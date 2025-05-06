@@ -14,7 +14,7 @@ struct intervallo{
 };
 
 Intervallo intervalloCrea(time_t inizio, time_t fine){
-  struct intervallo *i = (struct intervallo *) malloc(sizeof(struct intervallo));
+  Intervallo i = (Intervallo) malloc(sizeof(struct intervallo));
   if(i == NULL){
     return NULL;
   }
