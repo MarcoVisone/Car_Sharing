@@ -48,6 +48,20 @@ Byte intervalloContenutoIn(Intervallo interno, Intervallo esterno){
     return (interno->inizio <= esterno->fine) && (esterno->inizio <= interno->fine);
 }
 
+time_t convertiDataToTime(int anno, int mese, int giorno, int ora, int minuti){
+    struct tm temp = {0};
+
+    temp.tm_year = anno - 1900;
+    temp.tm_mon = mese - 1;
+    temp.tm_mday = giorno;
+    temp.tm_hour = ora;
+    temp.tm_min = minuti;
+    temp.tm_sec = 0;
+    temp.tm_isdst = -1;
+
+    return mktime(&temp);
+}
+
 char *intervalloToString(Intervallo i) {
     if (i == NULL) {
         return NULL;
@@ -58,8 +72,8 @@ char *intervalloToString(Intervallo i) {
     if (localtime_r(&(i->inizio), &temp1) == NULL || localtime_r(&(i->fine), &temp2) == NULL) {
         return NULL;
     }
-    strftime(buffer1, sizeof(buffer1), "[%d/%m/%Y %H:%M]", &temp1);
-    strftime(buffer2, sizeof(buffer2), "[%d/%m/%Y %H:%M]", &temp2);
+    strftime(buffer1, sizeof(buffer1), "%d/%m/%Y %H:%M", &temp1);
+    strftime(buffer2, sizeof(buffer2), "%d/%m/%Y %H:%M", &temp2);
     char *buffer_end = malloc(DIMENSIONE_BUFFER_FINALE);
     if (buffer_end == NULL) {
         return NULL;

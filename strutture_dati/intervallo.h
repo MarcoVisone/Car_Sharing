@@ -6,7 +6,7 @@
 #define INTERVALLO_H
 
 #include <time.h>
-#include "strutture_dati/byte.h"
+#include "byte.h"
 
 // Definizione del tipo puntatore a struct intervallo
 typedef struct intervallo* Intervallo;
@@ -46,6 +46,17 @@ time_t intervalloFine(Intervallo i);
  * @return 1 se contenuto, 0 altrimenti
  */
 Byte intervalloContenutoIn(Intervallo interno, Intervallo esterno);
+
+/**
+ * @brief Rende anno, mese, giorno, ora e minuti in un valore time_t
+ * @param anno  Anno
+ * @param mese  Mese
+ * @param giorno Giorno del mese
+ * @param ora   Ora
+ * @param minuti Minuti
+ * @return      Timestamp corrispondente o -1 in caso di errore
+ */
+time_t convertiDataToTime(int anno, int mese, int giorno, int ora, int minuti);
 
 /**
  * @brief Converte un intervallo in una stringa formattata
