@@ -1,15 +1,22 @@
 //
 // Created by marco on 5/6/25.
 //
-
 #ifndef BTREE_H
 #define BTREE_H
+#include "intervallo.h"
 
-typedef struct node* AVLIntervalTree;
+typedef struct node* IntervalTree;
 
-AVLIntervalTree avl_insert(AVLIntervalTree root, int key);
-AVLIntervalTree avl_delete(AVLIntervalTree root, int key);
-void avl_preorder(AVLIntervalTree root);
-void avl_inorder(AVLIntervalTree root);
-void avl_free(AVLIntervalTree root);
+IntervalTree treeInserisci(IntervalTree root, Intervallo i);
+
+Intervallo treePrenotazioneOccupata(IntervalTree root, Intervallo i);
+
+IntervalTree treeRimuovi(IntervalTree root, int key);
+
+void treePreorder(IntervalTree root);
+
+void treeInorder(IntervalTree root);
+
+void treeFree(IntervalTree root);
+
 #endif //BTREE_H
