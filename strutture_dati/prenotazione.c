@@ -8,13 +8,15 @@ struct prenotazione {
     Utente cliente;
     Intervallo date;
     double costo;
+    int id;
 };
 
-Prenotazione prenotazioneCrea(Utente cliente, Intervallo i, double costo){
+Prenotazione prenotazioneCrea(Utente cliente, Intervallo i, double costo, int id){
     Prenotazione p = malloc(sizeof(struct prenotazione));
     p->cliente = cliente;
     p->date = i;
     p->costo = costo;
+    p->id = id;
     return p;
 }
 
@@ -46,6 +48,13 @@ double getCosto(Prenotazione p){
     return p->costo;
 }
 
+int getId(Prenotazione p){
+    if(p == NULL){
+        return NULL;
+    }
+    return p->id;
+}
+
 void setCliente(Prenotazione p, Utente cliente){
     if(p == NULL){
         return;
@@ -65,4 +74,12 @@ void setCosto(Prenotazione p, double costo){
         return;
     }
     p->costo = costo;
+}
+
+Prenotazione dublicaPrenotazione(Prenotazione p){
+    if(p == NULL) return NULL;
+
+    Prenotazione copia = prenotazioneCrea(getCliente(p), getDateIntervallo(p), getCosto(p), getId(p));
+
+    return copia;
 }

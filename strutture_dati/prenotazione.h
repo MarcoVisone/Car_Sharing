@@ -18,10 +18,14 @@ Intervallo getDateIntervallo(Prenotazione p);
 
 double getCosto(Prenotazione p);
 
+int getId(Prenotazione p);
+
 void setCliente(Prenotazione p, Utente cliente);
 
 void setIntervallo(Prenotazione p, Intervallo i);
 
 void setCosto(Prenotazione p, double costo);
+
+Prenotazione dublicaPrenotazione(Prenotazione p);
 
 #endif //PRENOTAZIONE_H
