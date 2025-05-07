@@ -40,12 +40,12 @@ time_t intervalloInizio(Intervallo i);
 time_t intervalloFine(Intervallo i);
 
 /**
- * @brief Verifica se un intervallo è contenuto in un altro
+ * @brief Verifica se gli intervalli si sovrappongono
  * @param interno Intervallo interno da verificare
  * @param esterno Intervallo esterno in cui verificare la presenza
  * @return 1 se contenuto, 0 altrimenti
  */
-Byte intervalloContenutoIn(Intervallo interno, Intervallo esterno);
+Byte intervalliSiSovrappongono(Intervallo interno, Intervallo esterno);
 
 /**
  * @brief Rende anno, mese, giorno, ora e minuti in un valore time_t

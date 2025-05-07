@@ -41,7 +41,7 @@ time_t intervalloFine(Intervallo i){
     return i->fine;
 }
 
-Byte intervalloContenutoIn(Intervallo interno, Intervallo esterno){
+Byte intervalliSiSovrappongono(Intervallo interno, Intervallo esterno){
     if((interno == NULL || esterno == NULL)){
         return 0;
     }
