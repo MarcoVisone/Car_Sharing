@@ -4,19 +4,20 @@
 #ifndef BTREE_H
 #define BTREE_H
 #include "intervallo.h"
+#include "byte.h"
 
-typedef struct node* IntervalTree;
+typedef struct node* Prenotazioni;
 
-IntervalTree treeInserisci(IntervalTree root, Intervallo i);
+Prenotazioni aggiungiPrenotazione(Prenotazioni root, Intervallo i);
 
-Intervallo treePrenotazioneOccupata(IntervalTree root, Intervallo i);
+Byte prenotazioneOccupata(Prenotazioni root, Intervallo i);
 
-IntervalTree treeRimuovi(IntervalTree root, int key);
+Prenotazioni cancellaPrenotazione(Prenotazioni root, Prenotazione p);
 
-void treePreorder(IntervalTree root);
+void treePreorder(Prenotazioni root);
 
-void treeInorder(IntervalTree root);
+void treeInorder(Prenotazioni root);
 
-void treeFree(IntervalTree root);
+void treeFree(Prenotazioni root);
 
 #endif //BTREE_H
