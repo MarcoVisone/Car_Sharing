@@ -1,33 +1,63 @@
 #ifndef VEICOLO_H
 #define VEICOLO_H
 
-#include "adt/btree.h"
-#include "strutture_dati/byte.h"
+#include "../include/strutture_dati/byte.h"
 
-typedef struct veicolo *veicolo;
+typedef struct veicolo *Veicolo;
 
-char* getTarga(veicolo *v);
+/*
+* Funzione: crea_veicolo
+* ----------------------
+* Restituisce un nuovo veicolo con targa, modello, descrizione,
+* tariffa, prenotazioni passati come parametri alla funzione.
+*
+* Parametri:
+*    targa: stringa che rappresenta la targa del veicolo
+*    modello: stringa che rappresenta il modello del veicolo
+*    descrizione: stringa che rappresenta la descrizione del veicolo
+*    tariffa: numero che rappresenta la tariffa oraria in euro di un veicolo
+*    prenotazioni: puntatore alle prenotazioni relative ad un veicolo
+*
+* Pre-condizioni:
+*    targa: deve contenere una targa valida di 7 caratteri
+*    modello: non deve essere nullo e non deve essere vuoto
+*    descrizione: non deve essere nulla non deve essere vuota
+*    tariffa: deve essere > 0
+*
+* Post-condizione:
+*   ritorna un nuovo veicolo v se l'allocazione dinamica della memoria è andata a buon fine,
+*   altrimenti ritorna NULL
+*
+* Ritorna:
+*   Un nuovo veicolo v
+*/
+Veicolo crea_veicolo(char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni);
 
-void setTarga(veicolo *v, char *targa);
 
-char* getModello(veicolo *v);
+void distruggi_veicolo(Veicolo v);
 
-void setModello(veicolo *v, char *modello);
+char* get_targa(Veicolo *v);
 
-char* getDescrizione(veicolo *v);
+void set_targa(Veicolo *v, char *targa);
 
-void setDescrizione(veicolo *v, char *descrizione);
+char* get_modello(Veicolo *v);
 
-double getTariffa(veicolo *v);
+void set_modello(Veicolo *v, char *modello);
 
-void setTariffa(veicolo *v, double tariffa);
+char* get_descrizione(Veicolo *v);
 
-AVLIntervalTree getPrenotazione(veicolo *v);
+void set_descrizione(Veicolo *v, char *descrizione);
 
-void setPrenotazione(veicolo *v, AVLIntervalTree prenotazione);
+double get_tariffa(Veicolo *v);
 
-Byte confrontaTarghe(veicolo *v, char *targa);
+void set_tariffa(Veicolo *v, double tariffa);
 
-char* veicoloToString(veicolo *v);
+Prenotazioni get_prenotazioni(Veicolo *v);
+
+void set_prenotazioni(Veicolo *v, Prenotazioni prenotazioni);
+
+Byte confronta_targhe(Veicolo *v, char *targa);
+
+char* veicolo_in_stringa(Veicolo *v);
 
 #endif //VEICOLO_H
