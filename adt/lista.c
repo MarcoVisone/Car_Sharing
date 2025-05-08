@@ -6,12 +6,18 @@ struct nodo{
     struct nodo *next;
 };
 
-Nodo creaLista(){
+Nodo crea_lista(){
     return NULL;
 }
 
+void distruggi_nodo(Nodo nodo){
+  if(nodo != NULL){
+    free(nodo);
+  }
+}
+
 Nodo aggiungi_nodo(Item item, Nodo nodo){
-  Nodo nodo2=malloc(sizeof(Nodo));
+  Nodo nodo2=malloc(sizeof(struct nodo));
   nodo2->item=item;
   nodo2->next=nodo;
   return nodo2;
