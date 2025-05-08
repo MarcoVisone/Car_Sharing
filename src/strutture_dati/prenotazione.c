@@ -5,6 +5,8 @@
 
 #include "../../include/strutture_dati/prenotazione.h"
 #include <stdlib.h>
+#include <stdio.h>
+#define DIMENSIONE_BUFFER 1024
 
 struct prenotazione {
     Utente cliente;
@@ -12,7 +14,7 @@ struct prenotazione {
     double costo;
 };
 
-Prenotazione prenotazione_crea(Utente cliente, Intervallo i, double costo){
+Prenotazione crea_prenotazione(Utente cliente, Intervallo i, double costo){
     Prenotazione p = malloc(sizeof(struct prenotazione));
     p->cliente = cliente;
     p->date = i;
@@ -20,59 +22,82 @@ Prenotazione prenotazione_crea(Utente cliente, Intervallo i, double costo){
     return p;
 }
 
-void prenotazione_distruggi(Prenotazione p){
+void distruggi_prenotazione(Prenotazione p){
     if(p == NULL){
         return;
     }
+
     free(p);
 }
 
-Utente prenotazione_ottieni_cliente(Prenotazione p){
+Utente ottieni_cliente_prenotazione(Prenotazione p){
     if(p == NULL){
         return NULL;
     }
+
     return p->cliente;
 }
 
-Intervallo prenotazione_ottieni_intervallo(Prenotazione p){
+Intervallo ottieni_intervallo_prenotazione(Prenotazione p){
     if(p == NULL){
       return NULL;
     }
+
     return p->date;
 }
 
-double prenotazione_ottieni_costo(Prenotazione p){
+double ottieni_costo_prenotazione(Prenotazione p){
     if(p == NULL){
         return 0;
     }
+
     return p->costo;
 }
 
-void prenotazione_imposta_cliente(Prenotazione p, Utente cliente){
+void imposta_cliente_prenotazione(Prenotazione p, Utente cliente){
     if(p == NULL){
         return;
     }
+
     p->cliente = cliente;
 }
 
-void prenotazione_imposta_intervallo(Prenotazione p, Intervallo i){
+void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i){
     if(p == NULL){
         return;
     }
+
     p->date = i;
 }
 
-void prenotazione_imposta_costo(Prenotazione p, double costo){
+void imposta_costo_prenotazione(Prenotazione p, double costo){
     if(p == NULL){
         return;
     }
+
     p->costo = costo;
 }
 
-Prenotazione prenotazione_duplica(Prenotazione p){
+Prenotazione duplica_prenotazione(Prenotazione p){
     if(p == NULL) return NULL;
 
-    Prenotazione copia = prenotazione_crea(p->cliente, p->date,  p->costo);
+    Prenotazione copia = crea_prenotazione(p->cliente, p->date,  p->costo);
 
     return copia;
+}
+
+char *prenotazione_in_stringa(Prenotazione p){
+	if(p == NULL){
+		return NULL;
+	}
+	char *buffer = malloc(sizeof(char) * DIMENSIONE_BUFFER);
+	char *cliente = utente_in_stringa(p->cliente);
+	char *date = intervallo_in_stringa(p->date);
+	double costo = p->costo;
+	snprintf(buffer, DIMENSIONE_BUFFER, "%s\n Durata Prenotazione: %s\nPrezzo Prenotazione: %0.2lf\n",
+			cliente,
+			date,
+			costo);
+
+	return buffer;
 }

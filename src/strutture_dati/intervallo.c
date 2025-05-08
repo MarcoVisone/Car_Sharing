@@ -15,31 +15,39 @@ struct intervallo{
     time_t fine;
 };
 
-Intervallo intervallo_crea(time_t inizio, time_t fine){
+Intervallo crea_intervallo(time_t inizio, time_t fine){
     Intervallo i = (Intervallo) malloc(sizeof(struct intervallo));
     if(i == NULL){
         return NULL;
     }
+
     i->inizio = inizio;
     i->fine = fine;
+
     return i;
 }
 
-void intervallo_distruggi(Intervallo i){
-    free(i);
+void distruggi_intervallo(Intervallo i){
+    if(i == NULL){
+		return;
+	}
+
+	free(i);
 }
 
-time_t intervallo_inizio(Intervallo i) {
+time_t inizio_intervallo(Intervallo i) {
     if(i == NULL){
         return 0;
     }
+
     return i->inizio;
 }
 
-time_t intervallo_fine(Intervallo i){
+time_t fine_intervallo(Intervallo i){
     if(i == NULL){
         return 0;
     }
+
     return i->fine;
 }
 
@@ -47,6 +55,7 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
     if((interno == NULL || esterno == NULL)){
         return 0;
     }
+
     return (interno->inizio <= esterno->fine) && (esterno->inizio <= interno->fine);
 }
 
@@ -68,18 +77,26 @@ char *intervallo_in_stringa(Intervallo i) {
     if (i == NULL) {
         return NULL;
     }
+
+	/* Creazione di 3 buffer 2 per convertire la data in stringa e 1 per concatenare i due buffer */
     char buffer1[DIMENSIONE_BUFFER] = {0};
     char buffer2[DIMENSIONE_BUFFER] = {0};
+	char *buffer_end = malloc(DIMENSIONE_BUFFER_FINALE);
     struct tm temp1, temp2;
+
+	/* Trasformazione delle date inzio e fine in stringa */
     if (localtime_r(&(i->inizio), &temp1) == NULL || localtime_r(&(i->fine), &temp2) == NULL) {
         return NULL;
     }
+
     strftime(buffer1, sizeof(buffer1), "%d/%m/%Y %H:%M", &temp1);
     strftime(buffer2, sizeof(buffer2), "%d/%m/%Y %H:%M", &temp2);
-    char *buffer_end = malloc(DIMENSIONE_BUFFER_FINALE);
+
     if (buffer_end == NULL) {
         return NULL;
     }
+
     snprintf(buffer_end, DIMENSIONE_BUFFER_FINALE, "%s -> %s", buffer1, buffer2);
+
     return buffer_end;
 }

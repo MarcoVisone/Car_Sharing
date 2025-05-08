@@ -22,7 +22,7 @@ typedef struct prenotazione *Prenotazione;
  * Ritorna:
  *     Restituisce la prenotazione creata
  */
-Prenotazione prenotazione_crea(Utente cliente, Intervallo i, double costo);
+Prenotazione crea_prenotazione(Utente cliente, Intervallo i, double costo);
 
 /*
  * Distrugge una prenotazione.
@@ -30,7 +30,7 @@ Prenotazione prenotazione_crea(Utente cliente, Intervallo i, double costo);
  * Parametri:
  *     p: Puntatore alla prenotazione da distruggere
  */
-void prenotazione_distruggi(Prenotazione p);
+void distruggi_prenotazione(Prenotazione p);
 
 /*
  * Ottiene il cliente della prenotazione.
@@ -40,7 +40,7 @@ void prenotazione_distruggi(Prenotazione p);
  * Ritorna:
  *     Il cliente associato alla prenotazione, NULL se la prenotazione è NULL
  */
-Utente prenotazione_ottieni_cliente(Prenotazione p);
+Utente ottieni_cliente_prenotazione(Prenotazione p);
 
 /*
  * Ottiene l'intervallo della prenotazione.
@@ -50,7 +50,7 @@ Utente prenotazione_ottieni_cliente(Prenotazione p);
  * Ritorna:
  *     L'intervallo temporale della prenotazione, NULL se la prenotazione è NULL
  */
-Intervallo prenotazione_ottieni_intervallo(Prenotazione p);
+Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
 
 /*
  * Ottiene il costo della prenotazione.
@@ -60,7 +60,7 @@ Intervallo prenotazione_ottieni_intervallo(Prenotazione p);
  * Ritorna:
  *     Il costo della prenotazione, 0 se la prenotazione è 0
  */
-double prenotazione_ottieni_costo(Prenotazione p);
+double ottieni_costo_prenotazione(Prenotazione p);
 
 /*
  * Imposta il cliente della prenotazione.
@@ -69,7 +69,7 @@ double prenotazione_ottieni_costo(Prenotazione p);
  *     p: Puntatore alla prenotazione
  *     cliente: Nuovo cliente da associare alla prenotazione
  */
-void prenotazione_imposta_cliente(Prenotazione p, Utente cliente);
+void imposta_cliente_prenotazione(Prenotazione p, Utente cliente);
 
 /*
  * Imposta l'intervallo della prenotazione.
@@ -78,7 +78,7 @@ void prenotazione_imposta_cliente(Prenotazione p, Utente cliente);
  *     p: Puntatore alla prenotazione
  *     i: Nuovo intervallo da associare alla prenotazione
  */
-void prenotazione_imposta_intervallo(Prenotazione p, Intervallo i);
+void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
 
 /*
  * Imposta il costo della prenotazione.
@@ -87,7 +87,7 @@ void prenotazione_imposta_intervallo(Prenotazione p, Intervallo i);
  *     p: Puntatore alla prenotazione
  *     costo: Nuovo costo da associare alla prenotazione
  */
-void prenotazione_imposta_costo(Prenotazione p, double costo);
+void imposta_costo_prenotazione(Prenotazione p, double costo);
 
 /*
  * Duplica una prenotazione.
@@ -97,6 +97,16 @@ void prenotazione_imposta_costo(Prenotazione p, double costo);
  * Ritorna:
  *     Una nuova prenotazione identica a quella fornita, NULL se la prenotazione è NULL
  */
-Prenotazione prenotazione_duplica(Prenotazione p);
+Prenotazione duplica_prenotazione(Prenotazione p);
+
+/*
+ * Converte i valori di Prenotazione in stringa
+ * Per facilitare la stampa nel'interfaccia
+ * Parametri:
+ *     p: Puntatore alla prenotazione da rendere stringa
+ * Ritorna:
+ *     Una stringa contenente tutti i valori di prenotazione formattati
+ */
+char* prenotazione_in_stringa(Prenotazione p);
 
 #endif //PRENOTAZIONE_H

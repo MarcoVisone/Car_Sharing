@@ -19,8 +19,9 @@ typedef struct intervallo* Intervallo;
  *     fine: Il timestamp di fine dell'intervallo
  * Ritorna:
  *     Restituisce l'intervallo creato
+ *
  */
-Intervallo intervallo_crea(time_t inizio, time_t fine);
+Intervallo crea_intervallo(time_t inizio, time_t fine);
 
 /*
  * Distrugge un intervallo.
@@ -28,7 +29,7 @@ Intervallo intervallo_crea(time_t inizio, time_t fine);
  * Parametri:
  *     i: Puntatore all'intervallo da distruggere
  */
-void intervallo_distruggi(Intervallo i);
+void distruggi_intervallo(Intervallo i);
 
 /*
  * Ottiene il timestamp di inizio dell'intervallo.
@@ -38,7 +39,7 @@ void intervallo_distruggi(Intervallo i);
  * Ritorna:
  *     Il timestamp di inizio, 0 se l'intervallo è NULL
  */
-time_t intervallo_inizio(Intervallo i);
+time_t inizio_intervallo(Intervallo i);
 
 /*
  * Ottiene il timestamp di fine dell'intervallo.
@@ -48,7 +49,7 @@ time_t intervallo_inizio(Intervallo i);
  * Ritorna:
  *     Il timestamp di fine, 0 se l'intervallo è NULL
  */
-time_t intervallo_fine(Intervallo i);
+time_t fine_intervallo(Intervallo i);
 
 /*
  * Verifica la sovrapposizione tra due intervalli.
