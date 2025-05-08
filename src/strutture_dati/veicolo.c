@@ -1,5 +1,5 @@
 
-#include "strutture_dati/veicolo.h"
+#include "../../include/strutture_dati/veicolo.h"
 #include <string.h>
 
 #define NUM_CARATTERI_TARGA 7

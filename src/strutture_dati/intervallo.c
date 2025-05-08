@@ -1,7 +1,9 @@
-//
-// Created by marco on 5/6/25.
-//
-#include "intervallo.h"
+/*
+ * Autore: Marco Visone
+ * Data: 06/05/2025
+ */
+
+#include "../../include/strutture_dati/intervallo.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -13,7 +15,7 @@ struct intervallo{
     time_t fine;
 };
 
-Intervallo intervalloCrea(time_t inizio, time_t fine){
+Intervallo intervallo_crea(time_t inizio, time_t fine){
     Intervallo i = (Intervallo) malloc(sizeof(struct intervallo));
     if(i == NULL){
         return NULL;
@@ -23,32 +25,32 @@ Intervallo intervalloCrea(time_t inizio, time_t fine){
     return i;
 }
 
-void intervalloDistruggi(Intervallo i){
+void intervallo_distruggi(Intervallo i){
     free(i);
 }
 
-time_t intervalloInizio(Intervallo i) {
+time_t intervallo_inizio(Intervallo i) {
     if(i == NULL){
         return 0;
     }
     return i->inizio;
 }
 
-time_t intervalloFine(Intervallo i){
+time_t intervallo_fine(Intervallo i){
     if(i == NULL){
         return 0;
     }
     return i->fine;
 }
 
-Byte intervalliSiSovrappongono(Intervallo interno, Intervallo esterno){
+Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
     if((interno == NULL || esterno == NULL)){
         return 0;
     }
     return (interno->inizio <= esterno->fine) && (esterno->inizio <= interno->fine);
 }
 
-time_t convertiDataToTime(int anno, int mese, int giorno, int ora, int minuti){
+time_t converti_data_in_time(int anno, int mese, int giorno, int ora, int minuti){
     struct tm temp = {0};
 
     temp.tm_year = anno - 1900;
@@ -62,7 +64,7 @@ time_t convertiDataToTime(int anno, int mese, int giorno, int ora, int minuti){
     return mktime(&temp);
 }
 
-char *intervalloToString(Intervallo i) {
+char *intervallo_in_stringa(Intervallo i) {
     if (i == NULL) {
         return NULL;
     }

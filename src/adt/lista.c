@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "lista.h"
+#include "../../include/adt/lista.h"
 
 struct nodo{
     void *item;
