@@ -44,7 +44,7 @@ Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
  *     prenotazioni: Radice dell'albero delle prenotazioni
  *     p: Prenotazione da cercare
  * Ritorna:
- *     1 se la prenotazione è presente, 0 altrimenti
+ *     0 se la prenotazione è presente, 1 altrimenti
  */
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
