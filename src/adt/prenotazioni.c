@@ -6,14 +6,13 @@
 #include "../include/adt/prenotazioni.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 struct node{
     Prenotazione prenotazione;
-    struct node *right;
-    struct node *left;
     time_t max;
     int height;
+	struct node *right;
+    struct node *left;
 };
 
 static time_t massimo(time_t a, time_t b){
@@ -40,16 +39,41 @@ static time_t ottieni_max(struct node *nodo){
 static void aggiorna_nodo(struct node *n) {
     Intervallo iv = ottieni_intervallo_prenotazione(n->prenotazione);
     time_t fi = fine_intervallo(iv);
+
     n->height = 1 + massimo(height(n->left), height(n->right));
+
+	/* Il massasimo intervallo presente fra il nodo e i suoi figli
+     * utile per velocizzare la ricerca di intervalli
+     * che si sovrappongono
+	 */
     n->max = massimo(fi, massimo(ottieni_max(n->left), ottieni_max(n->right)));
 }
 
-static struct node *gira_destra(struct node *y){
+/*
+ * Ruota a destra un nodo.
+ * Prima della rotazione:
+ *      y
+ *     / \
+ *    x   C
+ *   / \
+ *  A   T2
+ *
+ * Dopo la rotazione a destra:
+ *      x
+ *     / \
+ *    A   y
+ *       / \
+ *      T2  C
+ *
+ * E poi aggiorna massimo e altezza di x e y
+ * con "aggiorna_nodo(nodo)"
+ */
+static struct node *ruota_destra(struct node *y){
     struct node *x = y->left;
     struct node *T2 = x->right;
 
     x->right = y;
-    x->left = T2;
+    y->left = T2;
 
 	aggiorna_nodo(x);
 	aggiorna_nodo(y);
@@ -57,14 +81,33 @@ static struct node *gira_destra(struct node *y){
     return x;
 }
 
-static struct node *gira_sinistra(struct node *x){
+/*
+ * Ruota a sinistra un nodo.
+ * Prima della rotazione:
+ *      x
+ *     / \
+ *    A   y
+ *       / \
+ *      T2  C
+ *
+ * Dopo la rotazione a sinistra:
+ *      y
+ *     / \
+ *    x   C
+ *   / \
+ *  A  T2
+ *
+ * E poi aggiorna massimo e altezza di x e y
+ * con "aggiorna_nodo(nodo)"
+ */
+static struct node *ruota_sinistra(struct node *x){
     struct node *y = x->right;
     struct node *T2 = y->left;
 
     y->left = x;
     x->right = T2;
 
-    /* Ricalcolare il massimo fra il nodo e i suoi 2 figli*/
+    /* Ricalcolare il massimo fra il nodo e i suoi 2 figli */
 	aggiorna_nodo(x);
 	aggiorna_nodo(y);
 
@@ -74,33 +117,33 @@ static struct node *gira_sinistra(struct node *x){
 static struct node *casi_bilanciamento(struct node *nodo, time_t inizio) {
     int bilancio = height(nodo->left) - height(nodo->right);
 
-    // LEFT-LEFT o LEFT-RIGHT
+    /* LEFT-LEFT o LEFT-RIGHT */
     if (bilancio > 1 && nodo->left) {
         time_t inizio_l = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->left->prenotazione));
 
-        // LEFT-LEFT
+        /* LEFT-LEFT */
         if (inizio < inizio_l)
-            return gira_destra(nodo);
+            return ruota_destra(nodo);
 
-        // LEFT-RIGHT
-        nodo->left = gira_sinistra(nodo->left);
-        return gira_destra(nodo);
+        /* LEFT-RIGHT */
+        nodo->left = ruota_sinistra(nodo->left);
+        return ruota_destra(nodo);
     }
 
-    // RIGHT-RIGHT o RIGHT-LEFT
+    /* RIGHT-RIGHT o RIGHT-LEFT */
     if (bilancio < -1 && nodo->right) {
         time_t inizio_r = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->right->prenotazione));
 
-        // RIGHT-RIGHT
+        /* RIGHT-RIGHT */
         if (inizio > inizio_r)
-            return gira_sinistra(nodo);
+            return ruota_sinistra(nodo);
 
-        // RIGHT-LEFT
-        nodo->right = gira_destra(nodo->right);
-        return gira_sinistra(nodo);
+        /* RIGHT-LEFT */
+        nodo->right = ruota_destra(nodo->right);
+        return ruota_sinistra(nodo);
     }
 
-    // Nessun ribilanciamento necessario
+    /* Nessun ribilanciamento necessario */
     return nodo;
 }
 
@@ -110,13 +153,19 @@ struct node *nuovo_prenotazioni(){
 
 static void distruggi_nodo(Prenotazioni p){
 	if(p == NULL) return;
+
+	/* prenotazione è allocata in memoria
+	 * dinamicamente quindi va distrutta con
+     * la sua funzione prima di liberare p
+	 */
     distruggi_prenotazione(p->prenotazione);
+
     free(p);
 }
 
 static void _distruggi_prenotazioni(Prenotazioni nodo) {
     if (nodo == NULL) return;
-
+	/* Distrugge tutti i nodi in modo preorder */
     _distruggi_prenotazioni(nodo->left);
     _distruggi_prenotazioni(nodo->right);
 
@@ -127,6 +176,10 @@ void distruggi_prenotazioni(Prenotazioni *prenotazioni) {
     if (*prenotazioni == NULL) return;
 
     _distruggi_prenotazioni(*prenotazioni);
+
+    /* Dopo aver distrutto la prenotazione imposto a NULL
+     * il puntatore, per evitare dangling pointer e memory leak
+     */
     *prenotazioni = NULL;
 }
 
@@ -147,7 +200,7 @@ struct node *aggiungi_prenotazione(struct node *tree, Prenotazione prenotazione)
 
 	aggiorna_nodo(tree);
 
-    /* Ribilancia l'albero se necessario*/
+    /* Ribilancia l'albero se necessario */
     return casi_bilanciamento(tree, nuovo_inizio);
 }
 
@@ -161,9 +214,13 @@ Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p){
 
     if(intervalli_si_sovrappongono(i_attuale, i_nuovo)) return 0;
 
+    /* Se esiste il nodo sinistro E il massimo intervallo presente
+     * nel nodo sinistro è maggiore o uguale all'inizio della nuova prenotazione,
+     * allora la potenziale sovrapposizione potrebbe essere nel sottoalbero sinistro
+     */
     if(prenotazioni->left && prenotazioni->left->max >= inizio)
         return controlla_prenotazione(prenotazioni->left, p);
-
+	/* Altrimenti si controlla a destra */
     return controlla_prenotazione(prenotazioni->right, p);
 }
 
@@ -182,20 +239,20 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p) {
     time_t inizio = inizio_intervallo(i_nuovo);
 
     if (!compara_intervalli(i_attuale, i_nuovo)) {
-        // Caso 0/1 figlio
+        /* Caso 0/1 figlio */
         if (prenotazioni->left == NULL || prenotazioni->right == NULL) {
             struct node *temp = prenotazioni->left ? prenotazioni->left : prenotazioni->right;
             if (temp == NULL) {
-                /* Nessun figlio*/
+                /* Nessun figlio */
                 distruggi_nodo(prenotazioni);
                 return NULL;
             } else {
-                /* Un figlio*/
+                /* Un figlio */
                 distruggi_nodo(prenotazioni);
                 return temp;
             }
         } else {
-            /* Caso due figli*/
+            /* Caso due figli */
             struct node *temp = trova_minimo(prenotazioni->right);
             distruggi_prenotazione(prenotazioni->prenotazione);
             prenotazioni->prenotazione = duplica_prenotazione(temp->prenotazione);
@@ -207,9 +264,9 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p) {
         prenotazioni->right = cancella_prenotazione(prenotazioni->right, p);
     }
 
-    /* Aggiorna max e height*/
+    /* Aggiorna max e height */
    	aggiorna_nodo(prenotazioni);
 
-	/* Ribilancia l'albero se necessario*/
+	/* Ribilancia l'albero se necessario */
     return casi_bilanciamento(prenotazioni, inizio_intervallo(i_attuale));
 }
