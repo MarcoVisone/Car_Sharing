@@ -1,3 +1,8 @@
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 09/05/2025
+ */
+
 #include "../../include/strutture_dati/veicolo.h"
 #include <string.h>
 
@@ -36,64 +41,64 @@ Veicolo crea_veicolo(char *targa, char *modello, char *descrizione, double tarif
 }
 
 void distruggi_veicolo(Veicolo v){
-    distruggi_prenotazioni(v->prenotazioni);
+    distruggi_prenotazioni(&(v->prenotazioni));
     free(v);
 }
 
-char* get_targa(Veicolo *v){
+char* ottieni_targa(Veicolo v){
     return v->targa;
 }
 
-void set_targa(Veicolo *v, char *targa){
+void imposta_targa(Veicolo v, char *targa){
     strncpy(v->targa, targa, NUM_CARATTERI_TARGA- 1);
     v->targa[NUM_CARATTERI_TARGA-1] = '\0';
 }
 
-char* get_modello(Veicolo *v){
+char* ottieni_modello(Veicolo v){
     return v->modello;
 }
 
-void set_modello(Veicolo *v, char *modello){
+void imposta_modello(Veicolo v, char *modello){
     strncpy(v->modello, modello, MAX_LUNGHEZZA_MODELLO-1);
     v->modello[MAX_LUNGHEZZA_MODELLO-1] = '\0';
 }
 
-char* get_descrizione(Veicolo *v){
+char* ottieni_descrizione(Veicolo v){
     return v->descrizione;
 }
 
-void set_descrizione(Veicolo *v, char *descrizione){
+void imposta_descrizione(Veicolo v, char *descrizione){
     strncpy(v->descrizione, descrizione, MAX_LUNGHEZZA_DESCRIZIONE-1);
     v->descrizione[MAX_LUNGHEZZA_DESCRIZIONE-1] = '\0';
 }
 
-double get_tariffa(Veicolo *v){
+double ottieni_tariffa(Veicolo v){
     return v->tariffa;
 }
 
-void set_tariffa(Veicolo *v, double tariffa){
+void imposta_tariffa(Veicolo v, double tariffa){
     v->tariffa = tariffa;
 }
 
-Prenotazioni get_prenotazioni(Veicolo *v){
+Prenotazioni ottieni_prenotazioni(Veicolo v){
     return v->prenotazioni;
 }
 
-void set_prenotazioni(Veicolo *v, Prenotazioni prenotazioni){
+void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
     v->prenotazioni = prenotazioni;
 }
 
-Byte confronta_targhe(Veicolo *v, char *targa){
+Byte confronta_targhe(Veicolo v, char *targa){
     return (strcmp(targa,v->targa) == 0);
 }
 
-char* veicolo_in_stringa(Veicolo *v){
+char* veicolo_in_stringa(Veicolo v){
     int size = NUM_CARATTERI_TARGA +
                MAX_LUNGHEZZA_MODELLO +
                MAX_LUNGHEZZA_TARIFFA +
                MAX_LUNGHEZZA_DESCRIZIONE + 100 + 1;
 
-    char buffer[size];
+    char *buffer = malloc(sizeof(char) * size);
 
     snprintf(buffer, size, "Modello: %s\nDescrizione: %s\nTarga: %s\nTariffa: %0.2lf",
             v->modello,
