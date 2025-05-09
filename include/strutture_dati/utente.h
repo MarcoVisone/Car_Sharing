@@ -1,10 +1,14 @@
-//
-// Created by marco on 5/6/25.
-//
+/*
+ * Autore: Antonio Sicignano
+ * Data: 09/05/2025
+ */
 
-#ifndef UTENTE_H
-#define UTENTE_H
+#include "/include/strutture_dati/byte.h"
+typedef struct utente *Utente;
 
-typedef struct utente* Utente;
-
-#endif //UTENTE_H
+Utente crea_utente(char*email, char*password, char*nome, char*cognome, Byte permesso, Data data);
+char *ottieni_cognome(Utente);
+char *ottieni_nome(Utente);
+char *ottieni_email(Utente);
+char *ottieni_password(Utente);
+Byte ottieni_permesso(Utente);
