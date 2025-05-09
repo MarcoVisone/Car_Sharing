@@ -251,6 +251,7 @@ static ListaPre _prenotazioni_libere(Prenotazioni p, ListaPre lista, Intervallo 
 
 ListaPre prenotazioni_libere(Prenotazioni prenotazioni, Intervallo i){
     ListaPre lista = crea_lista();
+    return _prenotazioni_libere(prenotazioni, lista, i);
 }
 
 static struct node *trova_minimo(struct node *nodo){
