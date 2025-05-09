@@ -1,12 +1,14 @@
 /*
-* Autore: Marco Visone
+ * Autore: Marco Visone
  * Data: 06/05/2025
  */
 
-#ifndef HASHMAP_UTENTI_H
-#define HASHMAP_UTENTI_H
+#ifndef PRENOTAZIONI_H
+#define PRENOTAZIONI_H
 
 #include "../include/strutture_dati/prenotazione.h"
+#include "../include/adt/lista.h"
+#include "../include/adt/lista_prenotazione.h"
 
 typedef struct node *Prenotazioni;
 
@@ -48,6 +50,8 @@ Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
  */
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
+Lista_Pre prenotazioni_libere(
+
 /*
  * Cancella una prenotazione dall'albero.
  * Rimuove una prenotazione specifica dalla struttura ad albero, mantenendo la struttura bilanciata
@@ -60,4 +64,4 @@ Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
 
-#endif //HASHMAP_UTENTI_H
+#endif //PRENOTAZIONI_H
