@@ -224,6 +224,35 @@ Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p){
     return controlla_prenotazione(prenotazioni->right, p);
 }
 
+static ListaPre _prenotazioni_libere(Prenotazioni p, ListaPre lista, Intervallo i) {
+    if (p == NULL) return lista;
+
+    time_t inizio_i = inizio_intervallo(i);
+    time_t fine_i = fine_intervallo(i);
+
+    if (p->max < inizio_i) {
+        return lista;
+    }
+
+    lista = _prenotazioni_libere(p->left, lista, i);
+
+    if (fine_intervallo(ottieni_intervallo_prenotazione(p->prenotazione)) >= inizio_i) {
+        if (!intervalli_si_sovrappongono(i, ottieni_intervallo_prenotazione(p->prenotazione))) {
+            lista = inserisci_prenotazione(lista, p->prenotazione);
+        }
+    }
+
+    if (ottieni_max(p->right) >= inizio_i) {
+        lista = _prenotazioni_libere(p->right, lista, i);
+    }
+
+    return lista;
+}
+
+ListaPre prenotazioni_libere(Prenotazioni prenotazioni, Intervallo i){
+    ListaPre lista = crea_lista();
+}
+
 static struct node *trova_minimo(struct node *nodo){
     while(nodo->left != NULL){
         nodo = nodo->left;
