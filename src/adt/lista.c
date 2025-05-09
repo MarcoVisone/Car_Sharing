@@ -1,3 +1,8 @@
+/*
+ * Autore: Antonio Sicignano
+ * Data: 09/05/2025
+ */
+
 #include <stdlib.h>
 #include "../../include/adt/lista.h"
 
@@ -35,4 +40,11 @@ Item ottieni_item(Nodo nodo){
     return NULL;
   }
   return nodo->item;
+}
+
+Byte lista_vuota(Nodo lista){
+  if(lista==NULL){
+    return 1;
+  }
+  return 0;
 }
