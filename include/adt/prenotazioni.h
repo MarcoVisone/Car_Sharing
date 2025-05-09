@@ -50,7 +50,7 @@ Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
  */
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
-Lista_Pre prenotazioni_libere(
+Lista_Pre prenotazioni_libere(Prenotazioni prenotazioni, Intervallo i);
 
 /*
  * Cancella una prenotazione dall'albero.
