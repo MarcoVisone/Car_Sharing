@@ -73,6 +73,20 @@ time_t converti_data_in_time(int anno, int mese, int giorno, int ora, int minuti
     return mktime(&temp);
 }
 
+Intervallo duplica_intervallo(Intervallo p){
+    if(p == NULL) return NULL;
+
+    Intervallo copia = crea_intervallo(p->inizio, p->fine);
+
+    return copia;
+}
+
+Byte compara_intervalli(Intervallo a, Intervallo b) {
+    if (a->inizio < b->inizio) return -1;
+    if (a->inizio > b->inizio) return 1;
+    return 0;
+}
+
 char *intervallo_in_stringa(Intervallo i) {
     if (i == NULL) {
         return NULL;

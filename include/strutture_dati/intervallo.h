@@ -77,6 +77,27 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
 time_t converti_data_in_time(int anno, int mese, int giorno, int ora, int minuti);
 
 /*
+ * Duplica un intervallo.
+ * Crea una copia dell'intervallo specificato, allocando nuova memoria
+ * Parametri:
+ *     p: Puntatore all'intervallo da duplicare
+ * Ritorna:
+ *     Un nuovo intervallo identico a quello passato, NULL in caso di errore
+ */
+Intervallo duplica_intervallo(Intervallo p);
+
+/*
+ * Confronta l'inizio di due intervalli.
+ * Ordina due intervalli temporali in base al tempo di inizio
+ * Parametri:
+ *     a: Primo intervallo da confrontare
+ *     b: Secondo intervallo da confrontare
+ * Ritorna:
+ *     -1 se 'a' inizia prima di 'b', 1 se 'a' inizia dopo 'b', 0 se iniziano nello stesso momento
+ */
+Byte compara_intervalli(Intervallo a, Intervallo b);
+
+/*
  * Converte un intervallo in stringa.
  * Crea una rappresentazione testuale dell'intervallo nel formato "dd/mm/yyyy HH:MM -> dd/mm/yyyy HH:MM"
  * Parametri:
