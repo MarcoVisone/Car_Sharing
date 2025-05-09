@@ -26,7 +26,8 @@ void distruggi_prenotazione(Prenotazione p){
     if(p == NULL){
         return;
     }
-
+    distruggi_intervallo(p->date);
+    distruggi_utente(p->cliente);
     free(p);
 }
 
@@ -81,10 +82,15 @@ void imposta_costo_prenotazione(Prenotazione p, double costo){
 Prenotazione duplica_prenotazione(Prenotazione p){
     if(p == NULL) return NULL;
 
-    Prenotazione copia = crea_prenotazione(p->cliente, p->date,  p->costo);
+    Intervallo date_copia = duplica_intervallo(p->date);
+
+    Utente cliente_copia = duplica_utente(p->cliente);
+
+    Prenotazione copia = crea_prenotazione(NULL, date_copia,  p->costo);
 
     return copia;
 }
+
 
 char *prenotazione_in_stringa(Prenotazione p){
 	if(p == NULL){
@@ -94,7 +100,7 @@ char *prenotazione_in_stringa(Prenotazione p){
 	char *cliente = utente_in_stringa(p->cliente);
 	char *date = intervallo_in_stringa(p->date);
 	double costo = p->costo;
-	snprintf(buffer, DIMENSIONE_BUFFER, "%s\n Durata Prenotazione: %s\nPrezzo Prenotazione: %0.2lf\n",
+	snprintf(buffer, DIMENSIONE_BUFFER, "%s\nDurata Prenotazione: %s\nPrezzo Prenotazione: %0.2lf\n",
 			cliente,
 			date,
 			costo);
