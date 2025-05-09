@@ -1,6 +1,7 @@
-//
-// Created by marco on 5/6/25.
-//
+/*
+ * Autore: Marco Visone
+ * Data: 06/05/2025
+ */
 
 #ifndef BYTE_H
 #define BYTE_H
