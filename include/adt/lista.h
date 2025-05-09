@@ -1,3 +1,9 @@
+/*
+ * Autore: Antonio Sicignano
+ * Data: 09/05/2025
+ */
+
+#include "include/strutture_dati/byte.h"
 typedef struct nodo *Nodo;
 typedef void *Item;
 
@@ -46,3 +52,12 @@ Item ottieni_item(Nodo nodo);
  *     Nodo: Un puntatore al nodo successivo
  */
 Nodo ottieni_prossimo(Nodo nodo);
+
+/*
+ * La funzione controlla se la lista è vuota
+ * Parametri:
+ *     lista: Un nodo della della lista
+ * Ritorna:
+ *     Byte: Un valore che può essere 1 se la lista è vuota e in caso contrario lo 0
+ */
+Byte lista_vuota(Nodo lista);
