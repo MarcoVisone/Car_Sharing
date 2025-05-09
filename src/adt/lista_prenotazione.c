@@ -5,10 +5,10 @@
 
 #include "../include/adt/lista_prenotazione.h"
 
-Lista_Pre aggiungi_prenotazione_lista(Lista_Pre l, Prenotazione p){
+ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
     return aggiungi_nodo(p, l);
 }
 
-Prenotazione ottieni_prenotazione_lista(Lista_Pre l){
+Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
 }

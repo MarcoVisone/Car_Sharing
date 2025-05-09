@@ -8,10 +8,10 @@
 
 #include "../include/strutture_dati/prenotazione.h"
 #include "../include/adt/lista.h"
-typedef Nodo Lista_Pre;
+typedef Nodo ListaPre;
 
-Lista_Pre aggiungi_prenotazione_lista(Lista_Pre l, Prenotazione p);
+ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
 
-Prenotazione ottieni_prenotazione_lista(Lista_Pre l);
+Prenotazione ottieni_prenotazione_lista(ListaPre l);
 
 #endif //LISTA_PRENOTAZIONE_H
