@@ -6,7 +6,7 @@
 #ifndef VEICOLO_H
 #define VEICOLO_H
 
-#include "../include/strutture_dati/byte.h"
+#include "../include/modelli/byte.h"
 
 typedef struct veicolo *Veicolo;
 

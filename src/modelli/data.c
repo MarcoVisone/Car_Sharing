@@ -3,18 +3,18 @@
  * Data: 09/05/2025
  */
 
-#include "include/adt/data.h"
+#include "include/modelli/data.h"
 #include <stdlib.h>
 
 struct data{
   Lista storico;
   int frequenza;
-  };
+};
 
-  struct storico{
-    Prenotazione prenotazione;
-    struct storico *next;
-  }
+struct storico{
+   Prenotazione prenotazione;
+   struct storico *next;
+}
 
 ListaPre ottieni_storico(Data data){
   return data->storico;

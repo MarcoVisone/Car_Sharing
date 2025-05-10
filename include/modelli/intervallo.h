@@ -7,7 +7,7 @@
 #define INTERVALLO_H
 
 #include <time.h>
-#include "../include/strutture_dati/byte.h"
+#include "../include/modelli/byte.h"
 
 typedef struct intervallo* Intervallo;
 

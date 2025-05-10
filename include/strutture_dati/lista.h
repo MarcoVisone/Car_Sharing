@@ -3,7 +3,7 @@
  * Data: 09/05/2025
  */
 
-#include "include/strutture_dati/byte.h"
+#include "include/modelli/byte.h"
 typedef struct nodo *Nodo;
 typedef void *Item;
 
