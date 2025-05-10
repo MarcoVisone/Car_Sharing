@@ -15,9 +15,12 @@ Nodo crea_lista(){
     return NULL;
 }
 
-void distruggi_nodo(Nodo nodo){
+void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *)){
 	if(nodo==NULL){
 		return;
+	}
+	if(funzione_distruggi_item==NULL){
+		funzione_distruggi_item(nodo->item);
 	}
 	free(nodo);
 }
