@@ -5,7 +5,7 @@
 
 #ifndef DATA_H
 #define DATA_H
-#include "include/adt/lista_prenotazione.h"
+#include "include/strutture_dati/lista_prenotazione.h"
 
 typedef struct data *Data;
 typedef struct storico *Storico;

@@ -6,9 +6,9 @@
 #ifndef PRENOTAZIONI_H
 #define PRENOTAZIONI_H
 
-#include "../include/strutture_dati/prenotazione.h"
-#include "../include/adt/lista.h"
-#include "../include/adt/lista_prenotazione.h"
+#include "../include/modelli/prenotazione.h"
+#include "../include/strutture_dati/lista.h"
+#include "../include/strutture_dati/lista_prenotazione.h"
 
 typedef struct node *Prenotazioni;
 
@@ -49,8 +49,6 @@ Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
  *     0 se la prenotazione è presente, 1 altrimenti
  */
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
-
-ListaPre prenotazioni_libere(Prenotazioni prenotazioni, Intervallo i);
 
 /*
  * Cancella una prenotazione dall'albero.

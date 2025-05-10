@@ -4,7 +4,7 @@
  */
 
 #include <stdlib.h>
-#include "../../include/adt/lista.h"
+#include "../../include/strutture_dati/lista.h"
 
 struct nodo{
     void *item;
