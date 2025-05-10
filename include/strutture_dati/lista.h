@@ -23,7 +23,7 @@ Nodo crea_lista();
  * Ritorna:
  *     Non restituisce nulla
  */
-void distruggi_nodo(Nodo nodo);
+void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *));
 
 /*
  * La funzione aggiunge un nodo alla lista
