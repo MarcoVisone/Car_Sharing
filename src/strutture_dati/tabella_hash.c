@@ -29,7 +29,7 @@ static unsigned long djb2_hash(const char str) {
     return hash;
 }
 
-TabellaHash nuova_tabella_hash(int grandezza){
+TabellaHash nuova_tabella_hash(unsigned int grandezza){
 	TabellaHash tabella_hash = malloc(sizeof(struct tabella_hash));
 	if(tabella_hash == NULL){
 		return NULL;
@@ -49,6 +49,22 @@ TabellaHash nuova_tabella_hash(int grandezza){
 	}
 
 	return tabella_hash;
+}
+
+void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
+	for(int i = 0; i < tabella_hash->grandezza; i++){
+		Nodo curr = tabella_hash->buckets[i];
+		while(!lista_vuota(curr)){
+			struct item *item = ottieni_item(curr);
+			free(item->chiave);
+			free(item);
+		}
+		Nodo temp = ottieni_prossimo(curr);
+		distruggi_nodo(curr, funzione_distruggi_valore);
+        curr = temp;
+	}
+	free(tabella_hash->buckets);
+	free(tabella_hash);
 }
 
 static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
@@ -150,20 +166,4 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
 		curr = ottieni_prossimo(curr);
 	}
 	return NULL;
-}
-
-void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
-	for(int i = 0; i < tabella_hash->grandezza; i++){
-		Nodo curr = tabella_hash->buckets[i];
-		while(!lista_vuota(curr)){
-			struct item *item = ottieni_item(curr);
-			free(item->chiave);
-			free(item);
-		}
-		Nodo temp = ottieni_prossimo(curr);
-		distruggi_nodo(curr, funzione_distruggi_valore);
-        curr = temp;
-	}
-	free(tabella_hash->buckets);
-	free(tabella_hash);
 }
