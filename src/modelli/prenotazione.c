@@ -19,7 +19,7 @@ struct prenotazione {
 
 Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo){
     Prenotazione p = malloc(sizeof(struct prenotazione));
-    snprintf(p->cliente, DIMENSIONE_EMAIL, "%s%c", cliente, 0);
+    snprintf(p->cliente, DIMENSIONE_EMAIL, "%s", cliente);
     p->date = i;
     p->costo = costo;
     return p;
