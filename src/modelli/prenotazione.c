@@ -3,7 +3,7 @@
  * Data: 06/05/2025
  */
 
-#include "../../include/modelli/prenotazione.h"
+#include "modelli/prenotazione.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

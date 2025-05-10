@@ -5,9 +5,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "lista.h"
-#include "utente.h"
-#include "data.h"
+#include "strutture_dati/lista.h"
+#include "modelli/utente.h"
+#include "modelli/data.h"
 #define MAX 30
 
 struct utente {

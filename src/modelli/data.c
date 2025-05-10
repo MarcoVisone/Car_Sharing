@@ -3,7 +3,7 @@
  * Data: 09/05/2025
  */
 
-#include "include/modelli/data.h"
+#include "modelli/data.h"
 #include <stdlib.h>
 
 struct data{
