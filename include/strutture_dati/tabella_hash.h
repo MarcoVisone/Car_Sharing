@@ -15,7 +15,7 @@ TabellaHash nuova_tabella_hash(int grandezza);
 
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
 
-void *cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave);
+Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzione_distruggi_valore)(void *));
 
 void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
 
