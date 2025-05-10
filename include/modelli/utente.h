@@ -3,7 +3,7 @@
  * Data: 09/05/2025
  */
 
-#include "/include/modelli/byte.h"
+#include "modelli/byte.h"
 typedef struct utente *Utente;
 
 Utente crea_utente(char*email, char*password, char*nome, char*cognome, Byte permesso, Data data);

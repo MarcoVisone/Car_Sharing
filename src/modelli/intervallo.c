@@ -3,7 +3,7 @@
  * Data: 06/05/2025
  */
 
-#include "../../include/modelli/intervallo.h"
+#include "modelli/intervallo.h"
 #include <stdlib.h>
 #include <stdio.h>
 

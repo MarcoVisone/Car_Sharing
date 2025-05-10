@@ -3,7 +3,7 @@
  * Data: 06/05/2025
  */
 
-#include "../include/strutture_dati/prenotazioni.h"
+#include "strutture_dati/prenotazioni.h"
 #include <stdio.h>
 #include <stdlib.h>
 

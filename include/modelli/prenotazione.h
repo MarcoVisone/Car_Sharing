@@ -7,8 +7,8 @@
 #define PRENOTAZIONE_H
 #include <stdlib.h>
 #include <stdio.h>
-#include "../include/modelli/intervallo.h"
-#include "../include/modelli/utente.h"
+#include "modelli/intervallo.h"
+#include "modelli/utente.h"
 
 typedef struct prenotazione *Prenotazione;
 

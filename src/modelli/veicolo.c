@@ -3,7 +3,7 @@
  * Data: 09/05/2025
  */
 
-#include "../../include/modelli/veicolo.h"
+#include "modelli/veicolo.h"
 #include <string.h>
 
 #define NUM_CARATTERI_TARGA 7 + 1
