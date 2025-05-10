@@ -9,6 +9,7 @@
 #include "strutture_dati/tabella_hash.h"
 #include "modello/veicolo.h"
 
+// Rinominata TabellaHash in TabellaVeicoli
 typedef TabellaHash TabellaVeicoli;
 
 TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza);
