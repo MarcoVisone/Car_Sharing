@@ -16,7 +16,7 @@ Nodo crea_lista(){
 }
 
 void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *)){
-	if(nodo==NULL){
+	if(nodo == NULL){
 		return;
 	}
 	if(funzione_distruggi_item==NULL){
@@ -33,22 +33,25 @@ Nodo aggiungi_nodo(Item item, Nodo nodo){
 }
 
 Nodo ottieni_prossimo(Nodo nodo){
-    if(nodo==NULL){
+    if(nodo == NULL){
       return NULL;
     }
     return nodo->next;
 }
 
 Item ottieni_item(Nodo nodo){
-    if(nodo==NULL){
+    if(nodo == NULL){
       return NULL;
     }
     return nodo->item;
 }
 
+void imposta_prossimo(Nodo nodo, Nodo prossimo){
+    if(nodo == NULL) return;
+
+    nodo->next = prossimo;
+}
+
 Byte lista_vuota(Nodo lista){
-    if(lista==NULL){
-      return 1;
-    }
-    return 0;
+    return lista == NULL;
 }

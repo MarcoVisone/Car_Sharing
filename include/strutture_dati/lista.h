@@ -53,6 +53,8 @@ Item ottieni_item(Nodo nodo);
  */
 Nodo ottieni_prossimo(Nodo nodo);
 
+void imposta_prossimo(Nodo nodo, Nodo prossimo);
+
 /*
  * La funzione controlla se la lista è vuota
  * Parametri:
