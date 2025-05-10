@@ -12,6 +12,8 @@ typedef Nodo ListaPre;
 
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
 
+ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p);
+
 Prenotazione ottieni_prenotazione_lista(ListaPre l);
 
 #endif //LISTA_PRENOTAZIONE_H
