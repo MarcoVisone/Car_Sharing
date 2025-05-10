@@ -306,6 +306,4 @@ Byte confronta_targhe(Veicolo v, char *targa);
 */
 char* veicolo_in_stringa(Veicolo v);
 
-ListaPre prenotazioni_veicolo_libere(Veicolo v);
-
 #endif //VEICOLO_H
