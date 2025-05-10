@@ -71,7 +71,7 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
 			/* Libera solo la memoria occupata dal nodo, ma non dall'item
 			 * così non c'è bisogno di fare l'operazione di allocare nuova memoria
 			 */
-			distruggi_nodo(temp);
+			distruggi_nodo(temp, NULL);
 		}
 	}
 
@@ -107,7 +107,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	return 1;
 }
 
-void *cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave){
+Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzione_distruggi_valore)(void *)){
 	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
 	Nodo *head = &tabella_hash->buckets[indice];
 	Nodo curr = *head;
@@ -128,15 +128,14 @@ void *cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave){
 			}
 			free(item->chiave);
 			free(item);
-			distruggi_nodo(curr);
+			distruggi_nodo(curr, funzione_distruggi_valore);
 			tabella_hash->numero_buckets--;
-			// Restituisce il valore perchè non si può deallocare la memoria visto che è generico
-			return valore;
+			return 1;
 		}
 		prec = curr;
 		curr = ottieni_prossimo(curr);
 	}
-	return NULL;
+	return 0;
 }
 
 void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
@@ -159,13 +158,10 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
 		while(!lista_vuota(curr)){
 			struct item *item = ottieni_item(curr);
 			free(item->chiave);
-			if(funzione_distruggi_valore){
-				funzione_distruggi_valore(item->valore);
-			}
 			free(item);
 		}
 		Nodo temp = ottieni_prossimo(curr);
-		distruggi_nodo(curr);
+		distruggi_nodo(curr, funzione_distruggi_valore);
         curr = temp;
 	}
 	free(tabella_hash->buckets);
