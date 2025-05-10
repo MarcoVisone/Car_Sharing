@@ -55,7 +55,7 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
 	for(int i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
-			struct item *item = ottieni_item(curr);
+			struct item *item = (struct item *)ottieni_item(curr);
 			free(item->chiave);
 			free(item);
 		}
@@ -77,7 +77,7 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
 	for(i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
-			struct item *item = ottieni_item(curr);
+			struct item *item = (struct item *)ottieni_item(curr);
 			unsigned long nuovo_indice = djb2_hash(item->chiave) % nuova_grandezza;
 			nuovi_buckets[nuovo_indice] = crea_lista();
 			nuovi_buckets[nuovo_indice] = aggiungi_nodo(item, nuovi_buckets[nuovo_indice]);
@@ -106,7 +106,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	Nodo lista = tabella_hash->buckets[indice];
 	Nodo i;
 	for(i = tabella_hash->buckets[indice]; !lista_vuota(i); i = ottieni_prossimo(i)){
-		struct item *nuovo_item = ottieni_item(i);
+		struct item *nuovo_item = (struct item *)ottieni_item(i);
 		if(strcmp(nuovo_item->chiave, chiave) == 0){
 			return 0;
 		}
@@ -133,11 +133,11 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
 	 * lo elimina facendo puntare il next del nodo precedente al next del nodo attuale
 	 */
 	while(!lista_vuota(curr)){
-		struct item *item = ottieni_item(curr);
+		struct item *item = (struct item *)ottieni_item(curr);
 		if(strcmp(nuovo_item->chiave, chiave) == 0){
 			void *valore = item->valore;
             if(prec){
-				prec->next = ottieni_prossimo(curr);
+				imposta_prossimo(prec, ottieni_prossimo(curr));
 			}
             else{
 				*head = ottieni_prossimo(curr);
@@ -159,7 +159,7 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
 	Nodo curr = tabella_hash->buckets[indice];
 
 	while(!lista_vuota(curr)){
-		struct item *item = ottieni_item(curr);
+		struct item *item = (struct item *)ottieni_item(curr);
 		if(strcmp(item->chiave, chiave) == 0){
 			return item->valore;
 		}
