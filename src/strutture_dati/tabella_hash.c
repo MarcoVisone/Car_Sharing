@@ -8,17 +8,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LUNGHEZZA_CHIAVE 255 + 1
-#define BLOCCO 10
+#define PERCENTUALE_DI_RIEMPIMENTO 0.75
 
 struct item{
-    char chiave[MAX_LUNGHEZZA_CHIAVE];
+    char *chiave;
 	void *valore;
 };
 
 struct tabella_hash{
 	unsigned int grandezza;
 	Nodo *buckets;
+	unsigned int numero_buckets;
 };
 
 static unsigned long djb2_hash(const char str) {
@@ -35,6 +35,7 @@ TabellaHash nuova_tabella_hash(int grandezza){
 		return NULL;
 	}
 
+	tabella_hash->numero_buckets = 0;
 	tabella_hash->grandezza = grandezza;
 	tabella_hash->buckets = calloc(grandezza, sizeof(Nodo));
 	if(tabella_hash->buckets == NULL){
@@ -50,22 +51,40 @@ TabellaHash nuova_tabella_hash(int grandezza){
 	return tabella_hash;
 }
 
-static TabellaHash ridimensiona_tabella_hash(TabellaHash tabella_hash){
-	unsigned int nuova_grandezza = tabella_hash->grandezza + BLOCCO;
+static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
+    // Raddoppiare la grandezza serve a mantenere bassa la possibilità di avere collisioni
+	unsigned int nuova_grandezza = tabella_hash->grandezza * 2;
 	Nodo *nuovi_buckets = calloc(nuova_grandezza, sizeof(Nodo));
 	int i = 0;
-	for(i = 0; i < nuova_grandezza; i++){
-		nuovi_buckets[i] = crea_lista();
-	}
+
+	// Si spostano gli elementi dalla tabella hash ai nuovi bucket
 	for(i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
 			struct item *item = ottieni_item(curr);
+			unsigned long nuovo_indice = djb2_hash(item->chiave) % nuova_grandezza;
+			nuovi_buckets[nuovo_indice] = crea_lista();
+			nuovi_buckets[nuovo_indice] = aggiungi_nodo(item, nuovi_buckets[nuovo_indice]);
+			Nodo temp = curr;
+			curr = ottieni_prossimo(curr);
+
+			/* Libera solo la memoria occupata dal nodo, ma non dall'item
+			 * così non c'è bisogno di fare l'operazione di allocare nuova memoria
+			 */
+			distruggi_nodo(temp);
 		}
 	}
+
+	free(tabella_hash->buckets);
+	tabella_hash->buckets = nuovi_buckets;
+	tabella_hash->grandezza = nuova_grandezza;
 }
 
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
+	// Limita la percentuale di collisioni ad una percentuale minore del 100%
+	if((tabella_hash->numero_buckets / tabella_hash->grandezza) > PERCENTUALE_DI_RIEMPIMENTO){
+		ridimensiona_tabella_hash(tabella_hash);
+	}
 	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
 
 	Nodo lista = tabella_hash->buckets[indice];
@@ -84,11 +103,71 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	nuovo_item->chiave = strdup(chiave); //alloca una nuova stringa chiave dentro alla chiave
 	nuovo_item->valore = valore;
 	tabella_hash->buckets[indice] = aggiungi_nodo(nuovo_item, lista);
-
+	tabella_hash->numero_buckets++;
 	return 1;
 }
 
-Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave){
+void *cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave){
 	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
+	Nodo *head = &tabella_hash->buckets[indice];
+	Nodo curr = *head;
+	Nodo prec = NULL;
 
+	/* Scorre la lista finchè non è vuota, quando trova il nodo con la chiave corrispondente
+	 * lo elimina facendo puntare il next del nodo precedente al next del nodo attuale
+	 */
+	while(!lista_vuota(curr)){
+		struct item *item = ottieni_item(curr);
+		if(strcmp(nuovo_item->chiave, chiave) == 0){
+			void *valore = item->valore;
+            if(prec){
+				prec->next = ottieni_prossimo(curr);
+			}
+            else{
+				*head = ottieni_prossimo(curr);
+			}
+			free(item->chiave);
+			free(item);
+			distruggi_nodo(curr);
+			tabella_hash->numero_buckets--;
+			// Restituisce il valore perchè non si può deallocare la memoria visto che è generico
+			return valore;
+		}
+		prec = curr;
+		curr = ottieni_prossimo(curr);
+	}
+	return NULL;
+}
+
+void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
+	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
+	Nodo curr = tabella_hash->buckets[indice];
+
+	while(!lista_vuota(curr)){
+		struct item *item = ottieni_item(curr);
+		if(strcmp(item->chiave, chiave) == 0){
+			return item->valore;
+		}
+		curr = ottieni_prossimo(curr);
+	}
+	return NULL;
+}
+
+void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
+	for(int i = 0; i < tabella_hash->grandezza; i++){
+		Nodo curr = tabella_hash->buckets[i];
+		while(!lista_vuota(curr)){
+			struct item *item = ottieni_item(curr);
+			free(item->chiave);
+			if(funzione_distruggi_valore){
+				funzione_distruggi_valore(item->valore);
+			}
+			free(item);
+		}
+		Nodo temp = ottieni_prossimo(curr);
+		distruggi_nodo(curr);
+        curr = temp;
+	}
+	free(tabella_hash->buckets);
+	free(tabella_hash);
 }
