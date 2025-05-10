@@ -11,7 +11,9 @@
 
 typedef struct tabella_hash *TabellaHash;
 
-TabellaHash nuova_tabella_hash(int grandezza);
+TabellaHash nuova_tabella_hash(unsigned int grandezza);
+
+void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *));
 
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
 
@@ -19,5 +21,4 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
 
 void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
 
-void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *));
 #endif //TABELLA_HASH_H
