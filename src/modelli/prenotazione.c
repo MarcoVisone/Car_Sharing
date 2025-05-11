@@ -6,7 +6,6 @@
 #include <string.h>
 
 #define DIMENSIONE_BUFFER 1024
-#define NUMERO_CAMPI 4
 
 struct prenotazione {
     char *cliente;
