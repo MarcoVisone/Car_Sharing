@@ -4,6 +4,10 @@
  */
 
 #include "strutture_dati/lista_prenotazione.h"
+#include "strutture_dati/lista.h"
+#include "modelli/prenotazione.h"
+
+#include <stddef.h>
 
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
     return aggiungi_nodo(p, l);

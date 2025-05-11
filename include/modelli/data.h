@@ -5,10 +5,10 @@
 
 #ifndef DATA_H
 #define DATA_H
-#include "strutture_dati/lista_prenotazione.h"
 
 typedef struct data *Data;
-typedef struct storico *Storico;
+typedef struct nodo *ListaPre;
+typedef struct prenotazione *Prenotazione;
 
 ListaPre ottieni_storico(Data data);
 ListaPre aggiungi_a_storico(Data data, Prenotazione prenotazione);

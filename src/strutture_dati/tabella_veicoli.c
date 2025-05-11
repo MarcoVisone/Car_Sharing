@@ -4,6 +4,7 @@
  */
 
 #include "strutture_dati/tabella_veicoli.h"
+#include <stddef.h>
 
 TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza){
     return nuova_tabella_hash(grandezza);
@@ -37,7 +38,7 @@ Veicolo cerca_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa){
     if(tabella_veicoli == NULL){
         return NULL;
     }
-    return (Veicolo)cerca_in_tabella(tabella_veicoli, ottieni_targa(targa));
+    return (Veicolo)cerca_in_tabella(tabella_veicoli, targa);
 }
 
 Byte rimuovi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa){

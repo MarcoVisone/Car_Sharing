@@ -2,9 +2,12 @@
  * Autore: Russo Nello Manuel
  * Data: 09/05/2025
  */
+ #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "modelli/veicolo.h"
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define NUM_CARATTERI_TARGA 7 + 1
 #define MAX_LUNGHEZZA_MODELLO 50 + 1
@@ -42,7 +45,7 @@ void distruggi_veicolo(Veicolo v){
     free(v);
 }
 
-char* ottieni_targa(Veicolo v){
+char *ottieni_targa(Veicolo v){
 	if(v == NULL) return NULL;
     return v->targa;
 }

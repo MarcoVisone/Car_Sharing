@@ -2,13 +2,15 @@
  * Autore: Russo Nello Manuel
  * Data: 09/05/2025
  */
+ #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
-#include <stdio.h>
 #include "strutture_dati/tabella_hash.h"
 #include <stdlib.h>
 #include <string.h>
 
 #define PERCENTUALE_DI_RIEMPIMENTO 0.75
+
+static unsigned long djb2_hash(const char *str);
 
 struct item{
     char *chiave;
@@ -21,11 +23,12 @@ struct tabella_hash{
 	unsigned int numero_buckets;
 };
 
-static unsigned long djb2_hash(const char str) {
+static unsigned long djb2_hash(const char *str) {
     unsigned long hash = 5381;
     int c;
-    while ((c =str++))
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    while ((c = *str++)) {  // Aggiunto parentesi extra
+        hash = ((hash << 5) + hash) + c;
+    }
     return hash;
 }
 
@@ -43,7 +46,7 @@ TabellaHash nuova_tabella_hash(unsigned int grandezza){
 		return NULL;
 	}
 
-	int i = 0;
+	unsigned int i = 0;
 	for(i = 0; i < grandezza; i++){
 		tabella_hash->buckets[i] = crea_lista();
 	}
@@ -52,7 +55,7 @@ TabellaHash nuova_tabella_hash(unsigned int grandezza){
 }
 
 void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
-	for(int i = 0; i < tabella_hash->grandezza; i++){
+	for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
 			struct item *item = (struct item *)ottieni_item(curr);
@@ -71,7 +74,7 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
     // Raddoppiare la grandezza serve a mantenere bassa la possibilità di avere collisioni
 	unsigned int nuova_grandezza = tabella_hash->grandezza * 2;
 	Nodo *nuovi_buckets = calloc(nuova_grandezza, sizeof(Nodo));
-	int i = 0;
+	unsigned int i = 0;
 
 	// Si spostano gli elementi dalla tabella hash ai nuovi bucket
 	for(i = 0; i < tabella_hash->grandezza; i++){
@@ -98,9 +101,11 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
 
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	// Limita la percentuale di collisioni ad una percentuale minore del 100%
-	if((tabella_hash->numero_buckets / tabella_hash->grandezza) > PERCENTUALE_DI_RIEMPIMENTO){
+	double percentuale = (double)tabella_hash->numero_buckets / (double)tabella_hash->grandezza;;
+	if(percentuale > PERCENTUALE_DI_RIEMPIMENTO){
 		ridimensiona_tabella_hash(tabella_hash);
 	}
+
 	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
 
 	Nodo lista = tabella_hash->buckets[indice];
@@ -134,8 +139,7 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
 	 */
 	while(!lista_vuota(curr)){
 		struct item *item = (struct item *)ottieni_item(curr);
-		if(strcmp(nuovo_item->chiave, chiave) == 0){
-			void *valore = item->valore;
+		if(strcmp(item->chiave, chiave) == 0){
             if(prec){
 				imposta_prossimo(prec, ottieni_prossimo(curr));
 			}

@@ -5,11 +5,7 @@
 
 #ifndef PRENOTAZIONE_H
 #define PRENOTAZIONE_H
-#include <stdlib.h>
-#include <stdio.h>
-#include "modelli/veicolo.h"
 #include "modelli/intervallo.h"
-#include "modelli/utente.h"
 
 typedef struct prenotazione *Prenotazione;
 
@@ -41,7 +37,7 @@ void distruggi_prenotazione(Prenotazione p);
  * Ritorna:
  *     Il cliente associato alla prenotazione, NULL se la prenotazione è NULL
  */
-Utente ottieni_cliente_prenotazione(Prenotazione p);
+char *ottieni_cliente_prenotazione(Prenotazione p);
 
 /*
  * Ottiene l'intervallo della prenotazione.

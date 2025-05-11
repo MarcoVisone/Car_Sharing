@@ -7,6 +7,7 @@
 #define VEICOLO_H
 
 #include "modelli/byte.h"
+#include "strutture_dati/prenotazioni.h"
 
 typedef struct veicolo *Veicolo;
 
@@ -77,7 +78,7 @@ void distruggi_veicolo(Veicolo v);
  * Ritorna:
  *	la targa del veicolo
  */
-char* ottieni_targa(Veicolo v);
+char *ottieni_targa(Veicolo v);
 
 /*
  * Funzione: imposta_targa

@@ -3,8 +3,11 @@
  * Data: 06/05/2025
  */
 
+#define _POSIX_C_SOURCE 200809L
+
 #include "modelli/intervallo.h"
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 
 #define DIMENSIONE_BUFFER 64

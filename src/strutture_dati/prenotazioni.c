@@ -4,8 +4,20 @@
  */
 
 #include "strutture_dati/prenotazioni.h"
-#include <stdio.h>
+#include "modelli/prenotazione.h"
 #include <stdlib.h>
+
+static time_t massimo(time_t a, time_t b);
+static int height(struct node* nodo);
+static struct node* nuovo_nodo(Prenotazione prenotazione);
+static void aggiorna_nodo(struct node *n);
+static struct node *ruota_destra(struct node *y);
+static struct node *ruota_sinistra(struct node *x);
+static struct node *casi_bilanciamento(struct node *nodo, time_t inizio);
+static void distruggi_nodo_prenotazioni(Prenotazioni p);
+static void _distruggi_prenotazioni(Prenotazioni nodo);
+static struct node *trova_minimo(struct node *nodo);
+
 
 struct node{
     Prenotazione prenotazione;
@@ -151,7 +163,7 @@ struct node *crea_prenotazioni(){
     return NULL;
 }
 
-static void distruggi_nodo(Prenotazioni p){
+static void distruggi_nodo_prenotazioni(Prenotazioni p){
 	if(p == NULL) return;
 
 	/* prenotazione è allocata in memoria
@@ -169,7 +181,7 @@ static void _distruggi_prenotazioni(Prenotazioni nodo) {
     _distruggi_prenotazioni(nodo->left);
     _distruggi_prenotazioni(nodo->right);
 
-    distruggi_nodo(nodo);
+    distruggi_nodo_prenotazioni(nodo);
 }
 
 void distruggi_prenotazioni(Prenotazioni *prenotazioni) {
@@ -193,10 +205,12 @@ struct node *aggiungi_prenotazione(struct node *tree, Prenotazione prenotazione)
     time_t inizio = inizio_intervallo(ottieni_intervallo_prenotazione(tree->prenotazione));
     time_t nuovo_inizio = inizio_intervallo(ottieni_intervallo_prenotazione(prenotazione));
 
-    if(nuovo_inizio < inizio)
+    if(nuovo_inizio < inizio){
         tree->left = aggiungi_prenotazione(tree->left, prenotazione);
-    else
+    }
+    else{
         tree->right = aggiungi_prenotazione(tree->right, prenotazione);
+    }
 
 	aggiorna_nodo(tree);
 
@@ -244,11 +258,11 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p) {
             struct node *temp = prenotazioni->left ? prenotazioni->left : prenotazioni->right;
             if (temp == NULL) {
                 /* Nessun figlio */
-                distruggi_nodo(prenotazioni);
+                distruggi_nodo_prenotazioni(prenotazioni);
                 return NULL;
             } else {
                 /* Un figlio */
-                distruggi_nodo(prenotazioni);
+                distruggi_nodo_prenotazioni(prenotazioni);
                 return temp;
             }
         } else {

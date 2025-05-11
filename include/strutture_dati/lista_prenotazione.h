@@ -6,9 +6,8 @@
 #ifndef LISTA_PRENOTAZIONE_H
 #define LISTA_PRENOTAZIONE_H
 
-#include "modelli/prenotazione.h"
-#include "strutture_dati/lista.h"
-typedef Nodo ListaPre;
+typedef struct nodo *ListaPre;
+typedef struct prenotazione *Prenotazione;
 
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
 

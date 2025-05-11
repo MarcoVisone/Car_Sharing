@@ -7,7 +7,7 @@
 #define HASHMAP_VEICOLI_H
 
 #include "strutture_dati/tabella_hash.h"
-#include "modello/veicolo.h"
+#include "modelli/veicolo.h"
 
 // Rinominata TabellaHash in TabellaVeicoli
 typedef TabellaHash TabellaVeicoli;

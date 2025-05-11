@@ -4,6 +4,8 @@
  */
 
 #include "modelli/byte.h"
+
+typedef struct data *Data;
 typedef struct utente *Utente;
 
 Utente crea_utente(char*email, char*password, char*nome, char*cognome, Byte permesso, Data data);

@@ -1,10 +1,6 @@
-/*
- * Autore: Marco Visone
- * Data: 06/05/2025
- */
+#define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "modelli/prenotazione.h"
-#include "strutture_dati/tabella_veicoli.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,101 +10,105 @@
 
 struct prenotazione {
     char *cliente;
-	char *veicolo;
+    char *veicolo;
     Intervallo date;
     double costo;
 };
 
-Prenotazione crea_prenotazione(char *cliente, Intervallo i, char *targa_veicolo, double costo){
+Prenotazione crea_prenotazione(char *cliente, Intervallo i, char *targa_veicolo, double costo) {
     Prenotazione p = malloc(sizeof(struct prenotazione));
 
-	p->cliente = strndup(cliente, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
-	p->veicolo = strndup(targa_veicolo, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
+    p->cliente = strdup(cliente);
+    p->veicolo = strdup(targa_veicolo);
     p->date = i;
     p->costo = costo;
 
     return p;
 }
 
-void distruggi_prenotazione(Prenotazione p){
-    if(p == NULL) return NULL;
+void distruggi_prenotazione(Prenotazione p) {
+    if (p == NULL) return;
 
     distruggi_intervallo(p->date);
-	free(p->veicolo);
-	free(p->cliente);
+    free(p->veicolo);
+    free(p->cliente);
     free(p);
 }
 
-char *ottieni_cliente_prenotazione(Prenotazione p){
-    if(p == NULL) NULL;
+char *ottieni_cliente_prenotazione(Prenotazione p) {
+    if (p == NULL) return NULL;
 
     return p->cliente;
 }
 
-char *ottieni_veicolo_prenotazione(Prenotazione p){
-	if(p == NULL) return NULL;
+char *ottieni_veicolo_prenotazione(Prenotazione p) {
+    if (p == NULL) return NULL;
 
-	return p->veicolo;
+    return p->veicolo;
 }
 
-Intervallo ottieni_intervallo_prenotazione(Prenotazione p){
-    if(p == NULL) return NULL;
+Intervallo ottieni_intervallo_prenotazione(Prenotazione p) {
+    if (p == NULL) return NULL;
 
     return p->date;
 }
 
-double ottieni_costo_prenotazione(Prenotazione p){
-    if(p == NULL) return -1;
+double ottieni_costo_prenotazione(Prenotazione p) {
+    if (p == NULL) return -1;
 
     return p->costo;
 }
 
-void imposta_cliente_prenotazione(Prenotazione p, char *cliente){
-    if(p == NULL) return;
+void imposta_cliente_prenotazione(Prenotazione p, char *cliente) {
+    if (p == NULL) return;
 
-	free(p->cliente);
-	p->cliente = strndup(cliente, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
+    free(p->cliente);
+    p->cliente = strdup(cliente);
 }
 
-void imposta_veicolo_prenotazione(Prenotazione p, char *veicolo){
-	if(p == NULL) return;
+void imposta_veicolo_prenotazione(Prenotazione p, char *veicolo) {
+    if (p == NULL) return;
 
-	free(p->veicolo);
-	p->veicolo = strndup(veicolo, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
+    free(p->veicolo);
+    p->veicolo = strdup(veicolo);
 }
 
-void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i){
-    if(p == NULL) return;
+void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i) {
+    if (p == NULL) return;
 
-	distruggi_intervallo(p->date);
+    distruggi_intervallo(p->date);
     p->date = i;
 }
 
-void imposta_costo_prenotazione(Prenotazione p, double costo){
-    if(p == NULL) return;
+void imposta_costo_prenotazione(Prenotazione p, double costo) {
+    if (p == NULL) return;
+
     p->costo = costo;
 }
 
-Prenotazione duplica_prenotazione(Prenotazione p){
-    if(p == NULL) return NULL;
+Prenotazione duplica_prenotazione(Prenotazione p) {
+    if (p == NULL) return NULL;
 
     Intervallo date_copia = duplica_intervallo(p->date);
-    char *cliente_copia = strndup(p->cliente, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
-	char *veicolo_copia = strndup(p->veicolo, (int)(DIMENSIONE_BUFFER / NUMERO_CAMPI));
+    char *cliente_copia = strdup(p->cliente);
+    char *veicolo_copia = strdup(p->veicolo);
 
-    Prenotazione copia = crea_prenotazione(cliente_copia, date_copia,  p->costo);
+    Prenotazione copia = crea_prenotazione(cliente_copia, date_copia, veicolo_copia, p->costo);
+
+    // Libera le copie temporanee perché crea_prenotazione fa strdup
+    free(cliente_copia);
+    free(veicolo_copia);
 
     return copia;
 }
 
+char *prenotazione_in_stringa(Prenotazione p) {
+    if (p == NULL) return NULL;
 
-char *prenotazione_in_stringa(Prenotazione p){
-	if(p == NULL) return NULL;
+    char *buffer = malloc(sizeof(char) * DIMENSIONE_BUFFER);
+    if (buffer == NULL) return NULL;
 
-	char *buffer = malloc(sizeof(char) * DIMENSIONE_BUFFER);
-	if(buffer == NULL) return NULL;
-
-	char *date = intervallo_in_stringa(p->date);
+    char *date = intervallo_in_stringa(p->date);
 
     snprintf(buffer, DIMENSIONE_BUFFER,
         "Prenotazione per il cliente %s:\n"
@@ -121,5 +121,6 @@ char *prenotazione_in_stringa(Prenotazione p){
         p->costo
     );
 
-	return buffer;
+    free(date);
+    return buffer;
 }

@@ -4,41 +4,38 @@
  */
 
 #include "modelli/data.h"
-#include <stdlib.h>
+#include "modelli/prenotazione.h"
+#include "strutture_dati/lista_prenotazione.h"
+
+//#include <stdlib.h>
 
 struct data{
-  Lista storico;
+  ListaPre storico;
   int frequenza;
 };
 
 struct storico{
    Prenotazione prenotazione;
    struct storico *next;
-}
+};
 
 ListaPre ottieni_storico(Data data){
   return data->storico;
 }
 
-ListaPre aggiungi_a_storico(Data data, Prenotazione prenotazione){
-  struct storico *s = malloc(sizeof(struct storico));
-  if(s == NULL){
-    printf("Errore allocazione memoria\n");
-    exit(1);
-  }
-  s->prenotazione = prenotazione;
-  s->next = data->storico;
-  data->storico = s;
-  data->frequenza++;
-  return storico;
+ListaPre aggiungi_a_storico(Data data, Prenotazione prenotazione) {
+    (void)data;
+    (void)prenotazione;
+    /* FUNZIONE ANCORA DA FARE */
+    return NULL;
 }
 
-ListaPre rimuovi_da_storico(Data data, Prenotazione prenotazione){
-  struct storico *s = malloc(sizeof(struct storico));
-  if(s == NULL){
-    printf("Errore allocazione memoria\n");
-    exit(1);
-  }
+ListaPre rimuovi_da_storico(Data data, Prenotazione prenotazione) {
+    (void)data;
+    (void)prenotazione;
+    /* FUNZIONE ANCORA DA FARE */
+    return NULL;
+}
 
 int ottieni_frequenza(Data data){
   return data->frequenza;
