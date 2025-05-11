@@ -7,6 +7,7 @@
 #define PRENOTAZIONE_H
 #include <stdlib.h>
 #include <stdio.h>
+#include "modelli/veicolo.h"
 #include "modelli/intervallo.h"
 #include "modelli/utente.h"
 
@@ -22,7 +23,7 @@ typedef struct prenotazione *Prenotazione;
  * Ritorna:
  *     Restituisce la prenotazione creata
  */
-Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo);
+Prenotazione crea_prenotazione(char *cliente, Intervallo i, char *targa_veicolo, double costo);
 
 /*
  * Distrugge una prenotazione.
@@ -62,6 +63,8 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
  */
 double ottieni_costo_prenotazione(Prenotazione p);
 
+char *ottieni_veicolo_prenotazione(Prenotazione p);
+
 /*
  * Imposta il cliente della prenotazione.
  * Modifica il cliente associato alla prenotazione specificata
@@ -70,6 +73,8 @@ double ottieni_costo_prenotazione(Prenotazione p);
  *     cliente: Nuovo cliente da associare alla prenotazione
  */
 void imposta_cliente_prenotazione(Prenotazione p, char *cliente);
+
+void imposta_veicolo_prenotazione(Prenotazione p, char *veicolo);
 
 /*
  * Imposta l'intervallo della prenotazione.
