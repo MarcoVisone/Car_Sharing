@@ -18,7 +18,7 @@ typedef struct node *Prenotazioni;
  * Ritorna:
  *     Un puntatore alla radice dell'albero vuoto
  */
-Prenotazioni nuovo_prenotazioni();
+Prenotazioni crea_prenotazioni();
 
 /*
  * Distrugge l'albero di prenotazioni.
