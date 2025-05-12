@@ -3,12 +3,10 @@
  * Data: 09/05/2025
  */
 
-#include "modelli/data.h"
-#include "modelli/prenotazione.h"
-#include "strutture_dati/lista_prenotazione.h"
-#include <stddef.h>
-
 #include <stdlib.h>
+
+#include "modelli/data.h"
+#include "strutture_dati/lista_prenotazione.h"
 #include <strutture_dati/lista.h>
 
 struct data{
@@ -32,32 +30,46 @@ void distruggi_data(Data data) {
     if (data == NULL) {
         return;
     }
+
     distruggi_lista_prenotazione(data->storico);
     free(data);
 }
 
 ListaPre ottieni_storico(Data data){
-  return data->storico;
+    if (data == NULL) {
+        return NULL;
+    }
+
+    return data->storico;
 }
 
-ListaPre aggiungi_a_storico(Data data, Prenotazione prenotazione) {
-    (void)data;
-    (void)prenotazione;
-    /* FUNZIONE ANCORA DA FARE */
-    return NULL;
+ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
+    if (data == NULL) {
+        return NULL;
+    }
+    data->storico = aggiungi_prenotazione_lista(data->storico, prenotazione);
+    return data->storico;
 }
 
-ListaPre rimuovi_da_storico(Data data, Prenotazione prenotazione) {
-    (void)data;
-    (void)prenotazione;
-    /* FUNZIONE ANCORA DA FARE */
-    return NULL;
+ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
+    if (data == NULL) {
+        return NULL;
+    }
+
+    data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
+    return data->storico;
 }
 
-int ottieni_frequenza(Data data){
-  return data->frequenza;
+int ottieni_frequenza_lista(Data data){
+    if (data == NULL) {
+        return ERRORE_FREQUENZA;
+    }
+    return data->frequenza;
 }
 
 void azzera_frequenza(Data data){
-  data->frequenza = 0;
+    if (data == NULL) {
+        return;
+    }
+    data->frequenza = 0;
 }

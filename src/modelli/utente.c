@@ -52,7 +52,6 @@ void imposta_nome(Utente utente, char *nome) {
     }
 
     snprintf(utente->nome, MAX_NOME, "%s", nome);
-
 }
 
 void imposta_cognome(Utente utente, char *cognome) {
@@ -61,7 +60,6 @@ void imposta_cognome(Utente utente, char *cognome) {
     }
 
     snprintf(utente->cognome, MAX_COGNOME, "%s", cognome);
-
 }
 
 void imposta_email(Utente utente, char *email) {
@@ -70,7 +68,6 @@ void imposta_email(Utente utente, char *email) {
     }
 
     snprintf(utente->email, MAX_EMAIL, "%s", email);
-
 }
 
 void imposta_password(Utente utente, char *password) {
@@ -79,7 +76,6 @@ void imposta_password(Utente utente, char *password) {
     }
 
     snprintf(utente->password, MAX_PASSOWORD, "%s", password);
-
 }
 
 void imposta_permesso(Utente utente, Byte permesso) {
@@ -88,7 +84,6 @@ void imposta_permesso(Utente utente, Byte permesso) {
     }
 
     utente->permesso = permesso;
-
 }
 
 void imposta_data(Utente utente, Data data) {
@@ -105,7 +100,6 @@ void imposta_data(Utente utente, Data data) {
     }
 
     utente->data = data;
-
 }
 
 char *ottieni_nome(Utente utente){
@@ -136,12 +130,42 @@ char *ottieni_password(Utente utente){
     return utente->password;
 }
 
+int ottieni_frequenza_cliente(Utente utente) {
+    return ottieni_frequenza(utente->data);
+}
+
 Byte ottieni_permesso(Utente utente){
     if (utente == NULL) {
         return ERRORE_PERMESSO;
     }
+
     return utente->permesso;
 }
+
+ListaPre ottieni_storico_utente(Utente utente) {
+    if (utente == NULL) {
+        return NULL;
+    }
+
+    return ottieni_storico_lista(utente->data);
+}
+
+Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione) {
+    if (utente == NULL) {
+        return 0;
+    }
+
+    return aggiungi_a_storico_lista(utente->data, prenotazione) != NULL;
+}
+
+Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
+    if (utente == NULL) {
+        return 0;
+    }
+
+    return rimuovi_da_storico_lista(utente->data, prenotazione) != NULL;
+}
+
 
 
 

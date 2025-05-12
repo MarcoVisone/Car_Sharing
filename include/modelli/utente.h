@@ -37,14 +37,14 @@ char *ottieni_email(Utente utente);
 
 char *ottieni_password(Utente utente);
 
+int ottieni_frequenza_cliente(Utente utente);
+
 Byte ottieni_permesso(Utente utente);
 
-ListaPre ottieni_storico(Utente utente);
+ListaPre ottieni_storico_utente(Utente utente);
 
-Byte aggiungi_a_storico(Utente utente, Prenotazione prenotazione);
+Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
 
-Byte rimuovi_da_storico(Utente utente, Prenotazione prenotazione);
-
-int ottieni_frequenza(Utente utente);
+Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
 #endif
