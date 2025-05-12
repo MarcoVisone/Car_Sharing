@@ -6,8 +6,7 @@
 #ifndef PRENOTAZIONI_H
 #define PRENOTAZIONI_H
 
-#include "strutture_dati/lista.h"
-#include "strutture_dati/lista_prenotazione.h"
+#include "modelli/byte.h"
 
 typedef struct prenotazione* Prenotazione;
 typedef struct node *Prenotazioni;

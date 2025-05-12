@@ -7,8 +7,8 @@
 #define VEICOLO_H
 
 #include "modelli/byte.h"
-#include "strutture_dati/prenotazioni.h"
 
+typedef struct node *Prenotazioni;
 typedef struct veicolo *Veicolo;
 
 /*

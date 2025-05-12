@@ -6,10 +6,10 @@
 #ifndef TABELLA_HASH_H
 #define TABELLA_HASH_H
 
-#include "strutture_dati/lista.h"
 #include "modelli/byte.h"
 
 typedef struct tabella_hash *TabellaHash;
+typedef struct nodo* Nodo;
 
 TabellaHash nuova_tabella_hash(unsigned int grandezza);
 

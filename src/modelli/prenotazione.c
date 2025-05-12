@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "modelli/prenotazione.h"
+#include "modelli/intervallo.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

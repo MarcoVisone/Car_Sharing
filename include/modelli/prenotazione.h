@@ -5,8 +5,8 @@
 
 #ifndef PRENOTAZIONE_H
 #define PRENOTAZIONE_H
-#include "modelli/intervallo.h"
 
+typedef struct intervallo* Intervallo;
 typedef struct prenotazione *Prenotazione;
 
 /*

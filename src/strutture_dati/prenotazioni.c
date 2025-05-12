@@ -5,7 +5,9 @@
 
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/prenotazione.h"
+#include "modelli/intervallo.h"
 #include <stdlib.h>
+#include <time.h>
 
 static time_t massimo(time_t a, time_t b);
 static int height(struct node* nodo);

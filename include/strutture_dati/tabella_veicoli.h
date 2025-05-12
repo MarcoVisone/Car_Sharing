@@ -7,10 +7,10 @@
 #define HASHMAP_VEICOLI_H
 
 #include "strutture_dati/tabella_hash.h"
-#include "modelli/veicolo.h"
 
 // Rinominata TabellaHash in TabellaVeicoli
-typedef TabellaHash TabellaVeicoli;
+typedef struct tabella_hash *TabellaVeicoli;
+typedef struct veicolo *Veicolo;
 
 TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza);
 
