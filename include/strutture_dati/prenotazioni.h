@@ -10,6 +10,7 @@
 
 typedef struct prenotazione* Prenotazione;
 typedef struct node *Prenotazioni;
+typedef struct intervallo *Intervallo;
 
 /*
  * Crea un nuovo albero di prenotazioni.
@@ -39,15 +40,14 @@ void distruggi_prenotazioni(Prenotazioni *prenotazioni);
 Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
 /*
- * Controlla l'esistenza di una prenotazione nell'albero.
- * Verifica se una determinata prenotazione è già presente nell'albero
+ * Controlla se la prenotazione è disponibile.
  * Parametri:
  *     prenotazioni: Radice dell'albero delle prenotazioni
  *     p: Prenotazione da cercare
  * Ritorna:
- *     0 se la prenotazione è presente, 1 altrimenti
+ *     1 se la prenotazione è presente, 0 altrimenti
  */
-Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
+Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i);
 
 /*
  * Cancella una prenotazione dall'albero.

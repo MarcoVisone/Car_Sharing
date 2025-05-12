@@ -220,24 +220,23 @@ struct node *aggiungi_prenotazione(struct node *tree, Prenotazione prenotazione)
     return casi_bilanciamento(tree, nuovo_inizio);
 }
 
-Byte controlla_prenotazione(Prenotazioni prenotazioni, Prenotazione p){
+Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
     if(prenotazioni == NULL)
         return 1;
 
     Intervallo i_attuale = ottieni_intervallo_prenotazione(prenotazioni->prenotazione);
-    Intervallo i_nuovo = ottieni_intervallo_prenotazione(p);
-    time_t inizio = inizio_intervallo(i_nuovo);
+    time_t inizio = inizio_intervallo(i);
 
-    if(intervalli_si_sovrappongono(i_attuale, i_nuovo)) return 0;
+    if(intervalli_si_sovrappongono(i_attuale, i)) return 0;
 
     /* Se esiste il nodo sinistro E il massimo intervallo presente
      * nel nodo sinistro è maggiore o uguale all'inizio della nuova prenotazione,
      * allora la potenziale sovrapposizione potrebbe essere nel sottoalbero sinistro
      */
     if(prenotazioni->left && prenotazioni->left->max >= inizio)
-        return controlla_prenotazione(prenotazioni->left, p);
+        return controlla_prenotazione(prenotazioni->left, i);
 	/* Altrimenti si controlla a destra */
-    return controlla_prenotazione(prenotazioni->right, p);
+    return controlla_prenotazione(prenotazioni->right, i);
 }
 
 static struct node *trova_minimo(struct node *nodo){
