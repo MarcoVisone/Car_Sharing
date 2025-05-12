@@ -6,6 +6,7 @@
 #include "modelli/data.h"
 #include "modelli/prenotazione.h"
 #include "strutture_dati/lista_prenotazione.h"
+#include <stddef.h>
 
 #include <stdlib.h>
 #include <strutture_dati/lista.h>

@@ -5,6 +5,7 @@
  #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "modelli/veicolo.h"
+#include "strutture_dati/prenotazioni.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

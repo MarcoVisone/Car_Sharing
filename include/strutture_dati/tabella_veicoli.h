@@ -6,6 +6,8 @@
 #ifndef HASHMAP_VEICOLI_H
 #define HASHMAP_VEICOLI_H
 
+#include "modelli/byte.h"
+
 // Rinominata TabellaHash in TabellaVeicoli
 typedef struct tabella_hash *TabellaVeicoli;
 typedef struct veicolo *Veicolo;
