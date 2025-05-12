@@ -4,16 +4,14 @@
  */
 #ifndef UTENTE_H
 #define UTENTE_H
-
 #include "modelli/byte.h"
+#include "modelli/data.h"
+
 #define ADMIN 0
 #define CLIENTE 1
 #define ERRORE_PERMESSO -1
 
-typedef struct nodo *ListaPre;
-typedef struct data *Data;
 typedef struct utente *Utente;
-typedef struct prenotazione *Prenotazione;
 
 Utente crea_utente(char *email, char *password, char *nome, char *cognome, Byte permesso);
 

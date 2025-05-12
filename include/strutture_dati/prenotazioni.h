@@ -7,10 +7,9 @@
 #define PRENOTAZIONI_H
 
 #include "modelli/byte.h"
+#include "modelli/prenotazione.h"
 
-typedef struct prenotazione* Prenotazione;
 typedef struct node *Prenotazioni;
-typedef struct intervallo *Intervallo;
 
 /*
  * Crea un nuovo albero di prenotazioni.

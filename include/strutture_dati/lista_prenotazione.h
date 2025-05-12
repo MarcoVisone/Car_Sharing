@@ -5,9 +5,10 @@
 
 #ifndef LISTA_PRENOTAZIONE_H
 #define LISTA_PRENOTAZIONE_H
+#include "modelli/prenotazione.h"
 
 typedef struct nodo *ListaPre;
-typedef struct prenotazione *Prenotazione;
+
 
 void distruggi_lista_prenotazione(ListaPre l);
 
