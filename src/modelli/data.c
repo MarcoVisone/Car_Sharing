@@ -35,7 +35,7 @@ void distruggi_data(Data data) {
     free(data);
 }
 
-ListaPre ottieni_storico(Data data){
+ListaPre ottieni_storico_lista(Data data){
     if (data == NULL) {
         return NULL;
     }
