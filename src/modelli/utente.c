@@ -4,7 +4,6 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 #include "strutture_dati/lista.h"
 #include "modelli/utente.h"
@@ -131,7 +130,7 @@ char *ottieni_password(Utente utente){
 }
 
 int ottieni_frequenza_cliente(Utente utente) {
-    return ottieni_frequenza(utente->data);
+    return ottieni_frequenza_lista(utente->data);
 }
 
 Byte ottieni_permesso(Utente utente){
@@ -165,7 +164,3 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
 
     return rimuovi_da_storico_lista(utente->data, prenotazione) != NULL;
 }
-
-
-
-
