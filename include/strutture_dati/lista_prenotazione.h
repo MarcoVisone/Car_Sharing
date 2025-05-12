@@ -9,6 +9,8 @@
 typedef struct nodo *ListaPre;
 typedef struct prenotazione *Prenotazione;
 
+void distruggi_lista_prenotazione(ListaPre l);
+
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
 
 ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p);

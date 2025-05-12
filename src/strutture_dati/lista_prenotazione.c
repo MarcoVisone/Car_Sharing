@@ -10,13 +10,26 @@
 
 #include <stddef.h>
 
-ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
-    return aggiungi_nodo(p, l);
-}
+static void distruggi_prenotazione_t(void *p);
 
 static void distruggi_prenotazione_t(void *prenotazione){
 	Prenotazione p = (Prenotazione)prenotazione;
 	distruggi_prenotazione(p);
+}
+
+void distruggi_lista_prenotazione(ListaPre l){
+    if(lista_vuota(l)) return;
+
+    ListaPre curr = l;
+    while(!lista_vuota(curr)){
+        ListaPre temp = ottieni_prossimo(curr);
+        distruggi_nodo(curr, distruggi_prenotazione_t);
+        curr = temp;
+    }
+}
+
+ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
+    return aggiungi_nodo(p, l);
 }
 
 ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
@@ -38,8 +51,6 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
     }
 	return l;
 }
-
-
 
 Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
