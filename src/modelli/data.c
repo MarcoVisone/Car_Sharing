@@ -7,17 +7,33 @@
 #include "modelli/prenotazione.h"
 #include "strutture_dati/lista_prenotazione.h"
 
-//#include <stdlib.h>
+#include <stdlib.h>
+#include <strutture_dati/lista.h>
 
 struct data{
   ListaPre storico;
   int frequenza;
 };
 
-struct storico{
-   Prenotazione prenotazione;
-   struct storico *next;
-};
+Data crea_data() {
+    Data data = malloc(sizeof(struct data));
+    if (data == NULL) {
+        return NULL;
+    }
+
+    data->storico = crea_lista();
+    data->frequenza = 0;
+
+    return data;
+}
+
+void distruggi_data(Data data) {
+    if (data == NULL) {
+        return;
+    }
+    distruggi_lista_prenotazione(data->storico);
+    free(data);
+}
 
 ListaPre ottieni_storico(Data data){
   return data->storico;
