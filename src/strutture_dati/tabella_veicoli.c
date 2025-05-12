@@ -4,6 +4,8 @@
  */
 
 #include "strutture_dati/tabella_veicoli.h"
+#include "modelli/veicolo.h"
+#include "strutture_dati/tabella_hash.h"
 #include <stddef.h>
 
 TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza){

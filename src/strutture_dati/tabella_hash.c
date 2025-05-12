@@ -5,6 +5,7 @@
  #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "strutture_dati/tabella_hash.h"
+#include "strutture_dati/lista.h"
 #include <stdlib.h>
 #include <string.h>
 

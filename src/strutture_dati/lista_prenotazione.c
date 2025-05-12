@@ -6,6 +6,7 @@
 #include "strutture_dati/lista_prenotazione.h"
 #include "strutture_dati/lista.h"
 #include "modelli/prenotazione.h"
+#include "modelli/intervallo.h"
 
 #include <stddef.h>
 
