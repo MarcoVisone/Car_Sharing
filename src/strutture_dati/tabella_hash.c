@@ -172,3 +172,33 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
 	}
 	return NULL;
 }
+
+void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione){
+    if(tabella_hash == NULL){
+        return NULL;
+    }
+
+    if(dimensione == NULL){
+        return NULL;
+    }
+
+    void *vettore = malloc(sizeof(void *) * tabella_hash->numero_buckets);
+    if(vettore == NULL){
+        return NULL;
+    }
+
+    unsigned int n = 0;
+
+    for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
+        Nodo curr = tabella_hash->buckets[i];
+        while(!lista_vuota(curr)){
+            struct item *item = (struct item *)ottieni_item(curr);
+            vettore[n] = item->valore;
+            n++;
+            curr = ottieni_prossimo(curr);
+        }
+    }
+
+    *dimensione = n;
+    return vettore;
+}
