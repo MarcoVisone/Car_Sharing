@@ -21,6 +21,6 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
 
 void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
 
-void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione);
+void **ottieni_vettore(TabellaHash tabella_hash, unsigned int *dimensione);
 
 #endif //TABELLA_HASH_H
