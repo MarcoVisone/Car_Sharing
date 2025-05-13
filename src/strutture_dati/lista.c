@@ -19,7 +19,7 @@ void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *)){
 	if(nodo == NULL){
 		return;
 	}
-	if(funzione_distruggi_item==NULL){
+	if(funzione_distruggi_item != NULL){
 		funzione_distruggi_item(nodo->item);
 	}
 	free(nodo);
