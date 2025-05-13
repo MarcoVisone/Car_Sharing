@@ -9,6 +9,9 @@
 #include "modelli/byte.h"
 #include "modelli/prenotazione.h"
 
+#define OK 0
+#define OCCUPATO 1
+
 typedef struct node *Prenotazioni;
 
 /*
@@ -42,9 +45,9 @@ Prenotazioni aggiungi_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
  * Controlla se la prenotazione è disponibile.
  * Parametri:
  *     prenotazioni: Radice dell'albero delle prenotazioni
- *     p: Prenotazione da cercare
+ *     i: Intervallo da cercare
  * Ritorna:
- *     1 se la prenotazione è presente, 0 altrimenti
+ *     OCCUPATO se l'intervallo è occupato, OK altrimenti
  */
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i);
 
@@ -58,6 +61,8 @@ Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i);
  *     La nuova radice dell'albero aggiornato
  */
 Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
+
+Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size);
 
 
 #endif //PRENOTAZIONI_H
