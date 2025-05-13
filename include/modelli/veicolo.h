@@ -278,7 +278,7 @@ Byte confronta_tipo(Veicolo v, char *tipo);
 
 Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 
-Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione, char *nome_cliente);
+Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 
 /*
  * Funzione: confronta_targhe
