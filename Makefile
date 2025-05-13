@@ -11,7 +11,7 @@ TARGET = car_sharing
 
 # Comando di rimozione compatibile cross-platform
 ifeq ($(OS),Windows_NT)
-    RM = cmd /C del /Q /F
+    RM = del /Q
 else
     RM = rm -f
 endif
