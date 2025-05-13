@@ -5,6 +5,7 @@
 #ifndef UTENTE_H
 #define UTENTE_H
 #include "modelli/byte.h"
+#include "strutture_dati/lista_prenotazione.h"
 #include "modelli/data.h"
 
 #define ADMIN 0
