@@ -1,10 +1,8 @@
-#define _POSIX_C_SOURCE 200809L  // Per usare strdup
-
-#include "modelli/prenotazione.h"
-#include "modelli/intervallo.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include "modelli/prenotazione.h"
+#include "modelli/intervallo.h"
+#include "utils/utils.h"
 
 #define DIMENSIONE_BUFFER 1024
 
@@ -17,7 +15,7 @@ struct prenotazione {
 Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo) {
     Prenotazione p = malloc(sizeof(struct prenotazione));
 
-    p->cliente = strdup(cliente);
+    p->cliente = my_strdup(cliente);
     p->date = i;
     p->costo = costo;
 
@@ -54,7 +52,7 @@ void imposta_cliente_prenotazione(Prenotazione p, char *cliente) {
     if (p == NULL) return;
 
     free(p->cliente);
-    p->cliente = strdup(cliente);
+    p->cliente = my_strdup(cliente);
 }
 
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i) {
@@ -74,7 +72,7 @@ Prenotazione duplica_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
 
     Intervallo date_copia = duplica_intervallo(p->date);
-    char *cliente_copia = strdup(p->cliente);
+    char *cliente_copia = my_strdup(p->cliente);
 
     Prenotazione copia = crea_prenotazione(cliente_copia, date_copia, p->costo);
 
