@@ -2,9 +2,21 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -Iinclude
 
-# Trova tutti i file .c nelle sottocartelle di src/
-SRC = $(wildcard src/**/*.c) $(wildcard src/*.c)
-OBJ = $(SRC:.c=.o)
+# OS Detection
+OS := $(shell uname -s)
+ifeq ($(OS),Windows_NT)
+    RM = del /Q
+    DETECTED_OS = Windows
+    PATHSEP = \\
+else
+    RM = rm -f
+    DETECTED_OS := $(OS)
+    PATHSEP = /
+endif
+
+# Trova tutti i file .c nelle sottocartelle di src/ (funziona su Unix e WSL)
+SRC := $(shell find src -name '*.c')
+OBJ := $(patsubst %.c,%.o,$(SRC))
 
 # Nome dell’eseguibile
 TARGET = car_sharing
@@ -18,7 +30,7 @@ $(TARGET): $(OBJ)
 
 # Pulizia dei file oggetto e dell'eseguibile
 clean:
-	rm -f $(OBJ) $(TARGET)
+	$(RM) $(OBJ) $(TARGET)
 
 # Per usare Bear: `bear -- make`
 .PHONY: all clean
