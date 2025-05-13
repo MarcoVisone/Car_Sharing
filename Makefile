@@ -13,6 +13,7 @@ TARGET = car_sharing
 ifdef OS
     RM = del /Q /F
     FixPath = $(subst /,\,$1)
+    TARGET = car_sharing.exe
 else
     ifeq ($(shell uname), Linux)
         RM = rm -f
