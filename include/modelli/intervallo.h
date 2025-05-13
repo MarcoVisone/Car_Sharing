@@ -74,7 +74,7 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
  * Ritorna:
  *     Il timestamp corrispondente alla data specificata
  */
-time_t converti_data_in_time(int anno, int mese, int giorno, int ora, int minuti);
+Intervallo converti_data_in_intervallo(const char *inizio, const char *fine);
 
 /*
  * Duplica un intervallo.
