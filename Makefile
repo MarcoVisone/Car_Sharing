@@ -1,6 +1,6 @@
 # Compilatore e flags
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -Iinclude
+CFLAGS = -Wall -Wextra -std=c99 -Iinclude
 
 # Trova tutti i file .c nelle sottocartelle di src/
 SRC = $(wildcard src/**/*.c) $(wildcard src/*.c)
