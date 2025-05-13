@@ -2,7 +2,6 @@
  * Autore: Russo Nello Manuel
  * Data: 09/05/2025
  */
- #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
 #include "modelli/veicolo.h"
 #include "strutture_dati/prenotazioni.h"
@@ -119,11 +118,12 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 	if(v == NULL) return 0;
 	if(prenotazione == NULL) return 0;
 
-	Intervallo i = ottieni_intervallo_prenotazione(prenotazione);
-	if(controlla_prenotazione(v->prenotazioni, i) == 1){
-		return 0;
-	}
-	v->prenotazioni = aggiungi_prenotazione(v->prenotazioni, prenotazione);
+	Prenotazioni temp = aggiungi_prenotazione(v->prenotazioni, prenotazione);
+
+	if(temp == NULL) return 0;
+
+	v->prenotazioni = temp;
+
 	return 1;
 }
 
