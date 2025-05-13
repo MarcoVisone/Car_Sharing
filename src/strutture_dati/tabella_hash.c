@@ -2,12 +2,13 @@
  * Autore: Russo Nello Manuel
  * Data: 09/05/2025
  */
- #define _POSIX_C_SOURCE 200809L  // Per usare strdup
 
-#include "strutture_dati/tabella_hash.h"
-#include "strutture_dati/lista.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include "strutture_dati/tabella_hash.h"
+#include "strutture_dati/lista.h"
+#include "utils/utils.h"
 
 #define PERCENTUALE_DI_RIEMPIMENTO 0.75
 
@@ -72,33 +73,33 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
 }
 
 static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
-    // Raddoppiare la grandezza serve a mantenere bassa la possibilità di avere collisioni
-	unsigned int nuova_grandezza = tabella_hash->grandezza * 2;
-	Nodo *nuovi_buckets = calloc(nuova_grandezza, sizeof(Nodo));
-	unsigned int i = 0;
+    unsigned int nuova_grandezza = tabella_hash->grandezza * 2;
+    Nodo *nuovi_buckets = calloc(nuova_grandezza, sizeof(Nodo));
+    if (nuovi_buckets == NULL) return;
 
-	// Si spostano gli elementi dalla tabella hash ai nuovi bucket
-	for(i = 0; i < tabella_hash->grandezza; i++){
-		Nodo curr = tabella_hash->buckets[i];
-		while(!lista_vuota(curr)){
-			struct item *item = (struct item *)ottieni_item(curr);
-			unsigned long nuovo_indice = djb2_hash(item->chiave) % nuova_grandezza;
-			nuovi_buckets[nuovo_indice] = crea_lista();
-			nuovi_buckets[nuovo_indice] = aggiungi_nodo(item, nuovi_buckets[nuovo_indice]);
-			Nodo temp = curr;
-			curr = ottieni_prossimo(curr);
+    for (unsigned int j = 0; j < nuova_grandezza; j++) {
+        nuovi_buckets[j] = crea_lista();
+    }
 
-			/* Libera solo la memoria occupata dal nodo, ma non dall'item
-			 * così non c'è bisogno di fare l'operazione di allocare nuova memoria
-			 */
-			distruggi_nodo(temp, NULL);
-		}
-	}
+    for (unsigned int i = 0; i < tabella_hash->grandezza; i++) {
+        Nodo curr = tabella_hash->buckets[i];
+        while (!lista_vuota(curr)) {
+            struct item *item = (struct item *)ottieni_item(curr);
+            unsigned long nuovo_indice = djb2_hash(item->chiave) % nuova_grandezza;
 
-	free(tabella_hash->buckets);
-	tabella_hash->buckets = nuovi_buckets;
-	tabella_hash->grandezza = nuova_grandezza;
+            nuovi_buckets[nuovo_indice] = aggiungi_nodo(item, nuovi_buckets[nuovo_indice]);
+
+            Nodo next = ottieni_prossimo(curr);
+            distruggi_nodo(curr, NULL);  //distruggi solo nodo, non item
+            curr = next;
+        }
+    }
+
+    free(tabella_hash->buckets);
+    tabella_hash->buckets = nuovi_buckets;
+    tabella_hash->grandezza = nuova_grandezza;
 }
+
 
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	// Limita la percentuale di collisioni ad una percentuale minore del 100%
@@ -122,7 +123,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 		return 0;
 	}
 
-	nuovo_item->chiave = strdup(chiave); //alloca una nuova stringa chiave dentro alla chiave
+	nuovo_item->chiave = my_strdup(chiave); //alloca una nuova stringa chiave dentro alla chiave
 	nuovo_item->valore = valore;
 	tabella_hash->buckets[indice] = aggiungi_nodo(nuovo_item, lista);
 	tabella_hash->numero_buckets++;
@@ -173,7 +174,7 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave){
 	return NULL;
 }
 
-void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione){
+void **ottieni_vettore(TabellaHash tabella_hash, unsigned int *dimensione){
     if(tabella_hash == NULL){
         return NULL;
     }
@@ -182,7 +183,7 @@ void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione){
         return NULL;
     }
 
-    void *vettore = malloc(sizeof(void *) * tabella_hash->numero_buckets);
+    void **vettore = malloc(sizeof(void *) * tabella_hash->numero_buckets);
     if(vettore == NULL){
         return NULL;
     }
@@ -193,8 +194,7 @@ void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione){
         Nodo curr = tabella_hash->buckets[i];
         while(!lista_vuota(curr)){
             struct item *item = (struct item *)ottieni_item(curr);
-            vettore[n] = item->valore;
-            n++;
+            vettore[n++] = item->valore;
             curr = ottieni_prossimo(curr);
         }
     }
