@@ -19,7 +19,8 @@ static struct node *casi_bilanciamento(struct node *nodo, time_t inizio);
 static void distruggi_nodo_prenotazioni(Prenotazioni p);
 static void _distruggi_prenotazioni(Prenotazioni nodo);
 static struct node *trova_minimo(struct node *nodo);
-
+static unsigned int conta_nodi(Prenotazioni prenotazioni);
+static void prenotazioni_in_vettore_t(Prenotazioni prenotazioni, Prenotazione *result, int *index);
 
 struct node{
     Prenotazione prenotazione;
@@ -222,12 +223,12 @@ struct node *aggiungi_prenotazione(struct node *tree, Prenotazione prenotazione)
 
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
     if(prenotazioni == NULL)
-        return 1;
+        return OK;
 
     Intervallo i_attuale = ottieni_intervallo_prenotazione(prenotazioni->prenotazione);
     time_t inizio = inizio_intervallo(i);
 
-    if(intervalli_si_sovrappongono(i_attuale, i)) return 0;
+    if(intervalli_si_sovrappongono(i_attuale, i)) return OCCUPATO;
 
     /* Se esiste il nodo sinistro E il massimo intervallo presente
      * nel nodo sinistro è maggiore o uguale all'inizio della nuova prenotazione,
@@ -284,4 +285,33 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p) {
 
 	/* Ribilancia l'albero se necessario */
     return casi_bilanciamento(prenotazioni, inizio_intervallo(i_attuale));
+}
+
+static unsigned int conta_nodi(Prenotazioni prenotazioni){
+    if (!prenotazioni) return 0;
+    return 1 + conta_nodi(prenotazioni->left) + conta_nodi(prenotazioni->right);
+}
+
+static void prenotazioni_in_vettore_t(Prenotazioni prenotazioni, Prenotazione *result, int *index) {
+    if (!prenotazioni) return;
+
+    prenotazioni_in_vettore_t(prenotazioni->left, result, index);
+
+    result[*index] = prenotazioni->prenotazione;
+    (*index)++;
+
+    prenotazioni_in_vettore_t(prenotazioni->right, result, index);
+}
+
+Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size) {
+    if (!prenotazioni) return NULL;
+
+    unsigned int num_nodi = conta_nodi(prenotazioni);
+    Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
+    if (!result) return NULL;
+
+    int index = 0;
+    prenotazioni_in_vettore_t(prenotazioni, result, &index);
+    *size = num_nodi;
+    return result;
 }
