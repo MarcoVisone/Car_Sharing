@@ -4,6 +4,7 @@
  */
 
 #ifndef DATA_H
+#include "modelli/prenotazione.h"
 #include "strutture_dati/lista_prenotazione.h"
 
 #define DATA_H
