@@ -8,7 +8,7 @@
 #include <time.h>
 #include <stdio.h>
 
-#define DIMENSIONE_BUFFER 64
+#define DIMENSIONE_BUFFER 25
 #define DIMENSIONE_BUFFER_FINALE (2 * DIMENSIONE_BUFFER + 5)
 
 static time_t converti_data_in_time_t(const char *data);
@@ -108,24 +108,13 @@ char *intervallo_in_stringa(Intervallo i) {
 
     char buffer1[DIMENSIONE_BUFFER] = {0};
     char buffer2[DIMENSIONE_BUFFER] = {0};
-    char *buffer_end = malloc(DIMENSIONE_BUFFER_FINALE);
+    char *buffer_end = malloc(sizeof(char) * DIMENSIONE_BUFFER_FINALE);
     if (buffer_end == NULL) {
         return NULL;
     }
 
-    struct tm *ptr1 = localtime(&(i->inizio));
-    struct tm *ptr2 = localtime(&(i->fine));
-
-    if (ptr1 == NULL || ptr2 == NULL) {
-        free(buffer_end);
-        return NULL;
-    }
-
-    struct tm temp1 = *ptr1;
-    struct tm temp2 = *ptr2;
-
-    strftime(buffer1, sizeof(buffer1), "%d/%m/%Y %H:%M", &temp1);
-    strftime(buffer2, sizeof(buffer2), "%d/%m/%Y %H:%M", &temp2);
+    strftime(buffer1, sizeof(buffer1), "%d/%m/%Y %H:%M", localtime(&(i->inizio)));
+    strftime(buffer2, sizeof(buffer2), "%d/%m/%Y %H:%M", localtime(&(i->fine)));
 
     snprintf(buffer_end, DIMENSIONE_BUFFER_FINALE, "%s -> %s", buffer1, buffer2);
 
