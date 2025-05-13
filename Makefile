@@ -9,6 +9,13 @@ OBJ = $(SRC:.c=.o)
 # Nome dell’eseguibile
 TARGET = car_sharing
 
+# Comando di rimozione compatibile cross-platform
+ifeq ($(OS),Windows_NT)
+    RM = cmd /C del /Q /F
+else
+    RM = rm -f
+endif
+
 # Regola principale
 all: $(TARGET)
 
@@ -18,7 +25,7 @@ $(TARGET): $(OBJ)
 
 # Pulizia dei file oggetto e dell'eseguibile
 clean:
-	$(RM) -f $(OBJ) $(TARGET)
+	-$(RM) $(OBJ) $(TARGET)
 
 # Per usare Bear: bear -- make
 .PHONY: all clean
