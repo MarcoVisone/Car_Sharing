@@ -23,6 +23,6 @@ Veicolo cerca_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa);
 
 Byte rimuovi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa);
 
-Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo intervallo);
+Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo intervallo, unsigned int *dimensione);
 
 #endif //HASHMAP_VEICOLI_H
