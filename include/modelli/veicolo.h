@@ -36,7 +36,7 @@ typedef struct veicolo *Veicolo;
  * Ritorna:
  *   Un nuovo veicolo v
  */
-Veicolo crea_veicolo(char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni);
+Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni);
 
 /*
  * Funzione: distruggi_veicolo
@@ -268,6 +268,17 @@ Prenotazioni ottieni_prenotazioni(Veicolo v);
  * 	modifica il puntatore prenotazioni nella struttura veicolo
  */
 void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni);
+
+
+char* ottieni_tipo_veicolo(Veicolo v);
+
+void imposta_tipo_veicolo(Veicolo v, char *tipo);
+
+Byte confronta_tipo(Veicolo v, char *tipo);
+
+Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
+
+Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione, char *nome_cliente);
 
 /*
  * Funzione: confronta_targhe
