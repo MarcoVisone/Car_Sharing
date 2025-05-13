@@ -127,18 +127,17 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 	return 1;
 }
 
-Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione, char *cliente){
+Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 	if(v == NULL) return 0;
     if(prenotazione == NULL) return 0;
 
-	Intervallo i = ottieni_intervallo_prenotazione(prenotazione);
-	char *cliente_a = ottieni_cliente_prenotazione(prenotazione);
+	Prenotazioni temp = cancella_prenotazione(v->prenotazioni, prenotazione);
 
-	if((controlla_prenotazione(v->prenotazioni, i) == 1) && (strcmp(cliente, cliente_a) == 0)){
-		v->prenotazioni = cancella_prenotazione(v->prenotazioni, prenotazione);
-		return 1;
-	}
-	return 0;
+	if(temp == NULL) return 0;
+
+	v->prenotazioni = temp;
+
+	return 1;
 }
 
 Byte confronta_targhe(Veicolo v, char *targa){
