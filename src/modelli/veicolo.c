@@ -111,7 +111,7 @@ char* veicolo_in_stringa(Veicolo v){
 
     char *buffer = malloc(sizeof(char) * size);
 
-    snprintf(buffer, size, "Modello: %s\nDescrizione: %s\nTarga: %s\nTariffa: %0.2lf",
+    snprintf(buffer, size, "Modello: %s\nDescrizione: %s\nTarga: %s\nTariffa: %0.3lf",
             v->modello,
             v->descrizione,
             v->targa,
