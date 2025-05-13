@@ -49,3 +49,17 @@ Byte rimuovi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa){
     }
     return cancella_dalla_tabella(tabella_veicoli, targa, distruggi_veicolo_t);
 }
+
+Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo intervallo, unsigned int *dimensione){
+    Veicolo *vettore = (Veicolo *)ottieni_vettore(tabella_veicoli, dimensione);
+    if(vettore == NULL){
+        return NULL;
+    }
+
+    for(unsigned int i = 0; i < *dimensione; i++){
+        if(controlla_prenotazione(ottieni_prenotazioni(vettore[i]), intervallo) == OCCUPATO){
+            vettore[i] = NULL;
+        }
+    }
+    return vettore;
+}
