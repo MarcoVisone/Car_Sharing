@@ -24,10 +24,3 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
 void *ottieni_vettore(TabellaHash tabella_hash, int *dimensione);
 
 #endif //TABELLA_HASH_H
-
-
-/*
-int size;
-Veicolo *veicoli = ottieni_vettore(t, &size);
-size -> grandezza vettore
-*/
