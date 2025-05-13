@@ -10,16 +10,14 @@
 
 struct prenotazione {
     char *cliente;
-    char *veicolo;
     Intervallo date;
     double costo;
 };
 
-Prenotazione crea_prenotazione(char *cliente, Intervallo i, char *targa_veicolo, double costo) {
+Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo) {
     Prenotazione p = malloc(sizeof(struct prenotazione));
 
     p->cliente = strdup(cliente);
-    p->veicolo = strdup(targa_veicolo);
     p->date = i;
     p->costo = costo;
 
@@ -30,7 +28,6 @@ void distruggi_prenotazione(Prenotazione p) {
     if (p == NULL) return;
 
     distruggi_intervallo(p->date);
-    free(p->veicolo);
     free(p->cliente);
     free(p);
 }
@@ -39,12 +36,6 @@ char *ottieni_cliente_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
 
     return p->cliente;
-}
-
-char *ottieni_veicolo_prenotazione(Prenotazione p) {
-    if (p == NULL) return NULL;
-
-    return p->veicolo;
 }
 
 Intervallo ottieni_intervallo_prenotazione(Prenotazione p) {
@@ -66,13 +57,6 @@ void imposta_cliente_prenotazione(Prenotazione p, char *cliente) {
     p->cliente = strdup(cliente);
 }
 
-void imposta_veicolo_prenotazione(Prenotazione p, char *veicolo) {
-    if (p == NULL) return;
-
-    free(p->veicolo);
-    p->veicolo = strdup(veicolo);
-}
-
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i) {
     if (p == NULL) return;
 
@@ -91,13 +75,11 @@ Prenotazione duplica_prenotazione(Prenotazione p) {
 
     Intervallo date_copia = duplica_intervallo(p->date);
     char *cliente_copia = strdup(p->cliente);
-    char *veicolo_copia = strdup(p->veicolo);
 
-    Prenotazione copia = crea_prenotazione(cliente_copia, date_copia, veicolo_copia, p->costo);
+    Prenotazione copia = crea_prenotazione(cliente_copia, date_copia, p->costo);
 
     // Libera le copie temporanee perché crea_prenotazione fa strdup
     free(cliente_copia);
-    free(veicolo_copia);
 
     return copia;
 }
@@ -111,12 +93,10 @@ char *prenotazione_in_stringa(Prenotazione p) {
     char *date = intervallo_in_stringa(p->date);
 
     snprintf(buffer, DIMENSIONE_BUFFER,
-        "Prenotazione per il cliente %s:\n"
-        "- Targa Veicolo: %s\n"
+        "- Cliente: %s\n"
         "- Periodo: %s\n"
         "- Costo totale: %.2f euro\n",
         p->cliente,
-        p->veicolo,
         date,
         p->costo
     );
