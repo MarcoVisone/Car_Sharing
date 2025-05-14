@@ -6,7 +6,9 @@
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/prenotazione.h"
 #include "modelli/intervallo.h"
+#include "strutture_dati/queue.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 static time_t massimo(time_t a, time_t b);
@@ -313,5 +315,41 @@ Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size) {
     int index = 0;
     prenotazioni_in_vettore_t(prenotazioni, result, &index);
     *size = num_nodi;
+    return result;
+}
+
+Prenotazione *ottieni_vettore_prenotazioni(Prenotazioni prenotazioni, unsigned int *size) {
+    if (prenotazioni == NULL) return NULL;
+
+    Queue q = new_queue();
+    unsigned int num_nodi = conta_nodi(prenotazioni);
+    Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
+    if (result == NULL) return NULL;
+
+    if (enqueue(prenotazioni, q) <= 0) {
+        free(result);
+        return NULL;
+    }
+
+    unsigned int i = 0;
+    while (!empty_queue(q)) {
+        Prenotazioni temp = (Prenotazioni)dequeue(q);
+        if (temp == NULL) continue;
+
+        result[i++] = temp->prenotazione;
+
+        if (temp->left != NULL && enqueue(temp->left, q) <= 0) {
+            free(result);
+            return NULL;
+        }
+
+        if (temp->right != NULL && enqueue(temp->right, q) <= 0) {
+            free(result);
+            return NULL;
+        }
+    }
+
+    *size = num_nodi;
+    distruggi_queue(q, NULL);
     return result;
 }
