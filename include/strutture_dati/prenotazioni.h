@@ -64,5 +64,6 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
 Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size);
 
+Prenotazione *ottieni_vettore_prenotazioni(Prenotazioni prenotazioni, unsigned int *size);
 
 #endif //PRENOTAZIONI_H
