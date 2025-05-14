@@ -16,6 +16,8 @@ typedef struct utente *Utente;
 
 Utente crea_utente(char *email, char *password, char *nome, char *cognome, Byte permesso);
 
+void distruggi_utente(Utente utente);
+
 void imposta_nome(Utente utente, char *nome);
 
 void imposta_cognome(Utente utente, char *cognome);

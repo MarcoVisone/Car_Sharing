@@ -45,6 +45,12 @@ Utente crea_utente(char *email, char *password,  char *nome, char *cognome, Byte
     return u;
 }
 
+void distruggi_utente(Utente utente){
+        if(utente == NULL) return;
+        distruggi_data(utente->data);
+        free(utente);
+}
+
 void imposta_nome(Utente utente, char *nome) {
     if(utente == NULL) {
         return;
