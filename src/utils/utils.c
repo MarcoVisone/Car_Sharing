@@ -87,7 +87,7 @@ char* mia_strdup(const char* s) {
 
 static Byte controllo_lvl_2(char *password) {
     int i=0;
-    for(i=0;i<strlen(password);i++) {
+    for(i=0;password[i];i++) {
         if(password[i] >= '!' || password[i] <= 38 || password[i] == '?' || password[i] == '@') {
             return 1;
         }
@@ -102,7 +102,7 @@ static Byte controllo_lunghezza_max(char *password) {
     return 0;
 }
 
-static Byte controllo_lunghezza_min(char *password) {
+static int controllo_lunghezza_min(char *password) {
     if ((int)strlen(password) < 8) {
         return -1;
     }
