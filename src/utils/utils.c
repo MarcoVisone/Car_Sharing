@@ -75,7 +75,7 @@ TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli){
     return tabella;
 }
 
-char* my_strdup(const char* s) {
+char* mia_strdup(const char* s) {
     if (s == NULL) return NULL;
     size_t len = strlen(s) + 1;
     char* dup = malloc(len * sizeof(char));
@@ -88,7 +88,7 @@ char* my_strdup(const char* s) {
 static Byte controllo_lvl_2(char *password) {
     int i=0;
     for(i=0;i<strlen(password);i++) {
-        if(password[i] >= '!' || password[i] <= '38'|| password[i] == '?' || password[i] == '@') {
+        if(password[i] >= '!' || password[i] <= 38 || password[i] == '?' || password[i] == '@') {
             return 1;
         }
     }
@@ -154,6 +154,3 @@ Byte controllo_password(char *password) {
     }
     return lvl;
 }
-
-
-
