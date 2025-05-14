@@ -6,7 +6,7 @@
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/prenotazione.h"
 #include "modelli/intervallo.h"
-#include "strutture_dati/queue.h"
+#include "strutture_dati/coda.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -321,35 +321,35 @@ Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size) {
 Prenotazione *ottieni_vettore_prenotazioni(Prenotazioni prenotazioni, unsigned int *size) {
     if (prenotazioni == NULL) return NULL;
 
-    Queue q = new_queue();
+    Coda q = crea_coda();
     unsigned int num_nodi = conta_nodi(prenotazioni);
     Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
     if (result == NULL) return NULL;
 
-    if (enqueue(prenotazioni, q) <= 0) {
+    if (aggiungi_in_coda(prenotazioni, q) <= 0) {
         free(result);
         return NULL;
     }
 
     unsigned int i = 0;
-    while (!empty_queue(q)) {
-        Prenotazioni temp = (Prenotazioni)dequeue(q);
+    while (!coda_vuota(q)) {
+        Prenotazioni temp = (Prenotazioni)rimuovi_dalla_coda(q);
         if (temp == NULL) continue;
 
         result[i++] = temp->prenotazione;
 
-        if (temp->left != NULL && enqueue(temp->left, q) <= 0) {
+        if (temp->left != NULL && aggiungi_in_coda(temp->left, q) <= 0) {
             free(result);
             return NULL;
         }
 
-        if (temp->right != NULL && enqueue(temp->right, q) <= 0) {
+        if (temp->right != NULL && aggiungi_in_coda(temp->right, q) <= 0) {
             free(result);
             return NULL;
         }
     }
 
     *size = num_nodi;
-    distruggi_queue(q, NULL);
+    distruggi_coda(q, NULL);
     return result;
 }
