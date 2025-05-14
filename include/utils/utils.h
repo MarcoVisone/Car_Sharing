@@ -8,5 +8,6 @@ TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli);
 
 char* my_strdup(const char* s);
 
+Byte controllo_password(char* password);
 
 #endif //UTILS_H

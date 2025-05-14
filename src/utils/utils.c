@@ -5,6 +5,7 @@
 #include "modelli/veicolo.h"
 #include "strutture_dati/prenotazioni.h"
 #include "strutture_dati/tabella_veicoli.h"
+#include <ctype.h>
 
 static char *genera_targa();
 
@@ -83,3 +84,76 @@ char* my_strdup(const char* s) {
     }
     return dup;
 }
+
+static Byte controllo_lvl_2(char *password) {
+    int i=0;
+    for(i=0;i<strlen(password);i++) {
+        if(password[i] >= '!' || password[i] <= '38'|| password[i] == '?' || password[i] == '@') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static Byte controllo_lunghezza_max(char *password) {
+    if((int)strlen(password) > 16){
+        return 1;
+    }
+    return 0;
+}
+
+static Byte controllo_lunghezza_min(char *password) {
+    if ((int)strlen(password) < 8) {
+        return -1;
+    }
+        return 1;
+}
+
+static Byte controllo_lvl_0(char *password) {
+    int i=0;
+    int controllo = 0;
+    for (i=0;password[i];i++) {
+        if (password[i] >= 'a' && password[i] <= 'z') {
+            controllo+=1;
+            break;
+        }
+    }
+    for (i=0; password[i]; i++) {
+        if (password[i] >= 'A' && password[i] <= 'Z'){
+            controllo+=1;
+        }
+    }
+    return controllo == 2;
+}
+
+static Byte controllo_lvl_1(char *password) {
+    for (int i=0; password[i]; i++) {
+        if (isdigit(password[i])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+Byte controllo_password(char *password) {
+    if (controllo_lunghezza_min(password) == -1) {
+        return -1;
+    }
+    Byte lvl = 0;
+    if (controllo_lvl_0(password)) {
+        lvl = 0;
+        if (controllo_lvl_1(password)) {
+            lvl = 1;
+            if (controllo_lvl_2(password)) {
+                lvl = 2;
+                if (controllo_lunghezza_max(password)) {
+                    lvl = 3;
+                }
+            }
+        }
+    }
+    return lvl;
+}
+
+
+
