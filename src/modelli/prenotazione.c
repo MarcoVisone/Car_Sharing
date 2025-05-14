@@ -15,7 +15,7 @@ struct prenotazione {
 Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo) {
     Prenotazione p = malloc(sizeof(struct prenotazione));
 
-    p->cliente = my_strdup(cliente);
+    p->cliente = mia_strdup(cliente);
     p->date = i;
     p->costo = costo;
 
@@ -52,7 +52,7 @@ void imposta_cliente_prenotazione(Prenotazione p, char *cliente) {
     if (p == NULL) return;
 
     free(p->cliente);
-    p->cliente = my_strdup(cliente);
+    p->cliente = mia_strdup(cliente);
 }
 
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i) {
@@ -72,7 +72,7 @@ Prenotazione duplica_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
 
     Intervallo date_copia = duplica_intervallo(p->date);
-    char *cliente_copia = my_strdup(p->cliente);
+    char *cliente_copia = mia_strdup(p->cliente);
 
     Prenotazione copia = crea_prenotazione(cliente_copia, date_copia, p->costo);
 
