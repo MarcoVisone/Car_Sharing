@@ -8,9 +8,23 @@
 #include "modelli/veicolo.h"
 #include "modelli/utente.h"
 
-static void salva_veicolo(FILE *fp, Veicolo v);
+/*
+    Scrivere nel file la grandezza del vettore (funzione fwrite)
+    poi iterare il vettore e fare fwrite di ogni campo del veicolo e per prenotazioni usare
+    la funzione salva_prenotazioni passando il file_prenotazioni
+*/
+static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
+
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
-static Veicolo carica_veicolo(FILE *fp);
+
+/*
+    Prendere dal file la grandezza del veicolo con fread,
+    leggere ogni campo del veicolo e alla fine creare un veicolo con
+    quei campi (usare carica_prenotazioni quando si devono prendere le prenotazioni)
+    e restituirlo
+*/
+static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
+
 static Prenotazioni carica_prenotazioni(FILE *fp);
 
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
@@ -65,7 +79,10 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
     return pren;
 }
 
-
+/*
+    Iterare il vettore e usare per ogni cella la funzione salva_veicolo
+*/
 void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_veicoli);
+
 
 int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli);
