@@ -6,8 +6,10 @@
 #define UTENTE_H
 #include <stdint.h>
 #include "modelli/byte.h"
-#include "strutture_dati/lista_prenotazione.h"
-#include "modelli/data.h"
+
+typedef struct prenotazione *Prenotazione;
+typedef struct nodo *ListaPre;
+typedef struct data *Data;
 
 #define ADMIN 0
 #define CLIENTE 1

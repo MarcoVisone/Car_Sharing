@@ -4,12 +4,11 @@
  */
 
 #ifndef DATA_H
-#include "modelli/prenotazione.h"
-#include "strutture_dati/lista_prenotazione.h"
-
 #define DATA_H
 #define ERRORE_FREQUENZA -2
 
+typedef struct prenotazione *Prenotazione;
+typedef struct nodo *ListaPre;
 typedef struct data *Data;
 
 Data crea_data();
