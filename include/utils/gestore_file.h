@@ -7,8 +7,8 @@ void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_vei
 
 int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli);
 
-void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti);
+void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int num_utenti);
 
-int carica_vettore_utenti(const char *nome_file, Utente vettore[], int max_utenti);
+int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int *num_utenti);
 
 #endif //GESTORE_FILE_H

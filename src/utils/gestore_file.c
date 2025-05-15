@@ -31,7 +31,7 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
 static void salva_data(FILE *file_data, Data d);
 
-static Data carica_data(FILE *file_data, Data d);
+static Data carica_data(FILE *file_data);
 
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 
@@ -132,8 +132,8 @@ static void salva_data(FILE *file_data, Data d){
     }
 }
 
-static Data carica_data(FILE *file_data, Data d){
-    if(file_data == NULL || d == NULL){
+static Data carica_data(FILE *file_data){
+    if(file_data == NULL){
         return NULL;
     }
     int numero_prenotazioni;
@@ -141,6 +141,12 @@ static Data carica_data(FILE *file_data, Data d){
 
     fread(&numero_prenotazioni, sizeof(int), 1, file_data);
     fread(&frequenza, sizeof(int), 1, file_data);
+
+    Data d = crea_data();
+    for(int i = 0; i < numero_prenotazioni; i++){
+        imposta_storico_lista(d, aggiungi_a_storico_lista(d, carica_prenotazione(file_data)));
+    }
+    return d;
 }
 
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
@@ -190,11 +196,12 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data){
 
     Data data = NULL;
     if(permesso == CLIENTE){
-      carica_data(file_data, data);
+      data = carica_data(file_data);
     }
 
     Utente u;
     u=crea_utente(email, password,  nome, cognome, permesso);
+    imposta_data(u, data);
     free(nome);
     free(cognome);
     free(email);
@@ -202,10 +209,36 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data){
     return u;
 }
 
-void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti){
-    return;
+void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int num_utenti){
+    FILE *file_utente = fopen(nome_file_utente, "w");
+    if (file_utente == NULL) return;
+    FILE *file_data = fopen(nome_file_data, "w");
+    if (file_data == NULL) return;
+
+    fwrite(&num_utenti, sizeof(unsigned int), 1, file_utente);
+
+    for (int i = 0; i < num_utenti; i++){
+      salva_utente(file_utente, file_data, vettore[i]);
+    }
+
+    fclose(file_utente);
+    fclose(file_data);
 }
 
-int carica_vettore_utenti(const char *nome_file, Utente vettore[], int max_utenti){
-    return 0;
+int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int *num_utenti){
+    FILE *file_utente = fopen(nome_file_utente, "r");
+    if (file_utente == NULL) return 0;
+    FILE *file_data = fopen(nome_file_data, "r");
+    if (file_data == NULL) return 0;
+
+    fread(num_utenti, sizeof(unsigned int), 1, file_utente);
+
+    for (int i = 0; i < *num_utenti; i++){
+        vettore[i] = carica_utente(file_utente, file_data);
+    }
+
+    fclose(file_utente);
+    fclose(file_data);
+
+    return 1;
 }
