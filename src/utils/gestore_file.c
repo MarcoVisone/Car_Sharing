@@ -29,12 +29,32 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
 */
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
+/*
+    Scrivere nel file la frequenza e il numero di prenotazioni (funzione fwrite),
+    poi iterare il vettore di prenotazioni e salvare ogni elemento usando
+    la funzione salva_prenotazione passando il file_data.
+*/
 static void salva_data(FILE *file_data, Data d);
 
+/*
+    Leggere dal file la frequenza e il numero di prenotazioni (funzione fread),
+    poi iterare il numero di prenotazioni e caricarle una a una con la funzione
+    carica_prenotazione, aggiungendole allo storico della struttura Data.
+*/
 static Data carica_data(FILE *file_data);
 
+/*
+    Scrivere nel file_utente i campi nome, cognome, email, password e permesso (usando fwrite),
+    se l’utente è di tipo CLIENTE, salvare la struttura Data associata
+    usando la funzione salva_data e passando il file_data.
+*/
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 
+/*
+    Leggere dal file_utente i campi nome, cognome, email, password e permesso (usando fread),
+    se l’utente è di tipo CLIENTE, caricare la struttura Data associata
+    usando la funzione carica_data e creare l’utente completo.
+*/
 static Utente carica_utente(FILE *file_utente, FILE *file_data);
 
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
@@ -116,6 +136,32 @@ int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_vei
     return 0;
 }
 
+/*
+ * Funzione: salva_data
+ * --------------------
+ *
+ * Salva su file le informazioni della struttura Data.
+ *
+ * Implementazione:
+ * Scrive su file il numero di prenotazioni, la frequenza e l'intero storico
+ * delle prenotazioni contenuto nella struttura Data.
+ *
+ * Parametri:
+ *    file_data: puntatore al file su cui salvare i dati
+ *    d: struttura Data da salvare
+ *
+ * Pre-condizione:
+ *    file_data e d devono essere validi
+ *
+ * Post-condizione:
+ *    i dati della struttura sono scritti nel file
+ *
+ * Ritorna:
+ *    nessun valore
+ *
+ * Side-effect:
+ *    scrittura su file
+ */
 static void salva_data(FILE *file_data, Data d){
     if(file_data == NULL || d == NULL){
       return;
@@ -132,6 +178,31 @@ static void salva_data(FILE *file_data, Data d){
     }
 }
 
+/*
+ * Funzione: carica_data
+ * ---------------------
+ *
+ * Carica da file le informazioni per ricostruire una struttura Data.
+ *
+ * Implementazione:
+ * Legge da file il numero di prenotazioni, la frequenza e ricostruisce
+ * lo storico delle prenotazioni. Restituisce una nuova struttura Data.
+ *
+ * Parametri:
+ *    file_data: puntatore al file da cui leggere i dati
+ *
+ * Pre-condizione:
+ *    file_data deve essere un file aperto in lettura e valido
+ *
+ * Post-condizione:
+ *    viene restituita una nuova struttura Data con i dati caricati
+ *
+ * Ritorna:
+ *    un nuovo oggetto Data, oppure NULL in caso di errore
+ *
+ * Side-effect:
+ *    lettura da file, allocazione dinamica
+ */
 static Data carica_data(FILE *file_data){
     if(file_data == NULL){
         return NULL;
@@ -149,6 +220,34 @@ static Data carica_data(FILE *file_data){
     return d;
 }
 
+/*
+ * Funzione: salva_utente
+ * ----------------------
+ *
+ * Salva le informazioni di un utente su due file distinti: uno per l'anagrafica,
+ * uno per i dati associati.
+ *
+ * Implementazione:
+ * Scrive nome, cognome, email, password, permesso e chiama salva_data
+ * per salvare la struttura Data.
+ *
+ * Parametri:
+ *    file_utente: file su cui scrivere i dati dell'utente
+ *    file_data: file su cui scrivere i dati storici dell'utente
+ *    u: utente da salvare
+ *
+ * Pre-condizione:
+ *    file_utente e u devono essere validi
+ *
+ * Post-condizione:
+ *    i dati dell'utente sono salvati nei file
+ *
+ * Ritorna:
+ *    nessun valore
+ *
+ * Side-effect:
+ *    scrittura su file
+ */
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     if (file_utente == NULL || u == NULL) return;
 
@@ -172,6 +271,32 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     salva_data(file_data, ottieni_data(u));
 }
 
+/*
+ * Funzione: carica_utente
+ * -----------------------
+ *
+ * Carica da due file le informazioni necessarie per ricostruire un utente.
+ *
+ * Implementazione:
+ * Legge nome, cognome, email, password, permesso e, se CLIENTE, carica
+ * anche la struttura Data associata.
+ *
+ * Parametri:
+ *    file_utente: file da cui leggere i dati dell'utente
+ *    file_data: file da cui leggere i dati storici
+ *
+ * Pre-condizione:
+ *    file_utente deve essere valido
+ *
+ * Post-condizione:
+ *    restituisce un utente ricostruito dai file
+ *
+ * Ritorna:
+ *    un nuovo oggetto Utente, o NULL in caso di errore
+ *
+ * Side-effect:
+ *    lettura da file, allocazione dinamica di memoria
+ */
 static Utente carica_utente(FILE *file_utente, FILE *file_data){
     if (file_utente == NULL) return NULL;
 
@@ -209,6 +334,33 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data){
     return u;
 }
 
+/*
+ * Funzione: salva_vettore_utenti
+ * ------------------------------
+ *
+ * Salva un array di utenti su due file: uno per l'anagrafica, uno per i dati.
+ *
+ * Implementazione:
+ * Apre due file, scrive il numero di utenti e salva ciascun utente.
+ *
+ * Parametri:
+ *    nome_file_utente: nome del file per l'anagrafica
+ *    nome_file_data: nome del file per i dati storici
+ *    vettore: array di puntatori a Utente
+ *    num_utenti: numero di utenti nell'array
+ *
+ * Pre-condizione:
+ *    vettore e nomi file devono essere validi
+ *
+ * Post-condizione:
+ *    i dati degli utenti sono scritti nei file
+ *
+ * Ritorna:
+ *    nessun valore
+ *
+ * Side-effect:
+ *    apertura e scrittura su file
+ */
 void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "w");
     if (file_utente == NULL) return;
@@ -225,6 +377,33 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
     fclose(file_data);
 }
 
+/*
+ * Funzione: carica_vettore_utenti
+ * -------------------------------
+ *
+ * Carica da due file un array di utenti.
+ *
+ * Implementazione:
+ * Apre i file, legge il numero di utenti e chiama carica_utente per ognuno.
+ *
+ * Parametri:
+ *    nome_file_utente: nome del file contenente i dati anagrafici
+ *    nome_file_data: nome del file contenente i dati storici
+ *    vettore: array di puntatori a Utente da riempire
+ *    num_utenti: puntatore a intero dove memorizzare il numero di utenti caricati
+ *
+ * Pre-condizione:
+ *    nomi file devono essere validi; vettore e num_utenti devono essere allocati
+ *
+ * Post-condizione:
+ *    il vettore contiene gli utenti caricati dai file
+ *
+ * Ritorna:
+ *    1 se il caricamento ha successo, 0 altrimenti
+ *
+ * Side-effect:
+ *    lettura da file, allocazione dinamica di memoria
+ */
 int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int *num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "r");
     if (file_utente == NULL) return 0;

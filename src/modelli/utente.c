@@ -548,6 +548,31 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
     return rimuovi_da_storico_lista(utente->data, prenotazione) != NULL;
 }
 
+/*
+ * Funzione: ottieni_data
+ * ----------------------
+ *
+ * Restituisce la struttura Data associata a un utente.
+ *
+ * Implementazione:
+ *    Verifica che il puntatore utente sia valido e restituisce il campo data.
+ *
+ * Parametri:
+ *    utente: puntatore alla struttura Utente da cui ottenere i dati
+ *
+ * Pre-condizione:
+ *    utente deve essere una struttura valida
+ *
+ * Post-condizione:
+ *    viene restituito il campo data dell'utente,
+ *    oppure NULL se l'utente non è valido
+ *
+ * Ritorna:
+ *    puntatore alla struttura Data, o NULL in caso di errore
+ *
+ * Side-effect:
+ *    nessuno
+ */
 Data ottieni_data(Utente utente){
   if (utente == NULL) {
     return NULL;

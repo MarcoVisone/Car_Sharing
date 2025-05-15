@@ -243,6 +243,34 @@ void azzera_frequenza(Data data){
     data->frequenza = 0;
 }
 
+
+/*
+ * Funzione: ottieni_vettore_storico
+ * ---------------------------------
+ *
+ * Restituisce un array contenente tutte le prenotazioni presenti nello storico.
+ *
+ * Implementazione:
+ *    Alloca dinamicamente un vettore di prenotazioni, copia gli elementi dalla lista storico
+ *    e imposta la dimensione tramite un puntatore.
+ *
+ * Parametri:
+ *    data: struttura contenente lo storico delle prenotazioni
+ *    dimensione: puntatore a intero dove verrà memorizzata la dimensione del vettore
+ *
+ * Pre-condizione:
+ *    data deve essere una struttura valida
+ *
+ * Post-condizione:
+ *    viene restituito un vettore allocato dinamicamente contenente tutte le prenotazioni,
+ *    oppure NULL se data è NULL o se l'allocazione fallisce
+ *
+ * Ritorna:
+ *    vettore di prenotazioni o NULL in caso di errore
+ *
+ * Side-effect:
+ *    allocazione dinamica di memoria
+ */
 Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
   if (data == NULL) {
     return NULL;
@@ -259,6 +287,30 @@ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
   return vettore_prenotazione;
 }
 
+/*
+ * Funzione: ottieni_numero_prenotazioni
+ * -------------------------------------
+ *
+ * Restituisce il numero di prenotazioni contenute nella struttura Data.
+ *
+ * Implementazione:
+ *    Controlla che la struttura sia valida e restituisce il campo numero_prenotazioni.
+ *
+ * Parametri:
+ *    data: struttura Data da cui ottenere il numero di prenotazioni
+ *
+ * Pre-condizione:
+ *    data deve essere una struttura valida
+ *
+ * Post-condizione:
+ *    nessuna
+ *
+ * Ritorna:
+ *    numero di prenotazioni o -1 se data è NULL
+ *
+ * Side-effect:
+ *    nessuno
+ */
 int ottieni_numero_prenotazioni(Data data){
   if (data == NULL) {
     return -1;
@@ -266,6 +318,31 @@ int ottieni_numero_prenotazioni(Data data){
   return data->numero_prenotazioni;
 }
 
+/*
+ * Funzione: imposta_numero_prenotazioni
+ * -------------------------------------
+ *
+ * Imposta il numero di prenotazioni nella struttura Data.
+ *
+ * Implementazione:
+ *    Verifica che data sia valida e assegna il valore al campo numero_prenotazioni.
+ *
+ * Parametri:
+ *    data: struttura Data su cui effettuare la modifica
+ *    numero_prenotazioni: nuovo valore da assegnare
+ *
+ * Pre-condizione:
+ *    data deve essere una struttura valida
+ *
+ * Post-condizione:
+ *    il campo numero_prenotazioni della struttura viene aggiornato
+ *
+ * Ritorna:
+ *    nessun valore
+ *
+ * Side-effect:
+ *    modifica della struttura Data
+ */
 void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
   if (data == NULL) {
     return;
@@ -273,6 +350,31 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
   data->numero_prenotazioni = numero_prenotazioni;
 }
 
+/*
+ * Funzione: imposta_storico_lista
+ * -------------------------------
+ *
+ * Imposta la lista delle prenotazioni storico nella struttura Data.
+ *
+ * Implementazione:
+ *    Verifica che data sia valida e assegna il valore al campo storico.
+ *
+ * Parametri:
+ *    data: struttura Data da aggiornare
+ *    lista_prenotazione: nuova lista storico da assegnare
+ *
+ * Pre-condizione:
+ *    data deve essere una struttura valida
+ *
+ * Post-condizione:
+ *    il campo storico della struttura viene aggiornato
+ *
+ * Ritorna:
+ *    nessun valore
+ *
+ * Side-effect:
+ *    modifica della struttura Data
+ */
 void imposta_storico_lista(Data data, ListaPre lista_prenotazione){
   if (data == NULL) {
     return;
