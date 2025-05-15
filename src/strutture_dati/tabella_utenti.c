@@ -6,6 +6,8 @@
 #include "strutture_dati/tabella_utenti.h"
 #include "strutture_dati/tabella_hash.h"
 #include "modelli/utente.h"
+#include <stddef.h>
+
 
 TabellaUtenti crea_tabella_utenti(unsigned int grandezza){
     return nuova_tabella_hash(grandezza);

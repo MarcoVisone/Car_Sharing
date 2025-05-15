@@ -3,11 +3,13 @@
  * Data: 09/05/2025
  */
 
-#include "modelli/veicolo.h"
-#include "strutture_dati/prenotazioni.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "modelli/intervallo.h"
+#include "modelli/prenotazione.h"
+#include "strutture_dati/prenotazioni.h"
+#include "modelli/veicolo.h"
 
 #define NUM_CARATTERI_TARGA 7 + 1
 #define MAX_LUNGHEZZA_MODELLO 50 + 1
