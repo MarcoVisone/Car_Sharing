@@ -88,7 +88,7 @@ char* mia_strdup(const char* s) {
 static Byte controllo_lvl_2(char *password) {
     int i=0;
     for(i=0;password[i];i++) {
-        if(password[i] >= '!' || password[i] <= 38 || password[i] == '?' || password[i] == '@') {
+        if(isalnum(password[i])) {
             return 1;
         }
     }
@@ -102,29 +102,19 @@ static Byte controllo_lunghezza_max(char *password) {
     return 0;
 }
 
-static int controllo_lunghezza_min(char *password) {
-    if ((int)strlen(password) < 8) {
-        return -1;
-    }
-        return 1;
-}
-
 static Byte controllo_lvl_0(char *password) {
     int i=0;
-    int controllo = 0;
+    int maiuscolo = 0;
+    int minuscolo = 0;
     for (i=0;password[i];i++) {
-        if (password[i] >= 'a' && password[i] <= 'z') {
-            controllo+=1;
-            break;
-        }
-    }
-    for (i=0; password[i]; i++) {
-        if (password[i] >= 'A' && password[i] <= 'Z'){
-            controllo+=1;
-            break;
-        }
-    }
-    return controllo == 2;
+        if (islower(password[i])) {
+            minuscolo=1;
+		}
+		if (isupper(password[i])) {
+        	maiuscolo=1;
+		}
+	}
+    return maiuscolo && minuscolo;
 }
 
 static Byte controllo_lvl_1(char *password) {
@@ -137,10 +127,10 @@ static Byte controllo_lvl_1(char *password) {
 }
 
 Byte controllo_password(char *password) {
-    if (controllo_lunghezza_min(password) == -1) {
-        return -1;
+  	Byte lvl = 0;
+    if ((int)strlen(password) < 8) {
+        lvl -1;
     }
-    Byte lvl = 0;
     if (controllo_lvl_0(password)) {
         lvl = 0;
         if (controllo_lvl_1(password)) {
