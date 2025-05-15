@@ -547,3 +547,10 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
 
     return rimuovi_da_storico_lista(utente->data, prenotazione) != NULL;
 }
+
+Data ottieni_data(Utente utente){
+  if (utente == NULL) {
+    return NULL;
+  }
+  return utente->data;
+}

@@ -384,4 +384,6 @@ Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
  */
 Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
+Data ottieni_data(Utente utente);
+
 #endif // UTENTE_H

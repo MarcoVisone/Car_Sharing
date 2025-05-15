@@ -30,7 +30,11 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
 static void salva_data(FILE *file_data, Data d);
 
+static Data carica_data(FILE *file_data, Data d);
+
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
+
+static Utente carica_utente(FILE *file_utente, FILE *file_data);
 
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
     if(fp == NULL || prenotazione == NULL) return;
@@ -113,12 +117,22 @@ static void salva_data(FILE *file_data, Data d){
     fwrite(&frequenza, sizeof(int), 1, file_data);
     fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
     for(int i = 0; i < numero_prenotazioni; i++){
-
+        salva_prenotazione(file_data, lista_prenotazioni[i]);
     }
 }
 
+static Data carica_data(FILE *file_data, Data d){
+    if(file_data == NULL || d == NULL){
+        return NULL;
+    }
+    int numero_prenotazioni;
+    int frequenza;
+
+    fread(&numero_prenotazioni, sizeof(int), 1, file_data);
+    fread(&frequenza, sizeof(int), 1, file_data);
+}
+
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
-//prendere ogni campo dell'utente e scriverlo nel file
     if (file_utente == NULL || u == NULL) return;
 
     unsigned int len = strlen(ottieni_nome(u))+1;
@@ -138,7 +152,43 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     Byte permesso = ottieni_permesso(u);
     fwrite(&permesso, sizeof(Byte), 1, file_utente);
 
-    salva_data(file_data, u);
+    salva_data(file_data, ottieni_data(u));
+}
+
+static Utente carica_utente(FILE *file_utente, FILE *file_data){
+    if (file_utente == NULL) return NULL;
+
+    unsigned int len = 0;
+    fread(&len, sizeof(unsigned int), 1, file_utente);
+    char *nome = malloc(len*sizeof(char));
+    fread(nome, sizeof(char), len, file_utente);
+
+    fread(&len, sizeof(unsigned int), 1, file_utente);
+    char *cognome = malloc(len*sizeof(char));
+    fread(cognome, sizeof(char), len, file_utente);
+
+    fread(&len, sizeof(unsigned int), 1, file_utente);
+    char *email = malloc(len*sizeof(char));
+    fread(email, sizeof(char), len, file_utente);
+
+    uint8_t *password = malloc(sizeof(uint8_t)*DIMENSIONE_PASSWORD);
+    fread(password, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
+
+    Byte permesso;
+    fread(&permesso, sizeof(Byte), 1, file_utente);
+
+    Data data = NULL;
+    if(permesso == CLIENTE){
+      carica_data(file_data, data);
+    }
+
+    Utente u;
+    u=crea_utente(email, password,  nome, cognome, permesso);
+    free(nome);
+    free(cognome);
+    free(email);
+    free(password);
+    return u;
 }
 
 void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti){
