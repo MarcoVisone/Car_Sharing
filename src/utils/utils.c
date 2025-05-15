@@ -9,14 +9,6 @@
 
 static char *genera_targa();
 
-/*
- * Funzione statica: genera_targa
- * ------------------------------
- * Genera una targa casuale nel formato: due lettere, tre cifre, due lettere.
- *
- * Ritorna:
- *    un puntatore statico a una stringa contenente la targa generata
- */
 static char *genera_targa() {
     static char targa[8];
     const char lettere[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -44,17 +36,21 @@ static char *genera_targa() {
  * --------------------------------
  * Crea e inizializza una tabella di veicoli con il numero specificato di veicoli.
  *
- * Implementazione:
- *    Viene creata una nuova tabella di veicoli con dimensione numero_veicoli
- *    tramite crea_tabella_veicoli. Per ogni veicolo, viene creato un nuovo
- *    oggetto Veicolo con tipo, modello e targa generati, quindi aggiunto alla tabella.
- *
  * Parametri:
  *    numero_veicoli: numero intero che rappresenta la dimensione della tabella
+ *
+ * Pre-condizioni:
+ *    numero_veicoli deve essere un valore positivo
+ *
+ * Post-condizione:
+ *    ritorna una nuova tabella di veicoli allocata dinamicamente, oppure NULL in caso di errore
  *
  * Ritorna:
  *    una nuova tabella di veicoli allocata dinamicamente,
  *    NULL in caso di fallimento nell'allocazione
+ *
+ * Side effects:
+ *    Allocazione dinamica di memoria per la tabella di veicoli
  */
 TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli){
     char *tipi[] = {
@@ -106,16 +102,22 @@ TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli){
  * -------------------
  * Duplica una stringa allocando nuova memoria.
  *
- * Implementazione:
- *    Calcola la lunghezza della stringa originale, alloca memoria
- *    sufficiente per la copia, quindi copia la stringa usando memcpy.
- *
  * Parametri:
  *    s: puntatore alla stringa originale da duplicare
+ *
+ * Pre-condizioni:
+ *    s non deve essere NULL
+ *
+ * Post-condizione:
+ *    ritorna un nuovo puntatore a una copia della stringa s,
+ *    oppure NULL se l'allocazione della memoria fallisce
  *
  * Ritorna:
  *    un nuovo puntatore a una copia della stringa s,
  *    NULL se l'allocazione della memoria fallisce
+ *
+ * Side effects:
+ *    Allocazione dinamica di memoria per la nuova stringa duplicata
  */
 char* mia_strdup(const char* s) {
     if (s == NULL) return NULL;
@@ -127,18 +129,7 @@ char* mia_strdup(const char* s) {
     return dup;
 }
 
-/*
- * Funzione statica: controllo_lvl_2
- * ---------------------------------
- * Controlla se la password contiene almeno un carattere alfanumerico.
- *
- * Parametri:
- *    password: stringa da controllare
- *
- * Ritorna:
- *    1 se la password contiene almeno un carattere alfanumerico,
- *    0 altrimenti
- */
+
 static Byte controllo_lvl_2(char *password) {
     int i=0;
     for(i=0;password[i];i++) {
@@ -149,18 +140,7 @@ static Byte controllo_lvl_2(char *password) {
     return 0;
 }
 
-/*
- * Funzione statica: controllo_lunghezza_max
- * -----------------------------------------
- * Verifica se la lunghezza della password supera i 16 caratteri.
- *
- * Parametri:
- *    password: stringa da controllare
- *
- * Ritorna:
- *    1 se la lunghezza è maggiore di 16,
- *    0 altrimenti
- */
+
 static Byte controllo_lunghezza_max(char *password) {
     if((int)strlen(password) > 16){
         return 1;
@@ -168,18 +148,7 @@ static Byte controllo_lunghezza_max(char *password) {
     return 0;
 }
 
-/*
- * Funzione statica: controllo_lvl_0
- * ---------------------------------
- * Verifica che la password contenga almeno una lettera maiuscola e una minuscola.
- *
- * Parametri:
- *    password: stringa da controllare
- *
- * Ritorna:
- *    1 se contiene almeno una maiuscola e una minuscola,
- *    0 altrimenti
- */
+
 static Byte controllo_lvl_0(char *password) {
     int i=0;
     int maiuscolo = 0;
@@ -195,18 +164,7 @@ static Byte controllo_lvl_0(char *password) {
     return maiuscolo && minuscolo;
 }
 
-/*
- * Funzione statica: controllo_lvl_1
- * ---------------------------------
- * Controlla se la password contiene almeno una cifra.
- *
- * Parametri:
- *    password: stringa da controllare
- *
- * Ritorna:
- *    1 se è presente almeno una cifra,
- *    0 altrimenti
- */
+
 static Byte controllo_lvl_1(char *password) {
     for (int i=0; password[i]; i++) {
         if (isdigit(password[i])) {
@@ -221,17 +179,22 @@ static Byte controllo_lvl_1(char *password) {
  * ----------------------------
  * Controlla se la password soddisfa i criteri di sicurezza definiti.
  *
- * Implementazione:
- *    Controlla la lunghezza minima (>=8), quindi verifica progressivamente la presenza
- *    di lettere maiuscole e minuscole, numeri, caratteri alfanumerici e lunghezza massima
- *    per assegnare un livello di sicurezza da -1 (non valida) a 4 (molto valida).
- *
  * Parametri:
  *    password: stringa che rappresenta la password da controllare
  *
+ * Pre-condizioni:
+ *    password non deve essere NULL
+ *
+ * Post-condizione:
+ *    ritorna 1 (Byte) se la password è valida,
+ *    0 (Byte) se la password non è valida
+ *
  * Ritorna:
- *    -1 se la password è troppo corta o non rispetta i requisiti base,
- *    un valore da 0 a 4 che indica il livello di robustezza della password
+ *    Byte 1 se la password è valida secondo i criteri,
+ *    0 se la password non è valida
+ *
+ * Side effects:
+ *    Nessuno
  */
 Byte controllo_password(char *password) {
   	Byte lvl = -1;
