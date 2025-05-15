@@ -8,9 +8,23 @@
 #include "modelli/veicolo.h"
 #include "modelli/utente.h"
 
-static void salva_veicolo(FILE *fp, Veicolo v);
+/*
+    Scrivere nel file la grandezza del vettore (funzione fwrite)
+    poi iterare il vettore e fare fwrite di ogni campo del veicolo e per prenotazioni usare
+    la funzione salva_prenotazioni passando il file_prenotazioni
+*/
+static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
+
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
-static Veicolo carica_veicolo(FILE *fp);
+
+/*
+    Prendere dal file la grandezza del veicolo con fread,
+    leggere ogni campo del veicolo e alla fine creare un veicolo con
+    quei campi (usare carica_prenotazioni quando si devono prendere le prenotazioni)
+    e restituirlo
+*/
+static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
+
 static Prenotazioni carica_prenotazioni(FILE *fp);
 
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
@@ -19,23 +33,22 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     Prenotazione *p = ottieni_vettore_prenotazioni(prenotazioni, &size);
     if (p == NULL) return;
 
-    // Scrivo subito il numero di prenotazioni
-    fwrite(&size, sizeof size, 1, fp);
+    fwrite(&size, sizeof(size), 1, fp);
 
     for (i = 0; i < size; i++) {
         char *cliente = ottieni_cliente_prenotazione(p[i]);
         unsigned int len = (unsigned int)strlen(cliente) + 1;
-        fwrite(&len, sizeof len, 1, fp);
+        fwrite(&len, sizeof(len), 1, fp);
         fwrite(cliente, sizeof(char), len, fp);
 
         double costo = ottieni_costo_prenotazione(p[i]);
-        fwrite(&costo, sizeof costo, 1, fp);
+        fwrite(&costo, sizeof(costo), 1, fp);
 
         Intervallo iv = ottieni_intervallo_prenotazione(p[i]);
         time_t inizio = inizio_intervallo(iv);
         time_t fine   = fine_intervallo(iv);
-        fwrite(&inizio, sizeof inizio, 1, fp);
-        fwrite(&fine,   sizeof fine,   1, fp);
+        fwrite(&inizio, sizeof(inizio), 1, fp);
+        fwrite(&fine, sizeof(fine), 1, fp);
     }
 }
 
@@ -57,7 +70,7 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
 
         time_t inizio, fine;
         fread(&inizio, sizeof(inizio), 1, fp);
-        fread(&fine,   sizeof(fine),   1, fp);
+        fread(&fine, sizeof(fine),   1, fp);
 
         Intervallo iv = crea_intervallo(inizio, fine);
         Prenotazione p = crea_prenotazione(nome, iv, costo);
@@ -66,7 +79,10 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
     return pren;
 }
 
-
+/*
+    Iterare il vettore e usare per ogni cella la funzione salva_veicolo
+*/
 void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_veicoli);
+
 
 int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli);
