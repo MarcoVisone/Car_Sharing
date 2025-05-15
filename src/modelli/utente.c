@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "strutture_dati/lista.h"
 #include "modelli/utente.h"
 #include "modelli/data.h"
 #include <string.h>
