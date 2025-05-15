@@ -9,48 +9,16 @@
 #include "modelli/data.h"
 #include "modelli/utente.h"
 
+static void salva_prenotazione(FILE *fp, Prenotazione prenotazione);
+static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
+static Prenotazioni carica_prenotazioni(FILE *fp);
+
 /*
     Scrivere nel file la grandezza del vettore (funzione fwrite)
     poi iterare il vettore e fare fwrite di ogni campo del veicolo e per prenotazioni usare
     la funzione salva_prenotazioni passando il file_prenotazioni
 */
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
-
-static void salva_data(FILE *file_data, Data d){
-    if(file_data == NULL || d == NULL){
-      return;
-    }
-    unsigned int dimensione;
-    Prenotazione *lista_prenotazioni;
-    lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
-    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
-    int frequenza = ottieni_frequenza_lista(d);
-    fwrite(&frequenza, sizeof(int), 1, file_data);
-    fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
-    for(int i = 0; i < numero_prenotazioni; i++){
-
-    }
-}
-
-static void salva_utente(FILE *file_utente, Utente u){
-//prendere ogni campo dell'utente e scriverlo nel file
-    if (file_utente == NULL || u == NULL) return;
-    unsigned int len = strlen(ottieni_nome(u))+1;
-    fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_nome(u), sizeof(char), len, file_utente);
-    len = strlen(ottieni_cognome(u))+1;
-    fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_cognome(u), sizeof(char), len, file_utente);
-    len = strlen(ottieni_email(u)+1);
-    fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_email(u), sizeof(char), len, file_utente);
-    fwrite(ottieni_password(u), sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
-    Byte permesso = ottieni_permesso(u);
-    fwrite(&permesso, sizeof(Byte), 1, file_utente);
-    salva_data(file_utente, u);
-}
-
-static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
 
 /*
     Prendere dal file la grandezza del veicolo con fread,
@@ -60,7 +28,27 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
 */
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
-static Prenotazioni carica_prenotazioni(FILE *fp);
+static void salva_data(FILE *file_data, Data d);
+
+static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
+
+static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
+    if(fp == NULL || prenotazione == NULL) return;
+
+    char *cliente = ottieni_cliente_prenotazione(prenotazione);
+    unsigned int len = (unsigned int)strlen(cliente) + 1;
+    fwrite(&len, sizeof(len), 1, fp);
+    fwrite(cliente, sizeof(char), len, fp);
+
+    double costo = ottieni_costo_prenotazione(prenotazione);
+    fwrite(&costo, sizeof(costo), 1, fp);
+
+    Intervallo iv = ottieni_intervallo_prenotazione(prenotazione);
+    time_t inizio = inizio_intervallo(iv);
+    time_t fine   = fine_intervallo(iv);
+    fwrite(&inizio, sizeof(inizio), 1, fp);
+    fwrite(&fine, sizeof(fine), 1, fp);
+}
 
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     if (fp == NULL || prenotazioni == NULL) return;
@@ -71,19 +59,7 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     fwrite(&size, sizeof(size), 1, fp);
 
     for (i = 0; i < size; i++) {
-        char *cliente = ottieni_cliente_prenotazione(p[i]);
-        unsigned int len = (unsigned int)strlen(cliente) + 1;
-        fwrite(&len, sizeof(len), 1, fp);
-        fwrite(cliente, sizeof(char), len, fp);
-
-        double costo = ottieni_costo_prenotazione(p[i]);
-        fwrite(&costo, sizeof(costo), 1, fp);
-
-        Intervallo iv = ottieni_intervallo_prenotazione(p[i]);
-        time_t inizio = inizio_intervallo(iv);
-        time_t fine   = fine_intervallo(iv);
-        fwrite(&inizio, sizeof(inizio), 1, fp);
-        fwrite(&fine, sizeof(fine), 1, fp);
+        salva_prenotazione(fp, p[i]);
     }
 }
 
@@ -117,11 +93,58 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
 /*
     Iterare il vettore e usare per ogni cella la funzione salva_veicolo
 */
-void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_veicoli);
+void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_veicoli){
+    return;
+}
 
+int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli){
+    return 0;
+}
 
-int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli);
+static void salva_data(FILE *file_data, Data d){
+    if(file_data == NULL || d == NULL){
+      return;
+    }
+    unsigned int dimensione;
+    Prenotazione *lista_prenotazioni;
+    lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
+    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
+    int frequenza = ottieni_frequenza_lista(d);
+    fwrite(&frequenza, sizeof(int), 1, file_data);
+    fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
+    for(int i = 0; i < numero_prenotazioni; i++){
 
-void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti);
+    }
+}
 
-int carica_vettore_utenti(const char *nome_file, Utente vettore[], int max_utenti);
+static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
+//prendere ogni campo dell'utente e scriverlo nel file
+    if (file_utente == NULL || u == NULL) return;
+
+    unsigned int len = strlen(ottieni_nome(u))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_nome(u), sizeof(char), len, file_utente);
+
+    len = strlen(ottieni_cognome(u))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_cognome(u), sizeof(char), len, file_utente);
+
+    len = strlen(ottieni_email(u)+1);
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_email(u), sizeof(char), len, file_utente);
+
+    fwrite(ottieni_password(u), sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
+
+    Byte permesso = ottieni_permesso(u);
+    fwrite(&permesso, sizeof(Byte), 1, file_utente);
+
+    salva_data(file_data, u);
+}
+
+void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti){
+    return;
+}
+
+int carica_vettore_utenti(const char *nome_file, Utente vettore[], int max_utenti){
+    return 0;
+}
