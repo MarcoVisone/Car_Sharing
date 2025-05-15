@@ -19,23 +19,22 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     Prenotazione *p = ottieni_vettore_prenotazioni(prenotazioni, &size);
     if (p == NULL) return;
 
-    // Scrivo subito il numero di prenotazioni
-    fwrite(&size, sizeof size, 1, fp);
+    fwrite(&size, sizeof(size), 1, fp);
 
     for (i = 0; i < size; i++) {
         char *cliente = ottieni_cliente_prenotazione(p[i]);
         unsigned int len = (unsigned int)strlen(cliente) + 1;
-        fwrite(&len, sizeof len, 1, fp);
+        fwrite(&len, sizeof(len), 1, fp);
         fwrite(cliente, sizeof(char), len, fp);
 
         double costo = ottieni_costo_prenotazione(p[i]);
-        fwrite(&costo, sizeof costo, 1, fp);
+        fwrite(&costo, sizeof(costo), 1, fp);
 
         Intervallo iv = ottieni_intervallo_prenotazione(p[i]);
         time_t inizio = inizio_intervallo(iv);
         time_t fine   = fine_intervallo(iv);
-        fwrite(&inizio, sizeof inizio, 1, fp);
-        fwrite(&fine,   sizeof fine,   1, fp);
+        fwrite(&inizio, sizeof(inizio), 1, fp);
+        fwrite(&fine, sizeof(fine), 1, fp);
     }
 }
 
@@ -57,7 +56,7 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
 
         time_t inizio, fine;
         fread(&inizio, sizeof(inizio), 1, fp);
-        fread(&fine,   sizeof(fine),   1, fp);
+        fread(&fine, sizeof(fine),   1, fp);
 
         Intervallo iv = crea_intervallo(inizio, fine);
         Prenotazione p = crea_prenotazione(nome, iv, costo);
