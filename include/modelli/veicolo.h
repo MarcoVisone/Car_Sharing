@@ -15,36 +15,32 @@ typedef struct veicolo *Veicolo;
  * Funzione: crea_veicolo
  * ----------------------
  * Crea un nuovo veicolo con targa, modello, descrizione,
- * tariffa, prenotazioni passati come parametri alla funzione.
+ * tariffa e prenotazioni associate
  *
  * Parametri:
+ *    tipo: stringa che rappresenta il tipo del veicolo
  *    targa: stringa che rappresenta la targa del veicolo
  *    modello: stringa che rappresenta il modello del veicolo
  *    descrizione: stringa che rappresenta la descrizione del veicolo
  *    tariffa: numero che rappresenta la tariffa al minuto in euro di un veicolo
- *    prenotazioni: puntatore alle prenotazioni relative ad un veicolo
+ *    prenotazioni: puntatore alle prenotazioni associate ad un veicolo
  *
  * Pre-condizioni:
- *	targa: deve contenere una targa valida di 7 caratteri
- *   modello: non deve essere nullo e non deve essere vuoto
- *   descrizione: non deve essere nulla non deve essere vuota
- *   tariffa: deve essere > 0
+ *	 targa: non deve essere NULL e deve essere di 7 caratteri
+ *   modello: non deve essere NULL
+ *   descrizione: non deve essere NULL
+ *   tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
- *   ritorna un nuovo veicolo v se l'allocazione dinamica della memoria è andata a buon fine,
- *   altrimenti ritorna NULL
- *
- * Ritorna:
- *   Un nuovo veicolo v
+ *   restituisce un nuovo oggetto Veicolo se l'allocazione è andata a buon fine,
+ *   altrimenti restituisce NULL
  */
 Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni);
 
 /*
  * Funzione: distruggi_veicolo
  * ---------------------------
- *
- * dealloca un veicolo liberando la memoria allocata sia per il veicolo,
- * sia per le prenotazioni relative al veicolo
+ * elimina un veicolo
  *
  * Parametri:
  *	v: puntatore ad un veicolo
@@ -53,10 +49,10 @@ Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, 
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	non ritorna niente
+ *	non restituisce niente
  *
  * Side-effect:
- *	la memoria a cui punta v viene liberata
+ *	libera la memoria occupata dalla struttura Veicolo e dalle sue prenotazioni
  */
 void distruggi_veicolo(Veicolo v);
 
@@ -64,19 +60,16 @@ void distruggi_veicolo(Veicolo v);
  * Funzione: ottieni_targa
  * -----------------------
  *
- * ritorna una stringa che è la targa del veicolo puntato da v
+ * restituisce la targa del veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	ritorna una stringa che è la targa del veicolo puntato da v
- *
- * Ritorna:
- *	la targa del veicolo
+ *	restituisce una stringa contenente la targa del veicolo
  */
 char *ottieni_targa(Veicolo v);
 
@@ -84,13 +77,13 @@ char *ottieni_targa(Veicolo v);
  * Funzione: imposta_targa
  * -----------------------
  *
- * imposta una targa nel veicolo puntato da v
+ * Imposta la targa nel veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
- *	targa: stringa che contiene la targa di un veicolo
+ *	targa: stringa contenente la targa da impostare
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *	targa: non deve essere NULL e deve essere di 7 caratteri
  *
@@ -98,7 +91,7 @@ char *ottieni_targa(Veicolo v);
  *	non restituisce niente
  *
  * Side-effect:
- * 	modifica la stringa targa nella struttura veicolo
+ * 	aggiorna il campo targa del veicolo v con il valore fornito
  */
 void imposta_targa(Veicolo v, char *targa);
 
@@ -106,19 +99,19 @@ void imposta_targa(Veicolo v, char *targa);
  * Funzione: ottieni_modello
  * -------------------------
  *
- * ritorna una stringa che è il modello del veicolo puntato da v
+ * Restituisce il modello del veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	ritorna una stringa che è il modello del veicolo puntato da v
+ *	restituisce una stringa contenente il modello del veicolo
  *
  * Ritorna:
- *	il modello del veicolo
+ *	il modello del veicolo puntato da v
  */
 char* ottieni_modello(Veicolo v);
 
@@ -126,21 +119,21 @@ char* ottieni_modello(Veicolo v);
  * Funzione: imposta_modello
  * -------------------------
  *
- * imposta un modello nel veicolo puntato da v
+ * imposta il modello del veicolo puntato da v
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
- *	modello: stringa che contiene il modello di un veicolo
+ *	modello: stringa contenente il modello da impostare
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	modello: non deve essere NULL e deve essere di massimo 50 caratteri
+ *	modello: non deve essere NULL e deve essere lunga al massimo 50 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
  *
  * Side-effect:
- * 	modifica la stringa modello nella struttura veicolo
+ * 	aggiorna il campo modello del veicolo v con il valore fornito
  */
 void imposta_modello(Veicolo v, char *modello);
 
@@ -148,19 +141,19 @@ void imposta_modello(Veicolo v, char *modello);
  * Funzione: ottieni_descrizione
  * -----------------------------
  *
- * ritorna una stringa che è la descrizione del veicolo puntato da v
+ * restituisce la descrizione del veicolo puntato da v.
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	ritorna una stringa che è la descrizione del veicolo puntato da v
+ *	restituisce una stringa contenente la descrizione del veicolo
  *
  * Ritorna:
- *	la descrizione del veicolo
+ *	la descrizione del veicolo puntato da v
  */
 char* ottieni_descrizione(Veicolo v);
 
@@ -168,21 +161,21 @@ char* ottieni_descrizione(Veicolo v);
  * Funzione: imposta_descrizione
  * -----------------------------
  *
- * imposta una descrizione nel veicolo puntato da v
+ * imposta la descrizione del veicolo puntato da v
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
- *	descrizione: stringa che contiene la descrizione di un veicolo
+ *	descrizione: stringa contenente la descrizione da impostare
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	descrizione: non deve essere NULL e deve essere di massimo 1024 caratteri
+ *	descrizione: non deve essere NULL e deve lunga al massimo 1024 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
  *
  * Side-effect:
- * 	modifica la stringa descrizione nella struttura veicolo
+ * 	aggiorna il campo descrizione del veicolo con il valore fornito
  */
 void imposta_descrizione(Veicolo v, char *descrizione);
 
@@ -190,19 +183,16 @@ void imposta_descrizione(Veicolo v, char *descrizione);
  * Funzione: ottieni_tariffa
  * -------------------------
  *
- * ritorna un double che è la tariffa al minuto del veicolo puntato da v
+ * restituisce la tariffa al minuto del veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	ritorna un double che è la tariffa al minuto del veicolo puntato da v
- *
- * Ritorna:
- *	la tariffa del veicolo
+ *	restituisce un double che è la tariffa al minuto del veicolo puntato da v
  */
 double ottieni_tariffa(Veicolo v);
 
@@ -210,21 +200,21 @@ double ottieni_tariffa(Veicolo v);
  * Funzione: imposta_tariffa
  * -------------------------
  *
- * imposta una tariffa nel veicolo puntato da v
+ *  imposta la tariffa al minuto del veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *	tariffa: double che contiene la tariffa al minuto di un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
- *	tariffa: deve essere >0
+ *	tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
  *	non restituisce niente
  *
  * Side-effect:
- * 	modifica il double tariffa nella struttura veicolo
+ * 	aggiorna il campo tariffa del veicolo con il valore fornito
  */
 void imposta_tariffa(Veicolo v, double tariffa);
 
@@ -232,19 +222,16 @@ void imposta_tariffa(Veicolo v, double tariffa);
  * Funzione: ottieni_prenotazioni
  * ------------------------------
  *
- * ritorna un albero che contiene tutte le prenotazioni del veicolo puntato da v
+ * restituisce l'albero delle prenotazioni associate al veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	ritorna un albero che contiene tutte le prenotazioni del veicolo puntato da v
- *
- * Ritorna:
- *	le prenotazioni del veicolo
+ *	restituisce l'albero contenente le prenotazioni del veicolo
  */
 Prenotazioni ottieni_prenotazioni(Veicolo v);
 
@@ -252,49 +239,134 @@ Prenotazioni ottieni_prenotazioni(Veicolo v);
  * Funzione: imposta_prenotazioni
  * ------------------------------
  *
- * imposta le prenotazioni nel veicolo puntato da v
+ * imposta l'albero delle prenotazioni nel veicolo puntato da v
  *
  * Parametri:
  *	v: puntatore ad un veicolo
- *	prenotazioni: albero che contiene le prenotazioni di un veicolo
+ *	prenotazioni: albero contenente le prenotazioni da assegnare al veicolo
  *
- * Pre-condizione:
+ * Pre-condizioni:
  *	v: non deve essere NULL
- *	prenotazioni: nessuna
+ *	prenotazioni: non deve essere NULL
  *
- * Post-condizione:
+ * Post-condizioni:
  *	non restituisce niente
  *
  * Side-effect:
- * 	modifica il puntatore prenotazioni nella struttura veicolo
+ * 	aggiorna il campo prenotazioni del veicolo con il puntatore fornito
  */
 void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni);
 
-
+/*
+* Funzione: ottieni_tipo_veicolo
+* ------------------------------
+*
+* Restituisce il tipo del veicolo puntato da v
+*
+* Parametri:
+*	v: puntatore ad un veicolo
+*
+* Pre-condizioni:
+*	v: non deve essere NULL
+*
+* Post-condizione:
+*	restituisce una stringa contenente il tipo del veicolo
+*
+ */
 char* ottieni_tipo_veicolo(Veicolo v);
 
+/*
+ * Funzione: imposta_tipo_veicolo
+ * ------------------------------
+ *
+ * Imposta il tipo del veicolo puntato da v
+ *
+ * Parametri:
+ *	v: puntatore ad un veicolo
+ *	tipo: stringa che contiene il tipo di un veicolo
+ *
+ * Pre-condizioni:
+ *	v: non deve essere NULL
+ *	tipo: non deve essere NULL
+ *
+ * Post-condizioni:
+ *	non restituisce niente
+ *
+ * Side-effect:
+ * 	modifica il campo tipo_veicolo nella struttura veicolo
+ */
 void imposta_tipo_veicolo(Veicolo v, char *tipo);
 
+/*
+ * Funzione: confronta_tipo
+ * --------------------------
+ *
+ * confronta una stringa "tipo" con il tipo del veicolo puntato da v
+ *
+ * Parametri:
+ * 	v: puntatore ad un veicolo
+ * 	tipo: stringa che rappresenta il tipo di un veicolo
+ *
+ * Pre-condizioni:
+ *	v: non deve essere NULL
+ *  tipo: non deve essere NULL
+ *
+ * Post-condizione:
+ *	restituisce 1 se il tipo del veicolo è uguale a "tipo", altrimenti 0
+ */
 Byte confronta_tipo(Veicolo v, char *tipo);
 
+/*
+* Funzione: aggiungi_prenotazione_veicolo
+* ---------------------------------------
+*
+* aggiunge una prenotazione al veicolo puntato da v
+*
+* Parametri:
+*	v: puntatore ad un veicolo
+*	prenotazione: puntatore alla struttura prenotazione
+*
+* Pre-condizioni:
+*	v: non deve essere NULL
+*	prenotazione: non deve essere NULL
+*
+* Post-condizione:
+*	restituisce 1 se la prenotazione è stata aggiunta, altrimenti 0
+ */
 Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 
+/*
+* Funzione: rimuovi_prenotazione_veicolo
+* ---------------------------------------
+*
+* rimuove una prenotazione dal veicolo puntato da v
+*
+* Parametri:
+*	v: puntatore ad un veicolo
+*	prenotazione: puntatore alla struttura prenotazione
+*
+* Pre-condizioni:
+*	v: non deve essere NULL
+*	prenotazione: non deve essere NULL
+*
+* Post-condizione:
+*	restituisce 1 se la prenotazione è stata rimossa, altrimenti 0
+ */
 Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 
 /*
  * Funzione: confronta_targhe
  * --------------------------
  *
- * confronta una stringa targa con la targa del veicolo puntato da v, restituisce 1 se sono uguali
- * e 0 se sono diverse
+ * confronta la targa fornita con quella del veicolo puntato da v
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
  * 	targa: stringa che contiene la targa di un veicolo
  *
  * Pre-condizioni:
- * 	v: non deve essere NULL
- *   targa: non deve essere NULL e deve essere di 7 caratteri
+ *	v: non deve essere NULL
+ *  targa: non deve essere NULL e deve essere lunga 7 caratteri
  *
  * Post-condizione:
  *	restituisce 1 se le targhe sono uguali e 0 se sono diverse
@@ -305,7 +377,7 @@ Byte confronta_targhe(Veicolo v, char *targa);
  * Funzione: veicolo_in_stringa
  * ----------------------------
  *
- * restituisce una stringa che contiene tutte le informazioni di un veicolo
+ * restituisce una stringa che contiene tutte le informazioni del veicolo puntato da v
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
