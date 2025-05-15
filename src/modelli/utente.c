@@ -10,11 +10,6 @@
 #include "modelli/data.h"
 #include <string.h>
 
-#define DIMENSIONE_NOME (64 + 1)
-#define DIMENSIONE_COGNOME (64 + 1)
-#define DIMENSIONE_EMAIL (319 + 1)
-#define DIMENSIONE_PASSWORD 16
-
 struct utente {
     char nome[DIMENSIONE_NOME];
     char cognome[DIMENSIONE_COGNOME];
