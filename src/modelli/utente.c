@@ -8,31 +8,33 @@
 #include "strutture_dati/lista.h"
 #include "modelli/utente.h"
 #include "modelli/data.h"
-#define MAX_NOME (64 + 1)
-#define MAX_COGNOME (64 + 1)
-#define MAX_EMAIL (319 + 1)
-#define MAX_PASSOWORD (64 + 1)
+#include <string.h>
+
+#define DIMENSIONE_NOME (64 + 1)
+#define DIMENSIONE_COGNOME (64 + 1)
+#define DIMENSIONE_EMAIL (319 + 1)
+#define DIMENSIONE_PASSWORD 16
 
 struct utente {
-    char nome[MAX_NOME];
-    char cognome[MAX_COGNOME];
-    char email[MAX_EMAIL];
-    char password[MAX_PASSOWORD];
+    char nome[DIMENSIONE_NOME];
+    char cognome[DIMENSIONE_COGNOME];
+    char email[DIMENSIONE_EMAIL];
+    uint8_t password[DIMENSIONE_PASSWORD];
     Byte permesso;
     Data data;
 };
 
-Utente crea_utente(char *email, char *password,  char *nome, char *cognome, Byte permesso){
+Utente crea_utente(char *email, uint8_t *password,  char *nome, char *cognome, Byte permesso){
     Utente u = malloc(sizeof(struct utente));
 
     if(u == NULL){
         return NULL;
     }
 
-    snprintf(u->nome, MAX_NOME, "%s", nome);
-    snprintf(u->cognome, MAX_COGNOME, "%s", cognome);
-    snprintf(u->email, MAX_EMAIL, "%s", email);
-    snprintf(u->password, MAX_PASSOWORD, "%s", password);
+    snprintf(u->nome, DIMENSIONE_NOME, "%s", nome);
+    snprintf(u->cognome, DIMENSIONE_COGNOME, "%s", cognome);
+    snprintf(u->email, DIMENSIONE_EMAIL, "%s", email);
+    memcpy(u->password, password, DIMENSIONE_PASSWORD);
 
     u->permesso = permesso;
     if (permesso == CLIENTE) {
@@ -56,7 +58,7 @@ void imposta_nome(Utente utente, char *nome) {
         return;
     }
 
-    snprintf(utente->nome, MAX_NOME, "%s", nome);
+    snprintf(utente->nome, DIMENSIONE_NOME, "%s", nome);
 }
 
 void imposta_cognome(Utente utente, char *cognome) {
@@ -64,7 +66,7 @@ void imposta_cognome(Utente utente, char *cognome) {
         return;
     }
 
-    snprintf(utente->cognome, MAX_COGNOME, "%s", cognome);
+    snprintf(utente->cognome, DIMENSIONE_COGNOME, "%s", cognome);
 }
 
 void imposta_email(Utente utente, char *email) {
@@ -72,15 +74,15 @@ void imposta_email(Utente utente, char *email) {
         return;
     }
 
-    snprintf(utente->email, MAX_EMAIL, "%s", email);
+    snprintf(utente->email, DIMENSIONE_EMAIL, "%s", email);
 }
 
-void imposta_password(Utente utente, char *password) {
+void imposta_password(Utente utente, uint8_t *password) {
     if(utente == NULL) {
         return;
     }
 
-    snprintf(utente->password, MAX_PASSOWORD, "%s", password);
+    memcpy(utente->password, password, DIMENSIONE_PASSWORD);
 }
 
 void imposta_permesso(Utente utente, Byte permesso) {
@@ -128,7 +130,7 @@ char *ottieni_email(Utente utente){
     return utente->email;
 }
 
-char *ottieni_password(Utente utente){
+uint8_t *ottieni_password(Utente utente){
     if (utente == NULL) {
         return NULL;
     }
