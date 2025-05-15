@@ -127,21 +127,21 @@ static Byte controllo_lvl_1(char *password) {
 }
 
 Byte controllo_password(char *password) {
-  	Byte lvl = 0;
-    if ((int)strlen(password) < 8) {
-        lvl -1;
-    }
-    if (controllo_lvl_0(password)) {
-        lvl = 0;
-        if (controllo_lvl_1(password)) {
-            lvl = 1;
-            if (controllo_lvl_2(password)) {
-                lvl = 2;
-                if (controllo_lunghezza_max(password)) {
-                    lvl = 3;
-                }
-            }
-        }
-    }
+  	Byte lvl = -1;
+
+    if (strlen(password) < 8) return lvl;
+
+    if (!controllo_lvl_0(password)) return lvl;
+    lvl++;
+
+    if (!controllo_lvl_1(password)) return lvl;
+    lvl++;
+
+    if (!controllo_lvl_2(password)) return lvl;
+    lvl++;
+
+    if (!controllo_lunghezza_max(password)) return lvl;
+    lvl++;
+
     return lvl;
 }
