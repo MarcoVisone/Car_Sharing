@@ -6,6 +6,7 @@
 #include "modelli/prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/veicolo.h"
+#include "modelli/data.h"
 #include "modelli/utente.h"
 
 /*
@@ -14,6 +15,40 @@
     la funzione salva_prenotazioni passando il file_prenotazioni
 */
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
+
+static void salva_data(FILE *file_data, Data d){
+    if(file_data == NULL || d == NULL){
+      return;
+    }
+    unsigned int dimensione;
+    Prenotazione *lista_prenotazioni;
+    lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
+    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
+    int frequenza = ottieni_frequenza_lista(d);
+    fwrite(&frequenza, sizeof(int), 1, file_data);
+    fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
+    for(int i = 0; i < numero_prenotazioni; i++){
+
+    }
+}
+
+static void salva_utente(FILE *file_utente, Utente u){
+//prendere ogni campo dell'utente e scriverlo nel file
+    if (file_utente == NULL || u == NULL) return;
+    unsigned int len = strlen(ottieni_nome(u))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_nome(u), sizeof(char), len, file_utente);
+    len = strlen(ottieni_cognome(u))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_cognome(u), sizeof(char), len, file_utente);
+    len = strlen(ottieni_email(u)+1);
+    fwrite(&len, sizeof(unsigned int), 1, file_utente);
+    fwrite(ottieni_email(u), sizeof(char), len, file_utente);
+    fwrite(ottieni_password(u), sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
+    Byte permesso = ottieni_permesso(u);
+    fwrite(&permesso, sizeof(Byte), 1, file_utente);
+    salva_data(file_utente, u);
+}
 
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
 
@@ -86,3 +121,7 @@ void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_vei
 
 
 int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli);
+
+void salva_vettore_utenti(const char *nome_file, Utente vettore[], int num_utenti);
+
+int carica_vettore_utenti(const char *nome_file, Utente vettore[], int max_utenti);

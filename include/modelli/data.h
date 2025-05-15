@@ -164,4 +164,10 @@ int ottieni_frequenza_lista(Data data);
  */
 void azzera_frequenza(Data data);
 
+Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione);
+
+int ottieni_numero_prenotazioni(Data data);
+
+void imposta_numero_prenotazioni(Data data, int numero_prenotazioni);
+
 #endif // DATA_H

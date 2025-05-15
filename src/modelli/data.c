@@ -11,6 +11,7 @@
 
 struct data{
   ListaPre storico;
+  int numero_prenotazioni;
   int frequenza;
 };
 
@@ -46,6 +47,7 @@ Data crea_data() {
 
     data->storico = crea_lista();
     data->frequenza = 0;
+    data->numero_prenotazioni = 0;
 
     return data;
 }
@@ -143,6 +145,7 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
         return NULL;
     }
     data->storico = aggiungi_prenotazione_lista(data->storico, prenotazione);
+    data->numero_prenotazioni +=1;
     return data->storico;
 }
 
@@ -178,6 +181,7 @@ ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
     }
 
     data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
+    data->numero_prenotazioni -=1;
     return data->storico;
 }
 
@@ -237,4 +241,34 @@ void azzera_frequenza(Data data){
         return;
     }
     data->frequenza = 0;
+}
+
+Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
+  if (data == NULL) {
+    return NULL;
+  }
+  Prenotazione *vettore_prenotazione = malloc(sizeof(Prenotazione)*data->numero_prenotazioni);
+
+  ListaPre curr = data->storico;
+  unsigned int i = 0;
+  while (curr != NULL) {
+    vettore_prenotazione[i] = ottieni_item(curr);
+    curr = ottieni_prossimo(curr);
+  }
+  *dimensione = data->numero_prenotazioni;
+  return vettore_prenotazione;
+}
+
+int ottieni_numero_prenotazioni(Data data){
+  if (data == NULL) {
+    return -1;
+  }
+  return data->numero_prenotazioni;
+}
+
+void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
+  if (data == NULL) {
+    return;
+  }
+  data->numero_prenotazioni = numero_prenotazioni;
 }
