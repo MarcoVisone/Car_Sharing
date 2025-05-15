@@ -6,6 +6,6 @@
 
 void md5(const char *str, size_t initial_len, uint8_t *digest);
 
-int confronta_hash(uint8_t *hash_1, uint8_t *hash_2);
+int hash_equals(const uint8_t *a, const uint8_t *b, size_t len);
 
 #endif //MD5_H

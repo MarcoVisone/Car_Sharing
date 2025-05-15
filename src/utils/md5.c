@@ -149,3 +149,11 @@ void md5(const char *str, size_t initial_len, uint8_t *digest) {
     to_bytes(h2, digest + 8);
     to_bytes(h3, digest + 12);
 }
+
+int hash_equals(const uint8_t *a, const uint8_t *b, size_t len) {
+    uint8_t result = 0;
+    for (size_t i = 0; i < len; i++) {
+        result |= a[i] ^ b[i];
+    }
+    return result == 0;
+}
