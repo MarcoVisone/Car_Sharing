@@ -170,4 +170,6 @@ int ottieni_numero_prenotazioni(Data data);
 
 void imposta_numero_prenotazioni(Data data, int numero_prenotazioni);
 
+void imposta_storico_lista(Data data, ListaPre lista_prenotazione);
+
 #endif // DATA_H
