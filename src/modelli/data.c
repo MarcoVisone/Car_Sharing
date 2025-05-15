@@ -272,3 +272,11 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
   }
   data->numero_prenotazioni = numero_prenotazioni;
 }
+
+void imposta_storico_lista(Data data, ListaPre lista_prenotazione){
+  if (data == NULL) {
+    return;
+  }
+
+  data->storico = lista_prenotazione;
+}
