@@ -4,6 +4,7 @@
  */
 #ifndef UTENTE_H
 #define UTENTE_H
+#include <stdint.h>
 #include "modelli/byte.h"
 #include "strutture_dati/lista_prenotazione.h"
 #include "modelli/data.h"
@@ -14,7 +15,7 @@
 
 typedef struct utente *Utente;
 
-Utente crea_utente(char *email, char *password, char *nome, char *cognome, Byte permesso);
+Utente crea_utente(char *email, uint8_t *password, char *nome, char *cognome, Byte permesso);
 
 void distruggi_utente(Utente utente);
 
@@ -24,7 +25,7 @@ void imposta_cognome(Utente utente, char *cognome);
 
 void imposta_email(Utente utente, char *email);
 
-void imposta_password(Utente utente, char *password);
+void imposta_password(Utente utente, uint8_t *password);
 
 void imposta_permesso(Utente utente, Byte permesso);
 
@@ -36,7 +37,7 @@ char *ottieni_nome(Utente utente);
 
 char *ottieni_email(Utente utente);
 
-char *ottieni_password(Utente utente);
+uint8_t *ottieni_password(Utente utente);
 
 int ottieni_frequenza_cliente(Utente utente);
 
