@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#define LEN_HASH 16
 
 void md5(const char *str, size_t initial_len, uint8_t *digest);
 
