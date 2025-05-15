@@ -5,105 +5,194 @@
 
 #ifndef PRENOTAZIONE_H
 #define PRENOTAZIONE_H
+
 #include "modelli/intervallo.h"
 
 typedef struct prenotazione *Prenotazione;
 
-
 /*
- * Crea una prenotazione.
- * Utilizzata per creare una prenotazione da inserire nel Albero Binario
+ * Funzione: crea_prenotazione
+ * ---------------------------
+ * Crea una nuova prenotazione.
+ *
  * Parametri:
- *     cliente: Il cliente della prenotazione
- *     i: L'intervallo temporale della prenotazione
- *     costo: Il costo totale della prenotazione
+ *    cliente: nome del cliente
+ *    i: intervallo temporale della prenotazione
+ *    costo: costo della prenotazione
+ *
+ * Pre-condizioni:
+ *    cliente deve essere una stringa valida
+ *    i deve essere un intervallo valido (può essere NULL)
+ *
+ * Post-condizione:
+ *    ritorna una nuova prenotazione o NULL in caso di errore
+ *
  * Ritorna:
- *     Restituisce la prenotazione creata
+ *    Prenotazione creata
  */
 Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo);
 
 /*
- * Distrugge una prenotazione.
- * Libera la memoria allocata per la prenotazione
+ * Funzione: distruggi_prenotazione
+ * -------------------------------
+ * Libera la memoria allocata per la prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione da distruggere
+ *    p: puntatore alla prenotazione da distruggere
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    la memoria della prenotazione viene deallocata
  */
 void distruggi_prenotazione(Prenotazione p);
 
 /*
- * Ottiene il cliente della prenotazione.
- * Restituisce il cliente associato alla prenotazione specificata
+ * Funzione: ottieni_cliente_prenotazione
+ * -------------------------------------
+ * Restituisce il nome del cliente della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
+ *    p: puntatore alla prenotazione
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    ritorna il nome del cliente o NULL se p è NULL
+ *
  * Ritorna:
- *     Il cliente associato alla prenotazione, NULL se la prenotazione è NULL
+ *    Nome del cliente
  */
 char *ottieni_cliente_prenotazione(Prenotazione p);
 
 /*
- * Ottiene l'intervallo della prenotazione.
- * Restituisce l'intervallo temporale associato alla prenotazione
+ * Funzione: ottieni_intervallo_prenotazione
+ * ----------------------------------------
+ * Restituisce l'intervallo della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
+ *    p: puntatore alla prenotazione
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    ritorna l'intervallo o NULL se p è NULL
+ *
  * Ritorna:
- *     L'intervallo temporale della prenotazione, NULL se la prenotazione è NULL
+ *    Intervallo temporale
  */
 Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
 
 /*
- * Ottiene il costo della prenotazione.
- * Restituisce il costo totale associato alla prenotazione
+ * Funzione: ottieni_costo_prenotazione
+ * -----------------------------------
+ * Restituisce il costo della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
+ *    p: puntatore alla prenotazione
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    ritorna il costo o -1 se p è NULL
+ *
  * Ritorna:
- *     Il costo della prenotazione, 0 se la prenotazione è 0
+ *    Costo della prenotazione
  */
 double ottieni_costo_prenotazione(Prenotazione p);
 
 /*
- * Imposta il cliente della prenotazione.
- * Modifica il cliente associato alla prenotazione specificata
+ * Funzione: imposta_cliente_prenotazione
+ * -------------------------------------
+ * Modifica il nome del cliente associato alla prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
- *     cliente: Nuovo cliente da associare alla prenotazione
+ *    p: puntatore alla prenotazione
+ *    cliente: nuovo nome del cliente
+ *
+ * Pre-condizioni:
+ *    p deve essere non NULL
+ *    cliente deve essere una stringa valida
+ *
+ * Post-condizione:
+ *    aggiorna il nome del cliente
  */
 void imposta_cliente_prenotazione(Prenotazione p, char *cliente);
 
 /*
- * Imposta l'intervallo della prenotazione.
- * Modifica l'intervallo temporale associato alla prenotazione
+ * Funzione: imposta_intervallo_prenotazione
+ * ----------------------------------------
+ * Modifica l'intervallo temporale della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
- *     i: Nuovo intervallo da associare alla prenotazione
+ *    p: puntatore alla prenotazione
+ *    i: nuovo intervallo
+ *
+ * Pre-condizioni:
+ *    p deve essere non NULL
+ *    i deve essere un intervallo valido
+ *
+ * Post-condizione:
+ *    aggiorna l'intervallo della prenotazione
  */
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
 
 /*
- * Imposta il costo della prenotazione.
- * Modifica il costo totale associato alla prenotazione
+ * Funzione: imposta_costo_prenotazione
+ * -----------------------------------
+ * Modifica il costo della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione
- *     costo: Nuovo costo da associare alla prenotazione
+ *    p: puntatore alla prenotazione
+ *    costo: nuovo valore del costo
+ *
+ * Pre-condizioni:
+ *    p deve essere non NULL
+ *
+ * Post-condizione:
+ *    aggiorna il costo della prenotazione
  */
 void imposta_costo_prenotazione(Prenotazione p, double costo);
 
 /*
- * Duplica una prenotazione.
- * Crea una copia esatta della prenotazione specificata
+ * Funzione: duplica_prenotazione
+ * ------------------------------
+ * Crea una copia della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione da duplicare
+ *    p: puntatore alla prenotazione da duplicare
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    ritorna una nuova prenotazione identica o NULL se p è NULL
+ *
  * Ritorna:
- *     Una nuova prenotazione identica a quella fornita, NULL se la prenotazione è NULL
+ *    Nuova prenotazione duplicata
  */
 Prenotazione duplica_prenotazione(Prenotazione p);
 
 /*
- * Converte i valori di Prenotazione in stringa
- * Per facilitare la stampa nel'interfaccia
+ * Funzione: prenotazione_in_stringa
+ * --------------------------------
+ * Crea una rappresentazione testuale della prenotazione.
+ *
  * Parametri:
- *     p: Puntatore alla prenotazione da rendere stringa
+ *    p: puntatore alla prenotazione
+ *
+ * Pre-condizioni:
+ *    p può essere NULL
+ *
+ * Post-condizione:
+ *    ritorna una stringa formattata o NULL se p è NULL
+ *
  * Ritorna:
- *     Una stringa contenente tutti i valori di prenotazione formattati
+ *    Stringa contenente i dati della prenotazione
  */
 char* prenotazione_in_stringa(Prenotazione p);
 
