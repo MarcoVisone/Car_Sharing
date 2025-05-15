@@ -123,7 +123,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 		return 0;
 	}
 
-	nuovo_item->chiave = my_strdup(chiave); //alloca una nuova stringa chiave dentro alla chiave
+	nuovo_item->chiave = mia_strdup(chiave); //alloca una nuova stringa chiave dentro alla chiave
 	nuovo_item->valore = valore;
 	tabella_hash->buckets[indice] = aggiungi_nodo(nuovo_item, lista);
 	tabella_hash->numero_buckets++;

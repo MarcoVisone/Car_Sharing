@@ -5,5 +5,5 @@
 
 #ifndef BYTE_H
 #define BYTE_H
-typedef unsigned char Byte;
+typedef signed char Byte;
 #endif //BYTE_H

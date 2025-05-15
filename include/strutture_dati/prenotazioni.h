@@ -5,13 +5,12 @@
 
 #ifndef PRENOTAZIONI_H
 #define PRENOTAZIONI_H
-
-#include "modelli/byte.h"
-#include "modelli/prenotazione.h"
-
 #define OK 0
 #define OCCUPATO 1
 
+#include "modelli/byte.h"
+typedef struct intervallo *Intervallo;
+typedef struct prenotazione *Prenotazione;
 typedef struct node *Prenotazioni;
 
 /*
@@ -64,5 +63,6 @@ Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p);
 
 Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size);
 
+Prenotazione *ottieni_vettore_prenotazioni(Prenotazioni prenotazioni, unsigned int *size);
 
 #endif //PRENOTAZIONI_H

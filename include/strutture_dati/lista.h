@@ -3,63 +3,155 @@
  * Data: 09/05/2025
  */
 
+#ifndef LISTA_H
+#define LISTA_H
+
 #include "modelli/byte.h"
+
 typedef struct nodo *Nodo;
 typedef void *Item;
 
 /*
- * La funzione crea lista crea una lista vuota
- * Parametri:
- *     Nessun parametro
+ * Funzione: crea_lista
+ * --------------------
+ * Crea una nuova lista vuota, rappresentata da un puntatore Nodo.
+ *
+ * Pre-condizione:
+ *    nessuna
+ *
+ * Post-condizione:
+ *    ritorna un nodo che rappresenta la lista vuota (NULL o nodo sentinella)
+ *
  * Ritorna:
- *     Restituisce un nodo alla lista
+ *    Nodo nuovo nodo lista vuota
+ *
+ * Side-effect:
+ *    nessuno
  */
 Nodo crea_lista();
 
 /*
- * La funzione libera la memoria che occupa il nodo
+ * Funzione: distruggi_nodo
+ * ------------------------
+ * Dealloca la memoria del nodo passato come parametro,
+ * e chiama la funzione di distruzione per l'item contenuto nel nodo.
+ *
  * Parametri:
- *     nodo: Il Nodo
- * Ritorna:
- *     Non restituisce nulla
+ *    nodo: puntatore al nodo da distruggere
+ *    funzione_distruggi_item: funzione callback per liberare la memoria
+ *                            associata all'item contenuto nel nodo
+ *
+ * Pre-condizione:
+ *    nodo non deve essere NULL
+ *    funzione_distruggi_item deve essere valida (non NULL)
+ *
+ * Post-condizione:
+ *    la memoria del nodo e dell'item è liberata
+ *
+ * Side-effect:
+ *    deallocazione dinamica di memoria
  */
 void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *));
 
 /*
- * La funzione aggiunge un nodo alla lista
+ * Funzione: aggiungi_nodo
+ * -----------------------
+ * Inserisce un nuovo nodo contenente l'item in testa alla lista.
+ *
  * Parametri:
- *     item: L'Item da aggiungere alla lista
- *     nodo: La testa della lista
+ *    item: puntatore all'elemento da inserire nella lista
+ *    nodo: puntatore al nodo testa della lista esistente
+ *
+ * Pre-condizione:
+ *    nodo e item possono essere NULL (lista vuota o elemento nullo)
+ *
+ * Post-condizione:
+ *    ritorna il nuovo nodo testa della lista con l'item aggiunto
+ *
  * Ritorna:
- *     Restituisce il puntatore alla testa della lista
+ *    Nodo nuovo nodo testa della lista
+ *
+ * Side-effect:
+ *    modifica la struttura della lista aggiungendo un nuovo nodo
  */
 Nodo aggiungi_nodo(Item item, Nodo nodo);
 
 /*
- * La funzione fa ottenere l'item della lista
+ * Funzione: ottieni_item
+ * ----------------------
+ * Restituisce l'item contenuto nel nodo.
+ *
  * Parametri:
- *     nodo: Un Nodo della lista
+ *    nodo: puntatore al nodo da cui estrarre l'item
+ *
+ * Pre-condizione:
+ *    nodo non deve essere NULL
+ *
  * Ritorna:
- *     Item: L'Item del nodo
+ *    puntatore all'item contenuto nel nodo
+ *
+ * Side-effect:
+ *    nessuno
  */
 Item ottieni_item(Nodo nodo);
 
 /*
- * La funzione fa ottenere la posizione successiva della lista
+ * Funzione: ottieni_prossimo
+ * --------------------------
+ * Restituisce il puntatore al nodo successivo della lista.
+ *
  * Parametri:
- *     nodo: Un nodo della lista
+ *    nodo: puntatore al nodo corrente
+ *
+ * Pre-condizione:
+ *    nodo non deve essere NULL
+ *
  * Ritorna:
- *     Nodo: Un puntatore al nodo successivo
+ *    puntatore al nodo successivo, oppure NULL se non c'è un nodo successivo
+ *
+ * Side-effect:
+ *    nessuno
  */
 Nodo ottieni_prossimo(Nodo nodo);
 
+/*
+ * Funzione: imposta_prossimo
+ * --------------------------
+ * Imposta il puntatore al nodo successivo per il nodo corrente.
+ *
+ * Parametri:
+ *    nodo: puntatore al nodo corrente
+ *    prossimo: puntatore al nodo da impostare come successivo
+ *
+ * Pre-condizione:
+ *    nodo non deve essere NULL
+ *
+ * Post-condizione:
+ *    il campo "prossimo" del nodo è modificato
+ *
+ * Side-effect:
+ *    modifica la struttura della lista
+ */
 void imposta_prossimo(Nodo nodo, Nodo prossimo);
 
 /*
- * La funzione controlla se la lista è vuota
+ * Funzione: lista_vuota
+ * ---------------------
+ * Verifica se la lista è vuota.
+ *
  * Parametri:
- *     lista: Un nodo della della lista
+ *    lista: puntatore alla lista (nodo testa)
+ *
+ * Pre-condizione:
+ *    nessuna
+ *
  * Ritorna:
- *     Byte: Un valore che può essere 1 se la lista è vuota e in caso contrario lo 0
+ *    Byte 1 se la lista è vuota (NULL),
+ *    0 altrimenti
+ *
+ * Side-effect:
+ *    nessuno
  */
 Byte lista_vuota(Nodo lista);
+
+#endif // LISTA_H

@@ -3,11 +3,11 @@
  * Data: 10/05/2025
  */
 
-#include "strutture_dati/tabella_veicoli.h"
+#include <stddef.h>
+#include "strutture_dati/prenotazioni.h"
 #include "modelli/veicolo.h"
 #include "strutture_dati/tabella_hash.h"
-#include <stddef.h>
-
+#include "strutture_dati/tabella_veicoli.h"
 TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza){
     return nuova_tabella_hash(grandezza);
 }
