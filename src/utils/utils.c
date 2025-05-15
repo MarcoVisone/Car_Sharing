@@ -121,6 +121,7 @@ static Byte controllo_lvl_0(char *password) {
     for (i=0; password[i]; i++) {
         if (password[i] >= 'A' && password[i] <= 'Z'){
             controllo+=1;
+            break;
         }
     }
     return controllo == 2;
