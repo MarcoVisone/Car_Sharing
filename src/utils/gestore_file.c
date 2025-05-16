@@ -29,32 +29,12 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
 */
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
-/*
-    Scrivere nel file la frequenza e il numero di prenotazioni (funzione fwrite),
-    poi iterare il vettore di prenotazioni e salvare ogni elemento usando
-    la funzione salva_prenotazione passando il file_data.
-*/
 static void salva_data(FILE *file_data, Data d);
 
-/*
-    Leggere dal file la frequenza e il numero di prenotazioni (funzione fread),
-    poi iterare il numero di prenotazioni e caricarle una a una con la funzione
-    carica_prenotazione, aggiungendole allo storico della struttura Data.
-*/
 static Data carica_data(FILE *file_data);
 
-/*
-    Scrivere nel file_utente i campi nome, cognome, email, password e permesso (usando fwrite),
-    se l’utente è di tipo CLIENTE, salvare la struttura Data associata
-    usando la funzione salva_data e passando il file_data.
-*/
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 
-/*
-    Leggere dal file_utente i campi nome, cognome, email, password e permesso (usando fread),
-    se l’utente è di tipo CLIENTE, caricare la struttura Data associata
-    usando la funzione carica_data e creare l’utente completo.
-*/
 static Utente carica_utente(FILE *file_utente, FILE *file_data);
 
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
