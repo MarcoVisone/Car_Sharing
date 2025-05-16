@@ -37,19 +37,20 @@ Coda crea_coda(void);
  *
  * Parametri:
  *    coda: Puntatore alla coda da distruggere
- *    distruttore: Funzione da applicare ad ogni elemento prima di liberarlo (può essere NULL)
+ *    distruttore: Funzione da applicare ad ogni elemento prima di liberarlo
  *
  * Pre-condizioni:
  *    La coda deve essere stata creata correttamente
  *
  * Post-condizione:
- *    Tutti gli elementi e la struttura della coda vengono deallocati
+ *    Nessuna
  *
  * Ritorna:
  *    Non restituisce niente
  *
  * Side-effect:
- *    Libera memoria e può chiamare funzioni distruttrici personalizzate
+ *    Libera memoria di ogni nodo della coda e se distruttore != NULL
+ *    distrugge anche gli elementi dentro la coda
  */
 void distruggi_coda(Coda coda, void (*distruttore)(void *));
 
@@ -66,13 +67,11 @@ void distruggi_coda(Coda coda, void (*distruttore)(void *));
  *    La coda deve essere stata inizializzata
  *
  * Post-condizione:
- *    L'elemento viene aggiunto in fondo alla coda
- *
- * Ritorna:
- *    0 se l'inserimento è avvenuto con successo, -1 in caso di errore
+ *    Restituisce 0 se non ci sono stati errori e -1 in caso di errori
  *
  * Side-effect:
- *    Alloca memoria per un nuovo nodo
+ *    Alloca un nuovo nodo, e il puntatore "elemento" punterà al
+ *    elemento passato da parametri
  */
 int aggiungi_in_coda(void *elemento, Coda coda);
 
@@ -88,9 +87,6 @@ int aggiungi_in_coda(void *elemento, Coda coda);
  *    La coda deve essere stata inizializzata
  *
  * Post-condizione:
- *    L'elemento in testa viene rimosso dalla coda
- *
- * Ritorna:
  *    Puntatore all'elemento rimosso, o NULL se la coda è vuota o non inizializzata
  *
  * Side-effect:
@@ -110,10 +106,7 @@ void *rimuovi_dalla_coda(Coda coda);
  *    La coda deve essere stata inizializzata
  *
  * Post-condizione:
- *    Nessuna
- *
- * Ritorna:
- *    1 se la coda è vuota o NULL, 0 altrimenti
+ *     1 se la coda è vuota o NULL, 0 altrimenti
  *
  * Side-effect:
  *    Nessuno
