@@ -128,7 +128,7 @@ char* ottieni_modello(Veicolo v);
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	modello: non deve essere NULL e deve essere lunga al massimo 50 caratteri
+ *	modello: non deve essere NULL e deve essere lungo al massimo 50 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
@@ -170,7 +170,7 @@ char* ottieni_descrizione(Veicolo v);
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	descrizione: non deve essere NULL e deve lunga al massimo 1024 caratteri
+ *	descrizione: non deve essere NULL e deve essere lunga al massimo 1024 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
@@ -248,7 +248,6 @@ Prenotazioni ottieni_prenotazioni(Veicolo v);
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	prenotazioni: non deve essere NULL
  *
  * Post-condizioni:
  *	non restituisce niente
@@ -259,20 +258,20 @@ Prenotazioni ottieni_prenotazioni(Veicolo v);
 void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni);
 
 /*
-* Funzione: ottieni_tipo_veicolo
-* ------------------------------
-*
-* Restituisce il tipo del veicolo puntato da v
-*
-* Parametri:
-*	v: puntatore ad un veicolo
-*
-* Pre-condizioni:
-*	v: non deve essere NULL
-*
-* Post-condizione:
-*	restituisce una stringa contenente il tipo del veicolo
-*
+ * Funzione: ottieni_tipo_veicolo
+ * ------------------------------
+ *
+ * Restituisce il tipo del veicolo puntato da v
+ *
+ * Parametri:
+ *	v: puntatore ad un veicolo
+ *
+ * Pre-condizioni:
+ *	v: non deve essere NULL
+ *
+ * Post-condizione:
+ *	restituisce una stringa contenente il tipo del veicolo
+ *
  */
 char* ottieni_tipo_veicolo(Veicolo v);
 
@@ -288,7 +287,7 @@ char* ottieni_tipo_veicolo(Veicolo v);
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	tipo: non deve essere NULL
+ *	tipo: non deve essere NULL e deve essere lungo al massimo 30 caratteri
  *
  * Post-condizioni:
  *	non restituisce niente
