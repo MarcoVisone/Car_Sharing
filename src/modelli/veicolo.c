@@ -6,10 +6,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "modelli/veicolo.h"
 #include "modelli/intervallo.h"
 #include "modelli/prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
-#include "modelli/veicolo.h"
 
 #define NUM_CARATTERI_TARGA 7 + 1
 #define MAX_LUNGHEZZA_MODELLO 50 + 1
@@ -47,7 +47,7 @@ Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, 
 
 void distruggi_veicolo(Veicolo v){
 	if(v == NULL) return;
-    distruggi_prenotazioni(&(v->prenotazioni));
+    distruggi_prenotazioni(v->prenotazioni);
     free(v);
 }
 
@@ -117,27 +117,21 @@ Byte confronta_tipo(Veicolo v, char *tipo){
 }
 
 Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
-	if(v == NULL) return 0;
-	if(prenotazione == NULL) return 0;
+	if(v == NULL || prenotazione == NULL) return 0;
 
-	Prenotazioni temp = aggiungi_prenotazione(v->prenotazioni, prenotazione);
+	Byte codice = aggiungi_prenotazione(v->prenotazioni, prenotazione);
 
-	if(temp == NULL) return 0;
-
-	v->prenotazioni = temp;
+	if(!codice) return 0;
 
 	return 1;
 }
 
-Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
-	if(v == NULL) return 0;
-    if(prenotazione == NULL) return 0;
+Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo){
+	if(v == NULL || intervallo == NULL) return 0;
 
-	Prenotazioni temp = cancella_prenotazione(v->prenotazioni, prenotazione);
+	Byte codice = cancella_prenotazione(v->prenotazioni, intervallo);
 
-	if(temp == NULL) return 0;
-
-	v->prenotazioni = temp;
+	if(!codice) return 0;
 
 	return 1;
 }
