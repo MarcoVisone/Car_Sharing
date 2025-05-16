@@ -102,7 +102,7 @@ static Prenotazione carica_prenotazione(FILE *fp){
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     if (fp == NULL || prenotazioni == NULL) return;
     unsigned int size = 0, i;
-    Prenotazione *p = ottieni_vettore_prenotazioni(prenotazioni, &size);
+    Prenotazione *p = ottieni_vettore_prenotazioni_per_file(prenotazioni, &size);
     if (p == NULL) return;
 
     fwrite(&size, sizeof(size), 1, fp);
@@ -120,7 +120,8 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
     Prenotazioni pren = crea_prenotazioni();
 
     for (i = 0; i < size; i++) {
-        pren = aggiungi_prenotazione(pren, carica_prenotazione(fp));
+        if(!aggiungi_prenotazione(pren, carica_prenotazione(fp)))
+            continue;
     }
     return pren;
 }
