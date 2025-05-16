@@ -10,16 +10,14 @@
 
 #include <stddef.h>
 
-static void distruggi_prenotazione_t(void *p);
-
 /*
  * Funzione: distruggi_prenotazione_t
  * ----------------------------------
  * Funzione ausiliaria per distruggere una prenotazione castata da void*.
  *
  * Implementazione:
- * Prenotazione p = (Prenotazione)prenotazione;
- * distruggi_prenotazione(p);
+ *    Prenotazione p = (Prenotazione)prenotazione;
+ *    distruggi_prenotazione(p);
  *
  * Parametri:
  *    prenotazione: puntatore generico a una prenotazione
@@ -30,8 +28,8 @@ static void distruggi_prenotazione_t(void *p);
  * Post-condizione:
  *    La prenotazione viene distrutta liberando la memoria associata.
  *
- * Ritorna:
- *    Non restituisce niente
+ * Side-effect:
+ *    Libera la memoria della prenotazione puntata
  */
 static void distruggi_prenotazione_t(void *prenotazione){
     Prenotazione p = (Prenotazione)prenotazione;
@@ -45,8 +43,8 @@ static void distruggi_prenotazione_t(void *prenotazione){
  * distruggendo ogni nodo e la prenotazione associata.
  *
  * Implementazione:
- * Controlla se la lista è vuota, altrimenti itera sui nodi distruggendoli
- * e rilasciando la memoria delle prenotazioni tramite la funzione ausiliaria.
+ *    Controlla se la lista è vuota, altrimenti itera sui nodi distruggendoli
+ *    e rilasciando la memoria delle prenotazioni tramite la funzione ausiliaria.
  *
  * Parametri:
  *    l: la lista di prenotazioni da distruggere
@@ -57,8 +55,8 @@ static void distruggi_prenotazione_t(void *prenotazione){
  * Post-condizione:
  *    Tutti i nodi e le prenotazioni contenute nella lista vengono distrutti.
  *
- * Ritorna:
- *    Non restituisce niente
+ * Side-effect:
+ *    Libera memoria di ogni nodo della lista e delle prenotazioni contenute
  */
 void distruggi_lista_prenotazione(ListaPre l){
     if(lista_vuota(l)) return;
@@ -77,8 +75,8 @@ void distruggi_lista_prenotazione(ListaPre l){
  * Aggiunge una prenotazione all'inizio della lista.
  *
  * Implementazione:
- * Chiama la funzione generica aggiungi_nodo per inserire la prenotazione
- * all'inizio della lista.
+ *    Chiama la funzione generica aggiungi_nodo per inserire la prenotazione
+ *    all'inizio della lista.
  *
  * Parametri:
  *    l: lista di prenotazioni
@@ -105,8 +103,8 @@ ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
  * temporale della prenotazione passata come parametro.
  *
  * Implementazione:
- * Scorre la lista cercando una prenotazione con intervallo uguale;
- * se la trova, la rimuove aggiornando i puntatori.
+ *    Scorre la lista cercando una prenotazione con intervallo uguale;
+ *    se la trova, la rimuove aggiornando i puntatori.
  *
  * Parametri:
  *    l: lista di prenotazioni
@@ -129,9 +127,9 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
         Prenotazione pre = ottieni_item(curr);
         if(compara_intervalli(ottieni_intervallo_prenotazione(pre), ottieni_intervallo_prenotazione(p)) == 0){
             if(prev){
-               imposta_prossimo(prev, ottieni_prossimo(curr));
+                imposta_prossimo(prev, ottieni_prossimo(curr));
             } else {
-              return ottieni_prossimo(curr);
+                return ottieni_prossimo(curr);
             }
             distruggi_nodo(curr, distruggi_prenotazione_t);
         }
@@ -147,7 +145,7 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
  * Restituisce la prenotazione contenuta nel nodo corrente della lista.
  *
  * Implementazione:
- * Chiama la funzione generica ottieni_item sul nodo corrente.
+ *    Chiama la funzione generica ottieni_item sul nodo corrente.
  *
  * Parametri:
  *    l: lista di prenotazioni

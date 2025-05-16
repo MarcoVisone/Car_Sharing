@@ -24,8 +24,8 @@ typedef struct nodo *ListaPre;
  * Post-condizione:
  *    Tutti i nodi e le prenotazioni contenute nella lista vengono distrutti.
  *
- * Ritorna:
- *    Non restituisce niente
+ * Side-effect:
+ *    La memoria occupata da tutti i nodi con elementi annessi della lista viene liberata
  */
 void distruggi_lista_prenotazione(ListaPre l);
 
@@ -43,10 +43,10 @@ void distruggi_lista_prenotazione(ListaPre l);
  *    La prenotazione p deve essere valida.
  *
  * Post-condizione:
- *    La prenotazione viene aggiunta in testa alla lista.
+ *    La nuova testa della lista contiene la prenotazione aggiunta.
  *
  * Ritorna:
- *    La nuova testa della lista contenente la prenotazione aggiunta
+ *    La nuova testa della lista
  */
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
 
@@ -65,10 +65,10 @@ ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p);
  *    La prenotazione p deve essere valida.
  *
  * Post-condizione:
- *    Se presente, la prenotazione con intervallo uguale viene rimossa dalla lista.
+ *    La lista non contiene più la prenotazione specificata (se presente).
  *
  * Ritorna:
- *    La testa della lista eventualmente modificata
+ *    La testa della lista eventualmente aggiornata
  */
 ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p);
 
