@@ -10,106 +10,102 @@ typedef struct coda* Coda;
 
 /*
  * Funzione: crea_coda
- * -------------------
+ *
  * Crea una nuova coda vuota.
  *
  * Parametri:
- *    Nessuno
+ *   Nessuno
  *
- * Pre-condizioni:
- *    Nessuna
+ * Pre-condizione:
+ *   Nessuna
  *
  * Post-condizione:
- *    La coda viene inizializzata e pronta per essere utilizzata
+ *   La coda viene inizializzata e pronta per essere utilizzata.
  *
  * Ritorna:
- *    Puntatore alla nuova coda
- *
- * Side-effect:
- *    Alloca memoria per la struttura dati
+ *   Puntatore alla nuova coda.
  */
 Coda crea_coda(void);
 
 /*
  * Funzione: distruggi_coda
- * ------------------------
+ *
  * Distrugge una coda esistente e libera tutta la memoria associata.
  *
  * Parametri:
- *    coda: Puntatore alla coda da distruggere
- *    distruttore: Funzione da applicare ad ogni elemento prima di liberarlo
+ *   coda: puntatore alla coda da distruggere.
+ *   distruttore: funzione da applicare ad ogni elemento prima di liberarlo (può essere NULL).
  *
- * Pre-condizioni:
- *    La coda deve essere stata creata correttamente
+ * Pre-condizione:
+ *   La coda deve essere stata creata correttamente.
  *
  * Post-condizione:
- *    Nessuna
- *
- * Ritorna:
- *    Non restituisce niente
+ *   Tutta la memoria allocata per la coda viene rilasciata.
  *
  * Side-effect:
- *    Libera memoria di ogni nodo della coda e se distruttore != NULL
- *    distrugge anche gli elementi dentro la coda
+ *   Libera la memoria occupata dai nodi e, se fornito, applica la funzione distruttore
+ *   ad ogni elemento della coda.
  */
 void distruggi_coda(Coda coda, void (*distruttore)(void *));
 
 /*
  * Funzione: aggiungi_in_coda
- * --------------------------
+ *
  * Aggiunge un elemento in fondo alla coda.
  *
  * Parametri:
- *    elemento: Puntatore all'elemento da inserire
- *    coda: Puntatore alla coda in cui inserire l'elemento
+ *   elemento: puntatore all'elemento da inserire.
+ *   coda: puntatore alla coda in cui inserire l'elemento.
  *
- * Pre-condizioni:
- *    La coda deve essere stata inizializzata
+ * Pre-condizione:
+ *   La coda deve essere stata inizializzata.
  *
  * Post-condizione:
- *    Restituisce 0 se non ci sono stati errori e -1 in caso di errori
+ *   L'elemento viene aggiunto alla fine della coda.
  *
- * Side-effect:
- *    Alloca un nuovo nodo, e il puntatore "elemento" punterà al
- *    elemento passato da parametri
+ * Ritorna:
+ *   0 se l'inserimento è avvenuto con successo, -1 in caso di errore.
  */
 int aggiungi_in_coda(void *elemento, Coda coda);
 
 /*
  * Funzione: rimuovi_dalla_coda
- * ----------------------------
+ *
  * Rimuove l'elemento in testa alla coda e lo restituisce.
  *
  * Parametri:
- *    coda: Puntatore alla coda da cui rimuovere l'elemento
+ *   coda: puntatore alla coda da cui rimuovere l'elemento.
  *
- * Pre-condizioni:
- *    La coda deve essere stata inizializzata
+ * Pre-condizione:
+ *   La coda deve essere stata inizializzata.
  *
  * Post-condizione:
- *    Puntatore all'elemento rimosso, o NULL se la coda è vuota o non inizializzata
+ *   La coda viene modificata con un elemento in meno in testa.
  *
  * Side-effect:
- *    Libera la memoria del nodo rimosso
+ *   Libera la memoria occupata dal nodo rimosso.
+ *
+ * Ritorna:
+ *   Puntatore all'elemento rimosso, oppure NULL se la coda è vuota o non inizializzata.
  */
 void *rimuovi_dalla_coda(Coda coda);
 
 /*
  * Funzione: coda_vuota
- * --------------------
+ *
  * Verifica se la coda è vuota.
  *
  * Parametri:
- *    coda: Puntatore alla coda da controllare
+ *   coda: puntatore alla coda da controllare.
  *
- * Pre-condizioni:
- *    La coda deve essere stata inizializzata
+ * Pre-condizione:
+ *   La coda deve essere stata inizializzata.
  *
  * Post-condizione:
- *     1 se la coda è vuota o NULL, 0 altrimenti
+ *   Nessuna.
  *
- * Side-effect:
- *    Nessuno
+ * Ritorna:
+ *   1 se la coda è vuota o NULL, 0 altrimenti.
  */
 int coda_vuota(Coda coda);
 
