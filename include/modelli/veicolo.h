@@ -7,8 +7,9 @@
 #define VEICOLO_H
 #include "modelli/byte.h"
 
+typedef struct intervallo *Intervallo;
 typedef struct prenotazione *Prenotazione;
-typedef struct node *Prenotazioni;
+typedef struct albero *Prenotazioni;
 typedef struct veicolo *Veicolo;
 
 /*
@@ -339,11 +340,11 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 * Funzione: rimuovi_prenotazione_veicolo
 * ---------------------------------------
 *
-* rimuove una prenotazione dal veicolo puntato da v
+* rimuove una prenotazione dato il suo intervallo temporale dal veicolo puntato da v
 *
 * Parametri:
 *	v: puntatore ad un veicolo
-*	prenotazione: puntatore alla struttura prenotazione
+*	intervallo: puntatore alla struttura intervallo
 *
 * Pre-condizioni:
 *	v: non deve essere NULL
@@ -352,7 +353,7 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 * Post-condizione:
 *	restituisce 1 se la prenotazione è stata rimossa, altrimenti 0
  */
-Byte rimuovi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
+Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo);
 
 /*
  * Funzione: confronta_targhe
