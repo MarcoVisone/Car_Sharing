@@ -11,59 +11,66 @@
 #include <stdio.h>
 #include <time.h>
 
-static time_t massimo(time_t a, time_t b);
-static int height(struct node* nodo);
-static struct node* nuovo_nodo(Prenotazione prenotazione);
-static void aggiorna_nodo(struct node *n);
-static struct node *ruota_destra(struct node *y);
-static struct node *ruota_sinistra(struct node *x);
-static struct node *casi_bilanciamento(struct node *nodo, time_t inizio);
-static void distruggi_nodo_prenotazioni(Prenotazioni p);
-static void _distruggi_prenotazioni(Prenotazioni nodo);
-static struct node *trova_minimo(struct node *nodo);
-static unsigned int conta_nodi(Prenotazioni prenotazioni);
-static void prenotazioni_in_vettore_t(Prenotazioni prenotazioni, Prenotazione *result, int *index);
-
-struct node{
+struct nodo{
     Prenotazione prenotazione;
-    time_t max;
-    int height;
-	struct node *right;
-    struct node *left;
+    time_t massimo;
+    int altezza;
+	struct nodo *destra;
+    struct nodo *sinistra;
 };
+
+struct albero{
+    struct nodo *radice;
+    unsigned int num_nodi;
+};
+
+static time_t massimo(time_t a, time_t b);
+static int altezza(struct nodo *nodo);
+static struct nodo* nuovo_nodo(Prenotazione prenotazione);
+static void aggiorna_nodo(struct nodo *n);
+static struct nodo *ruota_destra(struct nodo *y);
+static struct nodo *ruota_sinistra(struct nodo *x);
+static struct nodo *casi_bilanciamento(struct nodo *nodo, time_t inizio);
+static struct nodo *aggiungi_prenotazione_t(struct nodo *albero, Prenotazione prenotazione);
+static void distruggi_nodo_prenotazioni(struct nodo *nodo);
+static void _distruggi_prenotazioni(struct nodo *nodo);
+static Byte controlla_prenotazione_t(struct nodo *radice, Intervallo i);
+static struct nodo *cancella_prenotazione_t(struct nodo *radice, Intervallo i, Byte *controllo);
+static struct nodo *trova_minimo(struct nodo *nodo);
+static void prenotazioni_in_vettore_t(struct nodo *radice, Prenotazione *result, int *index);
 
 static time_t massimo(time_t a, time_t b){
     return a > b ? a: b;
 }
 
-static int height(struct node* nodo) {
-    return nodo ? nodo->height : 0;
+static int altezza(struct nodo *nodo) {
+    return nodo ? nodo->altezza : 0;
 }
 
-static struct node* nuovo_nodo(Prenotazione prenotazione) {
-    struct node* nodo = malloc(sizeof(struct node));
+static struct nodo* nuovo_nodo(Prenotazione prenotazione) {
+    struct nodo* nodo = malloc(sizeof(struct nodo));
     nodo->prenotazione = prenotazione;
-    nodo->left   = nodo->right = NULL;
-    nodo->height = 1;
-    nodo->max = fine_intervallo(ottieni_intervallo_prenotazione(prenotazione));
+    nodo->sinistra   = nodo->destra = NULL;
+    nodo->altezza = 1;
+    nodo->massimo = fine_intervallo(ottieni_intervallo_prenotazione(prenotazione));
     return nodo;
 }
 
-static time_t ottieni_max(struct node *nodo){
-    return nodo ? nodo->max: 0;
+static time_t ottieni_massimo(struct nodo *nodo){
+    return nodo ? nodo->massimo: 0;
 }
 
-static void aggiorna_nodo(struct node *n) {
+static void aggiorna_nodo(struct nodo *n) {
     Intervallo iv = ottieni_intervallo_prenotazione(n->prenotazione);
     time_t fi = fine_intervallo(iv);
 
-    n->height = 1 + massimo(height(n->left), height(n->right));
+    n->altezza = 1 + massimo(altezza(n->sinistra), altezza(n->destra));
 
 	/* Il massasimo intervallo presente fra il nodo e i suoi figli
      * utile per velocizzare la ricerca di intervalli
      * che si sovrappongono
 	 */
-    n->max = massimo(fi, massimo(ottieni_max(n->left), ottieni_max(n->right)));
+    n->massimo = massimo(fi, massimo(ottieni_massimo(n->sinistra), ottieni_massimo(n->destra)));
 }
 
 /*
@@ -85,12 +92,12 @@ static void aggiorna_nodo(struct node *n) {
  * E poi aggiorna massimo e altezza di x e y
  * con "aggiorna_nodo(nodo)"
  */
-static struct node *ruota_destra(struct node *y){
-    struct node *x = y->left;
-    struct node *T2 = x->right;
+static struct nodo *ruota_destra(struct nodo *y){
+    struct nodo *x = y->sinistra;
+    struct nodo *T2 = x->destra;
 
-    x->right = y;
-    y->left = T2;
+    x->destra = y;
+    y->sinistra = T2;
 
 	aggiorna_nodo(x);
 	aggiorna_nodo(y);
@@ -117,12 +124,12 @@ static struct node *ruota_destra(struct node *y){
  * E poi aggiorna massimo e altezza di x e y
  * con "aggiorna_nodo(nodo)"
  */
-static struct node *ruota_sinistra(struct node *x){
-    struct node *y = x->right;
-    struct node *T2 = y->left;
+static struct nodo *ruota_sinistra(struct nodo *x){
+    struct nodo *y = x->destra;
+    struct nodo *T2 = y->sinistra;
 
-    y->left = x;
-    x->right = T2;
+    y->sinistra = x;
+    x->destra = T2;
 
     /* Ricalcolare il massimo fra il nodo e i suoi 2 figli */
 	aggiorna_nodo(x);
@@ -131,32 +138,32 @@ static struct node *ruota_sinistra(struct node *x){
     return y;
 }
 
-static struct node *casi_bilanciamento(struct node *nodo, time_t inizio) {
-    int bilancio = height(nodo->left) - height(nodo->right);
+static struct nodo *casi_bilanciamento(struct nodo *nodo, time_t inizio) {
+    int bilancio = altezza(nodo->sinistra) - altezza(nodo->destra);
 
-    /* LEFT-LEFT o LEFT-RIGHT */
-    if (bilancio > 1 && nodo->left) {
-        time_t inizio_l = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->left->prenotazione));
+    /* sinistra-sinistra o sinistra-destra */
+    if (bilancio > 1 && nodo->sinistra) {
+        time_t inizio_l = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->sinistra->prenotazione));
 
-        /* LEFT-LEFT */
+        /* sinistra-sinistra */
         if (inizio < inizio_l)
             return ruota_destra(nodo);
 
-        /* LEFT-RIGHT */
-        nodo->left = ruota_sinistra(nodo->left);
+        /* sinistra-destra */
+        nodo->sinistra = ruota_sinistra(nodo->sinistra);
         return ruota_destra(nodo);
     }
 
-    /* RIGHT-RIGHT o RIGHT-LEFT */
-    if (bilancio < -1 && nodo->right) {
-        time_t inizio_r = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->right->prenotazione));
+    /* destra-destra o destra-sinistra */
+    if (bilancio < -1 && nodo->destra) {
+        time_t inizio_r = inizio_intervallo(ottieni_intervallo_prenotazione(nodo->destra->prenotazione));
 
-        /* RIGHT-RIGHT */
+        /* destra-destra */
         if (inizio > inizio_r)
             return ruota_sinistra(nodo);
 
-        /* RIGHT-LEFT */
-        nodo->right = ruota_destra(nodo->right);
+        /* destra-sinistra */
+        nodo->destra = ruota_destra(nodo->destra);
         return ruota_sinistra(nodo);
     }
 
@@ -164,70 +171,55 @@ static struct node *casi_bilanciamento(struct node *nodo, time_t inizio) {
     return nodo;
 }
 
-struct node *crea_prenotazioni(){
-    return NULL;
-}
-
-static void distruggi_nodo_prenotazioni(Prenotazioni p){
-	if(p == NULL) return;
+static void distruggi_nodo_prenotazioni(struct nodo *nodo){
+	if(nodo == NULL) return;
 
 	/* prenotazione è allocata in memoria
 	 * dinamicamente quindi va distrutta con
      * la sua funzione prima di liberare p
 	 */
-    distruggi_prenotazione(p->prenotazione);
+    distruggi_prenotazione(nodo->prenotazione);
 
-    free(p);
+    free(nodo);
 }
 
-static void _distruggi_prenotazioni(Prenotazioni nodo) {
+static void _distruggi_prenotazioni(struct nodo *nodo) {
     if (nodo == NULL) return;
 	/* Distrugge tutti i nodi in modo preorder */
-    _distruggi_prenotazioni(nodo->left);
-    _distruggi_prenotazioni(nodo->right);
+    _distruggi_prenotazioni(nodo->sinistra);
+    _distruggi_prenotazioni(nodo->destra);
 
     distruggi_nodo_prenotazioni(nodo);
 }
 
-void distruggi_prenotazioni(Prenotazioni *prenotazioni) {
-    if (*prenotazioni == NULL) return;
-
-    _distruggi_prenotazioni(*prenotazioni);
-
-    /* Dopo aver distrutto la prenotazione imposto a NULL
-     * il puntatore, per evitare dangling pointer e memory leak
-     */
-    *prenotazioni = NULL;
-}
-
-struct node *aggiungi_prenotazione(struct node *tree, Prenotazione prenotazione){
+static struct nodo *aggiungi_prenotazione_t(struct nodo *albero, Prenotazione prenotazione){
     if(prenotazione == NULL)
         return NULL;
 
-    if(tree == NULL)
+    if(albero == NULL)
         return nuovo_nodo(prenotazione);
 
-    time_t inizio = inizio_intervallo(ottieni_intervallo_prenotazione(tree->prenotazione));
+    time_t inizio = inizio_intervallo(ottieni_intervallo_prenotazione(albero->prenotazione));
     time_t nuovo_inizio = inizio_intervallo(ottieni_intervallo_prenotazione(prenotazione));
 
     if(nuovo_inizio < inizio){
-        tree->left = aggiungi_prenotazione(tree->left, prenotazione);
+        albero->sinistra = aggiungi_prenotazione_t(albero->sinistra, prenotazione);
     }
     else{
-        tree->right = aggiungi_prenotazione(tree->right, prenotazione);
+        albero->destra = aggiungi_prenotazione_t(albero->destra, prenotazione);
     }
 
-	aggiorna_nodo(tree);
+	aggiorna_nodo(albero);
 
     /* Ribilancia l'albero se necessario */
-    return casi_bilanciamento(tree, nuovo_inizio);
+    return casi_bilanciamento(albero, nuovo_inizio);
 }
 
-Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
-    if(prenotazioni == NULL)
+static Byte controlla_prenotazione_t(struct nodo *radice, Intervallo i){
+    if(radice == NULL)
         return OK;
 
-    Intervallo i_attuale = ottieni_intervallo_prenotazione(prenotazioni->prenotazione);
+    Intervallo i_attuale = ottieni_intervallo_prenotazione(radice->prenotazione);
     time_t inizio = inizio_intervallo(i);
 
     if(intervalli_si_sovrappongono(i_attuale, i)) return OCCUPATO;
@@ -236,120 +228,169 @@ Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
      * nel nodo sinistro è maggiore o uguale all'inizio della nuova prenotazione,
      * allora la potenziale sovrapposizione potrebbe essere nel sottoalbero sinistro
      */
-    if(prenotazioni->left && prenotazioni->left->max >= inizio)
-        return controlla_prenotazione(prenotazioni->left, i);
+    if(radice->sinistra && radice->sinistra->massimo >= inizio)
+        return controlla_prenotazione_t(radice->sinistra, i);
 	/* Altrimenti si controlla a destra */
-    return controlla_prenotazione(prenotazioni->right, i);
+    return controlla_prenotazione_t(radice->destra, i);
 }
 
-static struct node *trova_minimo(struct node *nodo){
-    while(nodo->left != NULL){
-        nodo = nodo->left;
+static struct nodo *trova_minimo(struct nodo *nodo){
+    while(nodo->sinistra != NULL){
+        nodo = nodo->sinistra;
     }
     return nodo;
 }
 
-Prenotazioni cancella_prenotazione(Prenotazioni prenotazioni, Prenotazione p) {
-    if (prenotazioni == NULL) return prenotazioni;
+static struct nodo *cancella_prenotazione_t(struct nodo *radice, Intervallo i, Byte *controllo) {
+    if (radice == NULL) return radice;
 
-    Intervallo i_attuale = ottieni_intervallo_prenotazione(prenotazioni->prenotazione);
-    Intervallo i_nuovo = ottieni_intervallo_prenotazione(p);
-    time_t inizio = inizio_intervallo(i_nuovo);
+    Intervallo i_attuale = ottieni_intervallo_prenotazione(radice->prenotazione);
+    time_t inizio = inizio_intervallo(i);
 
-    if (!compara_intervalli(i_attuale, i_nuovo)) {
+    if (!compara_intervalli(i_attuale, i)) {
         /* Caso 0/1 figlio */
-        if (prenotazioni->left == NULL || prenotazioni->right == NULL) {
-            struct node *temp = prenotazioni->left ? prenotazioni->left : prenotazioni->right;
+        if (radice->sinistra == NULL || radice->destra == NULL) {
+            struct nodo *temp = radice->sinistra ? radice->sinistra : radice->destra;
             if (temp == NULL) {
                 /* Nessun figlio */
-                distruggi_nodo_prenotazioni(prenotazioni);
+                distruggi_nodo_prenotazioni(radice);
+                *controllo = 1;
                 return NULL;
             } else {
                 /* Un figlio */
-                distruggi_nodo_prenotazioni(prenotazioni);
+                distruggi_nodo_prenotazioni(radice);
+                *controllo = 1;
                 return temp;
             }
         } else {
             /* Caso due figli */
-            struct node *temp = trova_minimo(prenotazioni->right);
-            distruggi_prenotazione(prenotazioni->prenotazione);
-            prenotazioni->prenotazione = duplica_prenotazione(temp->prenotazione);
-            prenotazioni->right = cancella_prenotazione(prenotazioni->right, temp->prenotazione);
+            struct nodo *temp = trova_minimo(radice->destra);
+            Intervallo i_min = ottieni_intervallo_prenotazione(temp->prenotazione);
+
+            distruggi_prenotazione(radice->prenotazione);
+            radice->prenotazione = duplica_prenotazione(temp->prenotazione);
+
+            Byte controllo_dx = 0;
+            radice->destra = cancella_prenotazione_t(radice->destra, i_min, &controllo_dx);
+            if (controllo_dx){
+                *controllo = 1;
+            }
         }
-    } else if (prenotazioni->left && prenotazioni->left->max >= inizio) {
-        prenotazioni->left = cancella_prenotazione(prenotazioni->left, p);
-    } else {
-        prenotazioni->right = cancella_prenotazione(prenotazioni->right, p);
+    }
+    else if (radice->sinistra && radice->sinistra->massimo >= inizio) {
+        radice->sinistra = cancella_prenotazione_t(radice->sinistra, i, controllo);
+    }
+    else {
+        radice->destra = cancella_prenotazione_t(radice->destra, i, controllo);
     }
 
-    /* Aggiorna max e height */
-   	aggiorna_nodo(prenotazioni);
-
-	/* Ribilancia l'albero se necessario */
-    return casi_bilanciamento(prenotazioni, inizio_intervallo(i_attuale));
+    aggiorna_nodo(radice);
+    return casi_bilanciamento(radice, inizio_intervallo(i_attuale));
 }
 
-static unsigned int conta_nodi(Prenotazioni prenotazioni){
-    if (!prenotazioni) return 0;
-    return 1 + conta_nodi(prenotazioni->left) + conta_nodi(prenotazioni->right);
-}
+static void prenotazioni_in_vettore_t(struct nodo *radice, Prenotazione *result, int *index) {
+    if (!radice) return;
 
-static void prenotazioni_in_vettore_t(Prenotazioni prenotazioni, Prenotazione *result, int *index) {
-    if (!prenotazioni) return;
+    prenotazioni_in_vettore_t(radice->sinistra, result, index);
 
-    prenotazioni_in_vettore_t(prenotazioni->left, result, index);
-
-    result[*index] = prenotazioni->prenotazione;
+    result[*index] = radice->prenotazione;
     (*index)++;
 
-    prenotazioni_in_vettore_t(prenotazioni->right, result, index);
+    prenotazioni_in_vettore_t(radice->destra, result, index);
 }
 
-Prenotazione *prenotazioni_in_vettore(Prenotazioni prenotazioni, int *size) {
+Prenotazioni crea_prenotazioni(){
+    Prenotazioni albero = malloc(sizeof(struct albero));
+    albero->num_nodi = 0;
+    albero->radice = NULL;
+    return albero;
+}
+
+void distruggi_prenotazioni(Prenotazioni prenotazioni) {
+    if (prenotazioni == NULL) return;
+
+    _distruggi_prenotazioni(prenotazioni->radice);
+
+    /* Dopo aver distrutto la prenotazione imposto a NULL
+     * il puntatore, per evitare dangling pointer e memory leak
+     */
+    prenotazioni->radice = NULL;
+    prenotazioni->num_nodi = 0;
+    free(prenotazioni);
+}
+
+Byte aggiungi_prenotazione(Prenotazioni albero, Prenotazione prenotazione){
+    if(albero == NULL || prenotazione == NULL) return 0;
+    albero->radice = aggiungi_prenotazione_t(albero->radice, prenotazione);
+    if(albero->radice == NULL) return 0;
+    albero->num_nodi += 1;
+    return 1;
+}
+
+Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
+    if(prenotazioni == NULL || i == NULL) return 0;
+    return controlla_prenotazione_t(prenotazioni->radice, i);
+}
+
+Byte cancella_prenotazione(Prenotazioni prenotazioni, Intervallo i){
+    if(prenotazioni == NULL || i == NULL) return 0;
+
+    Byte controllo = 0;
+    prenotazioni->radice = cancella_prenotazione_t(prenotazioni->radice, i, &controllo);
+    if(controllo) prenotazioni->num_nodi -= 1;
+    return controllo;
+}
+
+Prenotazione *ottieni_vettore_prenotazioni_ordinate(Prenotazioni prenotazioni, unsigned int *size) {
     if (!prenotazioni) return NULL;
 
-    unsigned int num_nodi = conta_nodi(prenotazioni);
+    unsigned int num_nodi = prenotazioni->num_nodi;
     Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
     if (!result) return NULL;
 
     int index = 0;
-    prenotazioni_in_vettore_t(prenotazioni, result, &index);
+    prenotazioni_in_vettore_t(prenotazioni->radice, result, &index);
     *size = num_nodi;
     return result;
 }
 
-Prenotazione *ottieni_vettore_prenotazioni(Prenotazioni prenotazioni, unsigned int *size) {
+Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, unsigned int *size) {
     if (prenotazioni == NULL) return NULL;
 
-    Coda q = crea_coda();
-    unsigned int num_nodi = conta_nodi(prenotazioni);
+    unsigned int num_nodi = prenotazioni->num_nodi;
     Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
-    if (result == NULL) return NULL;
-
-    if (aggiungi_in_coda(prenotazioni, q) <= 0) {
-        free(result);
+    if (result == NULL){
+        printf("Ciao1\n");
         return NULL;
     }
 
     unsigned int i = 0;
+
+    Coda q = crea_coda();
+    if (aggiungi_in_coda(prenotazioni->radice, q) < 0) {
+        free(result);
+        return NULL;
+    }
     while (!coda_vuota(q)) {
-        Prenotazioni temp = (Prenotazioni)rimuovi_dalla_coda(q);
+        struct nodo *temp = (struct nodo *)rimuovi_dalla_coda(q);
         if (temp == NULL) continue;
 
         result[i++] = temp->prenotazione;
 
-        if (temp->left != NULL && aggiungi_in_coda(temp->left, q) <= 0) {
+        if (temp->sinistra != NULL && aggiungi_in_coda(temp->sinistra, q) < 0) {
             free(result);
             return NULL;
         }
 
-        if (temp->right != NULL && aggiungi_in_coda(temp->right, q) <= 0) {
+        if (temp->destra != NULL && aggiungi_in_coda(temp->destra, q) < 0) {
             free(result);
             return NULL;
         }
     }
 
-    *size = num_nodi;
+    *size = i;
+
     distruggi_coda(q, NULL);
+
     return result;
 }
