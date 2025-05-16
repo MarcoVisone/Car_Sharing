@@ -53,6 +53,9 @@ struct veicolo{
  * Post-condizione:
  *   restituisce un nuovo oggetto Veicolo se l'allocazione è andata a buon fine,
  *   altrimenti restituisce NULL
+ *
+ * Side-effect:
+ *    alloca memoria dinamicamente per il veicolo
  */
 Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni){
     Veicolo v = malloc(sizeof(struct veicolo));
