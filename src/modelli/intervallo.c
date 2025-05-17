@@ -21,34 +21,41 @@ struct intervallo{
 /*
  * Funzione: crea_intervallo
  * --------------------------
- * Crea un intervallo tra due timestamp specificati.
+ * Crea un nuovo intervallo temporale con tempo di inizio e fine specificati.
  *
  * Implementazione:
- * Alloca memoria per la struttura intervallo e imposta i valori.
+ * Verifica che il timestamp iniziale sia minore o uguale a quello finale.
+ * Se la condizione è rispettata, alloca memoria per una struttura `intervallo`.
+ * Se l'allocazione ha successo, imposta i valori di inizio e fine e restituisce
+ * il puntatore alla struttura. In caso di errore (allocazione fallita o intervallo
+ * non valido), restituisce NULL.
  *
  * Parametri:
- *    inizio: timestamp di inizio
- *    fine: timestamp di fine
+ *    inizio: timestamp di inizio dell'intervallo
+ *    fine: timestamp di fine dell'intervallo
  *
  * Pre-condizioni:
- *    inizio e fine devono essere timestamp validi
- *    inizio <= fine
+ *    inizio deve essere un timestamp valido
+ *    fine deve essere un timestamp valido
+ *    inizio deve essere <= fine
  *
  * Post-condizione:
- *    ritorna un intervallo valido o NULL in caso di errore di allocazione
+ *    restituisce un nuovo intervallo se l'allocazione è andata a buon fine,
+ *    altrimenti restituisce NULL
  *
- * Ritorna:
- *    Intervallo creato
+ * Restituisce:
+ *    Un nuovo intervallo
  *
  * Side-effect:
  *    Alloca memoria
  */
+
 Intervallo crea_intervallo(time_t inizio, time_t fine){
+    if(inizio > fine) return NULL;
     Intervallo i = (Intervallo) malloc(sizeof(struct intervallo));
     if(i == NULL){
         return NULL;
     }
-
     i->inizio = inizio;
     i->fine = fine;
 
@@ -67,7 +74,7 @@ Intervallo crea_intervallo(time_t inizio, time_t fine){
  *    i: intervallo da distruggere
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    la memoria è liberata se i non è NULL
@@ -98,7 +105,7 @@ void distruggi_intervallo(Intervallo i){
  *    i: intervallo
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    restituisce il campo inizio o 0
@@ -129,7 +136,7 @@ time_t inizio_intervallo(Intervallo i) {
  *    i: intervallo
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    restituisce il campo fine o 0
@@ -161,7 +168,7 @@ time_t fine_intervallo(Intervallo i){
  *    esterno: secondo intervallo
  *
  * Pre-condizioni:
- *    interno ed esterno possono essere NULL
+ *    interno ed esterno non possono essere NULL
  *
  * Post-condizione:
  *    ritorna 1 se si sovrappongono, 0 altrimenti
@@ -189,13 +196,13 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
  * Crea un nuovo intervallo copiando i valori di quello dato.
  *
  * Parametri:
- *    p: intervallo da duplicare
+ *    i: intervallo da duplicare
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
- *    ritorna una copia o NULL
+ *    ritorna una copia dell'intervallo o NULL se p è NULL
  *
  * Ritorna:
  *    Copia dell'intervallo
@@ -203,10 +210,10 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
  * Side-effect:
  *    Alloca memoria
  */
-Intervallo duplica_intervallo(Intervallo p){
-    if(p == NULL) return NULL;
+Intervallo duplica_intervallo(Intervallo i){
+    if(i == NULL) return NULL;
 
-    Intervallo copia = crea_intervallo(p->inizio, p->fine);
+    Intervallo copia = crea_intervallo(i->inizio, i->fine);
 
     return copia;
 }
@@ -230,12 +237,13 @@ Intervallo duplica_intervallo(Intervallo p){
  *    ritorna un valore intero in base alla comparazione
  *
  * Ritorna:
- *    -1, 0, 1
+ *    -1 se a inizia prima di b, 1 se a inizia dopo b, 0 se iniziano insieme
  *
  * Side-effect:
  *    Nessuno
  */
 Byte compara_intervalli(Intervallo a, Intervallo b) {
+    if(a == NULL || b == NULL) return 0;
     if (a->inizio < b->inizio) return -1;
     if (a->inizio > b->inizio) return 1;
     return 0;
@@ -293,7 +301,8 @@ static time_t converti_data_in_time_t(const char *data){
  *    fine: stringa data di fine
  *
  * Pre-condizioni:
- *    stringhe in formato "dd/mm/yyyy HH:MM"
+ *    stringhe non devono essere NULL
+ *    e in formato "dd/mm/yyyy HH:MM"
  *
  * Post-condizione:
  *    ritorna intervallo o NULL
@@ -305,6 +314,8 @@ static time_t converti_data_in_time_t(const char *data){
  *    Alloca memoria
  */
 Intervallo converti_data_in_intervallo(const char *inizio, const char *fine){
+    if(inizio == NULL || fine == NULL) return NULL;
+
     time_t t_inizio = converti_data_in_time_t(inizio);
     time_t t_fine = converti_data_in_time_t(fine);
 
@@ -327,7 +338,7 @@ Intervallo converti_data_in_intervallo(const char *inizio, const char *fine){
  *    i: intervallo
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    ritorna stringa o NULL
