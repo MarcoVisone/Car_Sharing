@@ -26,15 +26,16 @@ typedef struct intervallo* Intervallo;
  *    inizio deve essere <= fine
  *
  * Post-condizione:
- *    ritorna un nuovo intervallo se l'allocazione è andata a buon fine,
- *    altrimenti ritorna NULL
+ *    restituisce un nuovo intervallo se l'allocazione è andata a buon fine,
+ *    altrimenti restituisce NULL
  *
- * Ritorna:
+ * Restituisce:
  *    Un nuovo intervallo
  *
  * Side-effect:
  *    Alloca memoria
  */
+
 Intervallo crea_intervallo(time_t inizio, time_t fine);
 
 /*
@@ -136,7 +137,8 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
  *    fine: stringa con data/ora di fine (formato "dd/mm/yyyy HH:MM")
  *
  * Pre-condizioni:
- *    entrambe le stringhe devono essere nel formato corretto
+ *    Entrambe le stringhe devono essere nel formato corretto
+ *    e devono essere non NULL
  *
  * Post-condizione:
  *    ritorna un nuovo intervallo o NULL in caso di errore
@@ -155,10 +157,10 @@ Intervallo converti_data_in_intervallo(const char *inizio, const char *fine);
  * Crea una copia dell'intervallo specificato.
  *
  * Parametri:
- *    p: puntatore all'intervallo da duplicare
+ *    i: puntatore all'intervallo da duplicare
  *
  * Pre-condizioni:
- *    p non può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    ritorna una copia dell'intervallo o NULL se p è NULL
@@ -169,7 +171,7 @@ Intervallo converti_data_in_intervallo(const char *inizio, const char *fine);
  * Side-effect:
  *    Alloca memoria
  */
-Intervallo duplica_intervallo(Intervallo p);
+Intervallo duplica_intervallo(Intervallo i);
 
 /*
  * Funzione: compara_intervalli
@@ -203,7 +205,7 @@ Byte compara_intervalli(Intervallo a, Intervallo b);
  *    i: puntatore all'intervallo da convertire
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i non può essere NULL
  *
  * Post-condizione:
  *    ritorna una stringa formattata o NULL se i è NULL
