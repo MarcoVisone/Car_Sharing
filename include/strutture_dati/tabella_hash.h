@@ -44,7 +44,6 @@ TabellaHash nuova_tabella_hash(unsigned int grandezza);
  *
  * Pre-condizioni:
  *    tabella_hash: non deve essere NULL
- *    funzione_distruggi_valore: non deve essere NULL
  *
  * Post-condizioni:
  *    non restituisce nulla
@@ -58,12 +57,12 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
  * Funzione: inserisci_in_tabella
  * ------------------------------------
  *
- * inserisce un elemento nella tabella hash
+ * inserisce un elemento nella tabella hash associando una chiave a un valore
  *
  * Parametri:
  *    tabella_hash: puntatore alla tabella hash
  *    chiave: stringa contenente la chiave dell'elemento
- *    valore: puntatore al valore da inserire
+ *    valore: puntatore al valore da associare alla chiave
  *
  * Pre-condizioni:
  *    tabella_hash: non deve essere NULL
@@ -74,7 +73,7 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
  *    restituisce 1 se l'inserimento è avvenuto con successo, 0 in caso di errore
  *
  * Side-effect:
- *    modifica la tabella hash aggiungendo un nuovo elemento
+ *    modifica la tabella hash aggiungendo un nuovo elemento e ridimensiona la tabella se necessario
  */
 Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
 
@@ -92,14 +91,14 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
  * Pre-condizioni:
  *    tabella_hash: non deve essere NULL
  *    chiave: non deve essere NULL
- *    funzione_distruggi_valore: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce 1 se la rimozione ha avuto successo, 0 se la chiave non è presente
  *    o se si verifica un errore
  *
  * Side-effect:
- *    Modifica la tabella hash rimuovendo l'elemento associato alla chiave
+ *    - modifica la tabella hash rimuovendo l'elemento associato alla chiave
+ *    - libera memoria dinamicamente associata al nodo e al valore
  */
 Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzione_distruggi_valore)(void *));
 
@@ -137,7 +136,7 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
  *    tabella_hash: non deve essere NULL
  *    dimensione: non deve essere NULL
  *
- * Post-condizione:
+ * Post-condizioni:
  *    restituisce un array di puntatori ai valori presenti nella tabella hash,
  *    oppure NULL se ci sono errori o la tabella è vuota.
  *
