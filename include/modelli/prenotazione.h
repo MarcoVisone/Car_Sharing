@@ -20,11 +20,11 @@ typedef struct prenotazione *Prenotazione;
  *    costo: costo della prenotazione
  *
  * Pre-condizioni:
- *    cliente deve essere una stringa valida
- *    i deve essere un intervallo valido (può essere NULL)
+ *    cliente deve essere una stringa non nulla
+ *    i deve essere un intervallo valido non nullo
  *
  * Post-condizione:
- *    ritorna una nuova prenotazione o NULL in caso di errore
+ *    restituisce una nuova prenotazione o NULL in caso di errore
  *
  * Ritorna:
  *    Prenotazione creata
@@ -40,10 +40,16 @@ Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo);
  *    p: puntatore alla prenotazione da distruggere
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
  *    la memoria della prenotazione viene deallocata
+ *
+ * Side-effect:
+ *    Dealloca memoria dinamica
+ *
+ * Ritorna:
+ *    non restituisce niente
  */
 void distruggi_prenotazione(Prenotazione p);
 
@@ -56,10 +62,10 @@ void distruggi_prenotazione(Prenotazione p);
  *    p: puntatore alla prenotazione
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
- *    ritorna il nome del cliente o NULL se p è NULL
+ *    restituisce il nome del cliente
  *
  * Ritorna:
  *    Nome del cliente
@@ -75,10 +81,10 @@ char *ottieni_cliente_prenotazione(Prenotazione p);
  *    p: puntatore alla prenotazione
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
- *    ritorna l'intervallo o NULL se p è NULL
+ *    restituisce l'intervallo associato
  *
  * Ritorna:
  *    Intervallo temporale
@@ -94,10 +100,10 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
  *    p: puntatore alla prenotazione
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
- *    ritorna il costo o -1 se p è NULL
+ *    restituisce il costo
  *
  * Ritorna:
  *    Costo della prenotazione
@@ -119,6 +125,12 @@ double ottieni_costo_prenotazione(Prenotazione p);
  *
  * Post-condizione:
  *    aggiorna il nome del cliente
+ *
+ * Side-effect:
+ *    Modifica memoria interna della struttura
+ *
+ * Ritorna:
+ *    non restituisce niente
  */
 void imposta_cliente_prenotazione(Prenotazione p, char *cliente);
 
@@ -137,6 +149,12 @@ void imposta_cliente_prenotazione(Prenotazione p, char *cliente);
  *
  * Post-condizione:
  *    aggiorna l'intervallo della prenotazione
+ *
+ * Side-effect:
+ *    Modifica memoria interna della struttura
+ *
+ * Ritorna:
+ *    non restituisce niente
  */
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
 
@@ -154,6 +172,12 @@ void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
  *
  * Post-condizione:
  *    aggiorna il costo della prenotazione
+ *
+ * Side-effect:
+ *    Modifica memoria interna della struttura
+ *
+ * Ritorna:
+ *    non restituisce niente
  */
 void imposta_costo_prenotazione(Prenotazione p, double costo);
 
@@ -166,10 +190,10 @@ void imposta_costo_prenotazione(Prenotazione p, double costo);
  *    p: puntatore alla prenotazione da duplicare
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
- *    ritorna una nuova prenotazione identica o NULL se p è NULL
+ *    restituisce una nuova prenotazione identica
  *
  * Ritorna:
  *    Nuova prenotazione duplicata
@@ -185,10 +209,13 @@ Prenotazione duplica_prenotazione(Prenotazione p);
  *    p: puntatore alla prenotazione
  *
  * Pre-condizioni:
- *    p può essere NULL
+ *    p deve essere non NULL
  *
  * Post-condizione:
- *    ritorna una stringa formattata o NULL se p è NULL
+ *    restituisce una stringa formattata
+ *
+ * Side-effect:
+ *    Alloca memoria dinamica
  *
  * Ritorna:
  *    Stringa contenente i dati della prenotazione
