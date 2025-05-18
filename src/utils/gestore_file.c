@@ -132,7 +132,7 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
 }
 
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
-	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
+	if (file_veicolo == NULL || file_prenotazioni == NULL) return NULL;
 
 	unsigned int len;
     fread(&len, sizeof(unsigned int), 1, file_veicolo);
@@ -171,9 +171,9 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "w");
     if (file_prenotazioni == NULL) return;
 
-    fwrite(&num_veicoli, sizeof(unsigned int), 1, num_veicoli);
+    fwrite(&num_veicoli, sizeof(unsigned int), 1, file_veicolo);
 
-    for (int i = 0; i < num_veicoli; i++){
+    for (unsigned i = 0; i < num_veicoli; i++){
       salva_veicolo(file_veicolo, file_prenotazioni, vettore[i]);
     }
 
@@ -190,7 +190,7 @@ int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
 
     fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo);
 
-    for (int i = 0; i < *num_veicoli; i++){
+    for (unsigned i = 0; i < *num_veicoli; i++){
         vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni);
     }
 
@@ -434,7 +434,7 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
 
     fwrite(&num_utenti, sizeof(unsigned int), 1, file_utente);
 
-    for (int i = 0; i < num_utenti; i++){
+    for (unsigned int i = 0; i < num_utenti; i++){
       salva_utente(file_utente, file_data, vettore[i]);
     }
 
@@ -478,7 +478,7 @@ int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
 
     fread(num_utenti, sizeof(unsigned int), 1, file_utente);
 
-    for (int i = 0; i < *num_utenti; i++){
+    for (unsigned int i = 0; i < *num_utenti; i++){
         vettore[i] = carica_utente(file_utente, file_data);
     }
 
