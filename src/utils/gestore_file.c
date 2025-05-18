@@ -193,16 +193,15 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     fclose(file_prenotazioni);
 }
 
-int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo *vettore, unsigned int *num_veicoli){
+Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, unsigned int *num_veicoli){
 	FILE *file_veicolo = fopen(nome_file_veicolo, "r");
-    if (file_veicolo == NULL) return 0;
+    if (file_veicolo == NULL) return NULL;
 
     FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "r");
-    if (file_prenotazioni == NULL) return 0;
-
+    if (file_prenotazioni == NULL) return NULL;
     fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo);
 
-    vettore = malloc(sizeof(Veicolo) * (*num_veicoli));
+    Veicolo *vettore = malloc(sizeof(Veicolo) * (*num_veicoli));
 
     for (unsigned i = 0; i < *num_veicoli; i++){
         vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni);
@@ -211,7 +210,7 @@ int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     fclose(file_veicolo);
     fclose(file_prenotazioni);
 
-    return 1;
+    return vettore;
 }
 
 /*
@@ -487,16 +486,16 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
  * Side-effect:
  *    lettura da file, allocazione dinamica di memoria
  */
-int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente *vettore, unsigned int *num_utenti){
+Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, unsigned int *num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "r");
-    if (file_utente == NULL) return 0;
+    if (file_utente == NULL) return NULL;
 
     FILE *file_data = fopen(nome_file_data, "r");
-    if (file_data == NULL) return 0;
+    if (file_data == NULL) return NULL;
 
     fread(num_utenti, sizeof(unsigned int), 1, file_utente);
 
-    vettore = malloc(sizeof(Utente) * (*num_utenti));
+    Utente *vettore = malloc(sizeof(Utente) * (*num_utenti));
 
     for (unsigned int i = 0; i < *num_utenti; i++){
         vettore[i] = carica_utente(file_utente, file_data);
@@ -505,5 +504,5 @@ int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
     fclose(file_utente);
     fclose(file_data);
 
-    return 1;
+    return vettore;
 }
