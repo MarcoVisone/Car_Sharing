@@ -291,10 +291,11 @@ static Data carica_data(FILE *file_data){
     int numero_prenotazioni;
     int frequenza;
 
-    fread(&numero_prenotazioni, sizeof(int), 1, file_data);
     fread(&frequenza, sizeof(int), 1, file_data);
-
+    fread(&numero_prenotazioni, sizeof(int), 1, file_data);
     Data d = crea_data();
+    imposta_numero_prenotazioni(d, numero_prenotazioni);
+    imposta_frequenza(d, frequenza);
     for(int i = 0; i < numero_prenotazioni; i++){
         imposta_storico_lista(d, aggiungi_a_storico_lista(d, carica_prenotazione(file_data)));
     }
