@@ -133,7 +133,7 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
     fwrite(ottieni_modello(v), sizeof(char), len, file_veicolo);
 
-    len = strlen(ottieni_posizione(v)+1);
+    len = strlen(ottieni_posizione(v)) + 1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
     fwrite(ottieni_posizione(v), sizeof(char), len, file_veicolo);
 
@@ -340,7 +340,7 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
     fwrite(ottieni_cognome(u), sizeof(char), len, file_utente);
 
-    len = strlen(ottieni_email(u)+1);
+    len = strlen(ottieni_email(u)) + 1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
     fwrite(ottieni_email(u), sizeof(char), len, file_utente);
 
