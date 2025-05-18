@@ -133,9 +133,9 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
     fwrite(ottieni_modello(v), sizeof(char), len, file_veicolo);
 
-    len = strlen(ottieni_descrizione(v)+1);
+    len = strlen(ottieni_posizione(v)+1);
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
-    fwrite(ottieni_descrizione(v), sizeof(char), len, file_veicolo);
+    fwrite(ottieni_posizione(v), sizeof(char), len, file_veicolo);
 
 	double tariffa = ottieni_tariffa(v);
 	fwrite(&tariffa, sizeof(tariffa), 1, file_veicolo);
@@ -160,15 +160,15 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
     fread(modello_veicolo, sizeof(char), len, file_veicolo);
 
     fread(&len, sizeof(unsigned int), 1, file_veicolo);
-	char *descrizione_veicolo = malloc(sizeof(char) * len);
-    fread(descrizione_veicolo, sizeof(char), len, file_veicolo);
+	char *posizione_veicolo = malloc(sizeof(char) * len);
+    fread(posizione_veicolo, sizeof(char), len, file_veicolo);
 
 	double tariffa;
 	fread(&tariffa, sizeof(tariffa), 1, file_veicolo);
 
 	Prenotazioni p = carica_prenotazioni(file_prenotazioni);
 
-	Veicolo v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, descrizione_veicolo, tariffa, p);
+	Veicolo v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, posizione_veicolo, tariffa, p);
 
 	return v;
 }
