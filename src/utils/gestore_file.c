@@ -193,7 +193,7 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     fclose(file_prenotazioni);
 }
 
-int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int *num_veicoli){
+int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo *vettore, unsigned int *num_veicoli){
 	FILE *file_veicolo = fopen(nome_file_veicolo, "r");
     if (file_veicolo == NULL) return 0;
 
@@ -201,6 +201,8 @@ int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     if (file_prenotazioni == NULL) return 0;
 
     fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo);
+
+    vettore = malloc(sizeof(Veicolo) * (*num_veicoli));
 
     for (unsigned i = 0; i < *num_veicoli; i++){
         vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni);
@@ -242,13 +244,17 @@ static void salva_data(FILE *file_data, Data d){
     if(file_data == NULL || d == NULL){
       return;
     }
+
     unsigned int dimensione;
-    Prenotazione *lista_prenotazioni;
-    lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
-    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
+    Prenotazione *lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
+    if(lista_prenotazioni == NULL) return;
+
     int frequenza = ottieni_frequenza_lista(d);
     fwrite(&frequenza, sizeof(int), 1, file_data);
+
+    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
     fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
+
     for(int i = 0; i < numero_prenotazioni; i++){
         salva_prenotazione(file_data, lista_prenotazioni[i]);
     }
@@ -481,7 +487,7 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
  * Side-effect:
  *    lettura da file, allocazione dinamica di memoria
  */
-int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int *num_utenti){
+int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente *vettore, unsigned int *num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "r");
     if (file_utente == NULL) return 0;
 
@@ -489,6 +495,8 @@ int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
     if (file_data == NULL) return 0;
 
     fread(num_utenti, sizeof(unsigned int), 1, file_utente);
+
+    vettore = malloc(sizeof(Utente) * (*num_utenti));
 
     for (unsigned int i = 0; i < *num_utenti; i++){
         vettore[i] = carica_utente(file_utente, file_data);
