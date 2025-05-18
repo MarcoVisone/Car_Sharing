@@ -106,15 +106,98 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
     return pren;
 }
 
+static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v){
+	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
+
+	unsigned int len = strlen(ottieni_tipo_veicolo(v))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
+    fwrite(ottieni_tipo_veicolo(v), sizeof(char), len, file_veicolo);
+
+    len = strlen(ottieni_targa(v))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
+    fwrite(ottieni_targa(v), sizeof(char), len, file_veicolo);
+
+    len = strlen(ottieni_modello(v))+1;
+    fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
+    fwrite(ottieni_modello(v), sizeof(char), len, file_veicolo);
+
+    len = strlen(ottieni_descrizione(v)+1);
+    fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
+    fwrite(ottieni_descrizione(v), sizeof(char), len, file_veicolo);
+
+	double tariffa = ottieni_tariffa(v);
+	fwrite(&tariffa, sizeof(tariffa), 1, file_veicolo);
+
+	salva_prenotazioni(file_prenotazioni, ottieni_prenotazioni(v));
+}
+
+static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
+	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
+
+	unsigned int len;
+    fread(&len, sizeof(unsigned int), 1, file_veicolo);
+	char *tipo_veicolo = malloc(sizeof(char) * len);
+    fread(tipo_veicolo, sizeof(char), len, file_veicolo);
+
+    fread(&len, sizeof(unsigned int), 1, file_veicolo);
+	char *targa_veicolo = malloc(sizeof(char) * len);
+    fread(targa_veicolo, sizeof(char), len, file_veicolo);
+
+    fread(&len, sizeof(unsigned int), 1, file_veicolo);
+	char *modello_veicolo = malloc(sizeof(char) * len);
+    fread(modello_veicolo, sizeof(char), len, file_veicolo);
+
+    fread(&len, sizeof(unsigned int), 1, file_veicolo);
+	char *descrizione_veicolo = malloc(sizeof(char) * len);
+    fread(descrizione_veicolo, sizeof(char), len, file_veicolo);
+
+	double tariffa;
+	fread(&tariffa, sizeof(tariffa), 1, file_veicolo);
+
+	Prenotazioni p = carica_prenotazioni(file_prenotazioni);
+
+	Veicolo v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, descrizione_veicolo, tariffa, p);
+
+	return v;
+}
+
 /*
     Iterare il vettore e usare per ogni cella la funzione salva_veicolo
 */
-void salva_vettore_veicoli(const char *nome_file, Veicolo vettore[], int num_veicoli){
-    return;
+void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int num_veicoli){
+	FILE *file_veicolo = fopen(nome_file_veicolo, "w");
+    if (nome_file_veicolo == NULL) return;
+
+    FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "w");
+    if (file_prenotazioni == NULL) return;
+
+    fwrite(&num_veicoli, sizeof(unsigned int), 1, num_veicoli);
+
+    for (int i = 0; i < num_veicoli; i++){
+      salva_veicolo(file_veicolo, file_prenotazioni, vettore[i]);
+    }
+
+    fclose(file_veicolo);
+    fclose(file_prenotazioni);
 }
 
-int carica_vettore_veicoli(const char *nome_file, Veicolo vettore[], int max_veicoli){
-    return 0;
+int carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int *num_veicoli){
+	FILE *file_veicolo = fopen(nome_file_veicolo, "r");
+    if (file_veicolo == NULL) return 0;
+
+    FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "r");
+    if (file_prenotazioni == NULL) return 0;
+
+    fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo);
+
+    for (int i = 0; i < *num_veicoli; i++){
+        vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni);
+    }
+
+    fclose(file_veicolo);
+    fclose(file_prenotazioni);
+
+    return 1;
 }
 
 /*
@@ -342,9 +425,10 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data){
  * Side-effect:
  *    apertura e scrittura su file
  */
-void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int num_utenti){
+void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "w");
     if (file_utente == NULL) return;
+
     FILE *file_data = fopen(nome_file_data, "w");
     if (file_data == NULL) return;
 
@@ -385,9 +469,10 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
  * Side-effect:
  *    lettura da file, allocazione dinamica di memoria
  */
-int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], int *num_utenti){
+int carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int *num_utenti){
     FILE *file_utente = fopen(nome_file_utente, "r");
     if (file_utente == NULL) return 0;
+
     FILE *file_data = fopen(nome_file_data, "r");
     if (file_data == NULL) return 0;
 
