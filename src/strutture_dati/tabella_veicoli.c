@@ -223,3 +223,12 @@ Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo 
     }
     return vettore;
 }
+
+
+void carica_veicoli(TabellaVeicoli tabella_veicoli, Veicolo *veicolo, unsigned int dimensione){
+	if(tabella_veicoli == NULL || veicolo == NULL || !dimensione) return;
+
+	for(unsigned int i = 0; i < dimensione; i++){
+		aggiungi_veicolo_in_tabella(tabella_veicoli, veicolo[i]);
+	}
+}
