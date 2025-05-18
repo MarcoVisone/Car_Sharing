@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "modelli/utente.h"
 #include "modelli/data.h"
+#include "utils/utils.h"
 #include <string.h>
 
 struct utente {
@@ -578,4 +579,24 @@ Data ottieni_data(Utente utente){
     return NULL;
   }
   return utente->data;
+}
+
+char *utente_in_stringa(Utente utente){
+    if(utente == NULL) return NULL;
+    char *tipo_utente = NULL;
+    if(ottieni_permesso(utente) == ADMIN){
+        tipo_utente = mia_strdup("Admin");
+    }
+    else tipo_utente = mia_strdup("Cliente");
+
+    size_t lunghezza = (strlen(utente->cognome) + strlen(utente->nome) + strlen(utente->email) + strlen(tipo_utente)) + 100 + 1;
+    char *buffer = malloc(sizeof(char) * lunghezza);
+
+    snprintf(buffer, lunghezza, "- Nome: %s\n- Cognome: %s\n- Email: %s\n- Utente e' %s",
+        utente->nome,
+        utente->cognome,
+        utente->email,
+        tipo_utente);
+
+    return buffer;
 }

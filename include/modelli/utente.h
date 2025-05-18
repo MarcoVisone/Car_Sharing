@@ -386,4 +386,6 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
 Data ottieni_data(Utente utente);
 
+char *utente_in_stringa(Utente utente);
+
 #endif // UTENTE_H
