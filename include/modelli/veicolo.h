@@ -15,21 +15,21 @@ typedef struct veicolo *Veicolo;
 /*
  * Funzione: crea_veicolo
  * ----------------------
- * Crea un nuovo veicolo con targa, modello, descrizione,
+ * Crea un nuovo veicolo con targa, modello, posizione,
  * tariffa e prenotazioni associate
  *
  * Parametri:
  *    tipo: stringa che rappresenta il tipo del veicolo
  *    targa: stringa che rappresenta la targa del veicolo
  *    modello: stringa che rappresenta il modello del veicolo
- *    descrizione: stringa che rappresenta la descrizione del veicolo
+ *    posizione: stringa che rappresenta la posizione del veicolo
  *    tariffa: numero che rappresenta la tariffa al minuto in euro di un veicolo
  *    prenotazioni: puntatore alle prenotazioni associate ad un veicolo
  *
  * Pre-condizioni:
  *	 targa: non deve essere NULL e deve essere di 7 caratteri
  *   modello: non deve essere NULL
- *   descrizione: non deve essere NULL
+ *   posizione: non deve essere NULL
  *   tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
@@ -39,7 +39,7 @@ typedef struct veicolo *Veicolo;
  * Side-effect:
  *    alloca memoria dinamicamente per il veicolo
  */
-Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni);
+Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, double tariffa, Prenotazioni prenotazioni);
 
 /*
  * Funzione: distruggi_veicolo
@@ -142,10 +142,10 @@ char* ottieni_modello(Veicolo v);
 void imposta_modello(Veicolo v, char *modello);
 
 /*
- * Funzione: ottieni_descrizione
- * -----------------------------
+ * Funzione: ottieni_posizione
+ * ---------------------------
  *
- * restituisce la descrizione del veicolo puntato da v.
+ * restituisce la posizione del veicolo puntato da v.
  *
  * Parametri:
  *	v: puntatore ad un veicolo
@@ -154,34 +154,31 @@ void imposta_modello(Veicolo v, char *modello);
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce una stringa contenente la descrizione del veicolo
- *
- * Ritorna:
- *	la descrizione del veicolo puntato da v
+ *	restituisce una stringa contenente la posizione del veicolo
  */
-char* ottieni_descrizione(Veicolo v);
+char* ottieni_posizione(Veicolo v);
 
 /*
- * Funzione: imposta_descrizione
+ * Funzione: imposta_posizione
  * -----------------------------
  *
- * imposta la descrizione del veicolo puntato da v
+ * imposta la posizione del veicolo puntato da v
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
- *	descrizione: stringa contenente la descrizione da impostare
+ *	posizione: stringa contenente la posizione da impostare
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	descrizione: non deve essere NULL e deve essere lunga al massimo 1024 caratteri
+ *	posizione: non deve essere NULL e deve essere lunga al massimo 200 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo descrizione del veicolo con il valore fornito
+ * 	aggiorna il campo posizione del veicolo con il valore fornito
  */
-void imposta_descrizione(Veicolo v, char *descrizione);
+void imposta_posizione(Veicolo v, char *posizione);
 
 /*
  * Funzione: ottieni_tariffa
