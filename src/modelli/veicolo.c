@@ -13,14 +13,14 @@
 
 #define NUM_CARATTERI_TARGA 7 + 1
 #define MAX_LUNGHEZZA_MODELLO 50 + 1
-#define MAX_LUNGHEZZA_DESCRIZIONE 1024 + 1
+#define MAX_LUNGHEZZA_POSIZIONE 200 + 1
 #define MAX_LUNGHEZZA_TARIFFA 9 + 1
 #define MAX_LUNGHEZZA_TIPO 30 + 1
 
 struct veicolo{
     char targa[NUM_CARATTERI_TARGA];
     char modello[MAX_LUNGHEZZA_MODELLO];
-    char descrizione[MAX_LUNGHEZZA_DESCRIZIONE];
+    char posizione[MAX_LUNGHEZZA_POSIZIONE];
     double tariffa;
 	char tipo_veicolo[MAX_LUNGHEZZA_TIPO];
     Prenotazioni prenotazioni;
@@ -29,7 +29,7 @@ struct veicolo{
 /*
  * Funzione: crea_veicolo
  * ----------------------
- * Crea un nuovo veicolo con targa, modello, descrizione,
+ * Crea un nuovo veicolo con targa, modello, posizione,
  * tariffa e prenotazioni associate
  *
  * Implementazione:
@@ -40,14 +40,14 @@ struct veicolo{
  *    tipo: stringa che rappresenta il tipo del veicolo
  *    targa: stringa che rappresenta la targa del veicolo
  *    modello: stringa che rappresenta il modello del veicolo
- *    descrizione: stringa che rappresenta la descrizione del veicolo
+ *    posizione: stringa che rappresenta la posizione del veicolo
  *    tariffa: numero che rappresenta la tariffa al minuto in euro di un veicolo
  *    prenotazioni: puntatore alle prenotazioni associate ad un veicolo
  *
  * Pre-condizioni:
  *	 targa: non deve essere NULL e deve essere di 7 caratteri
  *   modello: non deve essere NULL
- *   descrizione: non deve essere NULL
+ *   posizione: non deve essere NULL
  *   tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
@@ -57,16 +57,16 @@ struct veicolo{
  * Side-effect:
  *    alloca memoria dinamicamente per il veicolo
  */
-Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *descrizione, double tariffa, Prenotazioni prenotazioni){
+Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, double tariffa, Prenotazioni prenotazioni){
     Veicolo v = malloc(sizeof(struct veicolo));
-    if(v == NULL || tipo == NULL || modello == NULL || descrizione == NULL ||
+    if(v == NULL || tipo == NULL || modello == NULL || posizione == NULL ||
 	   tariffa <= 0 || strlen(targa) != NUM_CARATTERI_TARGA - 1) return NULL;
 
 	snprintf(v->targa, NUM_CARATTERI_TARGA, "%s", targa);
 
     snprintf(v->modello, MAX_LUNGHEZZA_MODELLO, "%s", modello);
 
-    snprintf(v->descrizione, MAX_LUNGHEZZA_DESCRIZIONE, "%s", descrizione);
+    snprintf(v->posizione, MAX_LUNGHEZZA_POSIZIONE, "%s", posizione);
 
 	snprintf(v->tipo_veicolo, MAX_LUNGHEZZA_TIPO, "%s", tipo);
 
@@ -214,14 +214,14 @@ void imposta_modello(Veicolo v, char *modello){
 }
 
 /*
- * Funzione: ottieni_descrizione
- * -----------------------------
+ * Funzione: ottieni_posizione
+ * ---------------------------
  *
- * restituisce la descrizione del veicolo puntato da v.
+ * restituisce la posizione del veicolo puntato da v.
  *
  * Implementazione:
  *    Se il puntatore al veicolo è NULL, restituisce NULL, altrimenti
- *    restituisce la stringa contenuta nel campo descrizione del veicolo
+ *    restituisce la stringa contenuta nel campo posizione del veicolo
  *
  * Parametri:
  *	v: puntatore ad un veicolo
@@ -230,43 +230,40 @@ void imposta_modello(Veicolo v, char *modello){
  *	v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce una stringa contenente la descrizione del veicolo
- *
- * Ritorna:
- *	la descrizione del veicolo puntato da v
+ *	restituisce una stringa contenente la posizione del veicolo
  */
-char* ottieni_descrizione(Veicolo v){
+char* ottieni_posizione(Veicolo v){
 	if(v == NULL) return NULL;
-    return v->descrizione;
+    return v->posizione;
 }
 
 /*
- * Funzione: imposta_descrizione
+ * Funzione: imposta_posizione
  * -----------------------------
  *
- * imposta la descrizione del veicolo puntato da v
+ * imposta la posizione del veicolo puntato da v
  *
  * Implementazione:
- *    se le pre-condizioni sono rispettate copia la stringa descrizione nel campo descrizione della struttura veicolo
+ *    se le pre-condizioni sono rispettate copia la stringa posizione nel campo posizione della struttura veicolo
  *    con snprintf per evitare overflow di buffer, altrimenti non fa nulla
  *
  * Parametri:
  * 	v: puntatore ad un veicolo
- *	descrizione: stringa contenente la descrizione da impostare
+ *	posizione: stringa contenente la posizione da impostare
  *
  * Pre-condizioni:
  *	v: non deve essere NULL
- *	descrizione: non deve essere NULL e deve essere lunga al massimo 1024 caratteri
+ *	posizione: non deve essere NULL e deve essere lunga al massimo 200 caratteri
  *
  * Post-condizione:
  *	non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo descrizione del veicolo con il valore fornito
+ * 	aggiorna il campo posizione del veicolo con il valore fornito
  */
-void imposta_descrizione(Veicolo v, char *descrizione){
-    if(v == NULL || strlen(descrizione) > MAX_LUNGHEZZA_DESCRIZIONE - 1) return;
-    snprintf(v->descrizione, MAX_LUNGHEZZA_DESCRIZIONE, "%s", descrizione);
+void imposta_posizione(Veicolo v, char *posizione){
+    if(v == NULL || strlen(posizione) > MAX_LUNGHEZZA_POSIZIONE - 1) return;
+    snprintf(v->posizione, MAX_LUNGHEZZA_POSIZIONE, "%s", posizione);
 }
 
 /*
@@ -559,7 +556,7 @@ Byte confronta_targhe(Veicolo v, char *targa){
  * Implementazione:
  *    se il puntatore al veicolo è NULL, la funzione restituisce NULL.
  *    Altrimenti, calcola una dimensione sufficiente per contenere tutte le informazioni
- *    del veicolo (tipo, modello, descrizione, targa e tariffa). Alloca dinamicamente
+ *    del veicolo (tipo, modello, posizione, targa e tariffa). Alloca dinamicamente
  *    una stringa di tale dimensione, quindi formatta i dati del veicolo in essa usando snprintf.
  *    La stringa risultante è restituita al chiamante, che dovrà occuparsi di liberarne la memoria.
  *
@@ -579,14 +576,14 @@ char* veicolo_in_stringa(Veicolo v){
 			   NUM_CARATTERI_TARGA +
                MAX_LUNGHEZZA_MODELLO +
                MAX_LUNGHEZZA_TARIFFA +
-               MAX_LUNGHEZZA_DESCRIZIONE + 100 + 1;
+               MAX_LUNGHEZZA_POSIZIONE + 100 + 1;
 
     char *buffer = malloc(sizeof(char) * size);
 
-    snprintf(buffer, size, "Tipo: %s\nModello: %s\nDescrizione: %s\nTarga: %s\nTariffa: %0.3lf",
+    snprintf(buffer, size, "Tipo: %s\nModello: %s\nPosizione: %s\nTarga: %s\nTariffa: %0.3lf",
 			v->tipo_veicolo,
             v->modello,
-            v->descrizione,
+            v->posizione,
             v->targa,
             v->tariffa);
 
