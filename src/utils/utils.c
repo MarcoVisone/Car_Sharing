@@ -88,7 +88,7 @@ TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli){
         Veicolo nuovo_veicolo = crea_veicolo(tipi[i%num_tipi],
                                              genera_targa(),
                                              modelli[i%(num_modelli)],
-                                             "Macchina con 4 porte",
+                                             "Napoli Centro",
                                              0.012,
                                              crea_prenotazioni());
         aggiungi_veicolo_in_tabella(tabella, nuovo_veicolo);
