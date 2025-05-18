@@ -38,6 +38,9 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 static Utente carica_utente(FILE *file_utente, FILE *file_data);
 
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
+    /*
+     * Autore: Marco Visone
+     */
     if(fp == NULL || prenotazione == NULL) return;
 
     char *cliente = ottieni_cliente_prenotazione(prenotazione);
@@ -56,6 +59,9 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
 }
 
 static Prenotazione carica_prenotazione(FILE *fp){
+    /*
+     * Autore: Marco Visone
+     */
     if(fp == NULL) return NULL;
 
     unsigned int len;
@@ -80,6 +86,9 @@ static Prenotazione carica_prenotazione(FILE *fp){
 }
 
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
+    /*
+     * Autore: Marco Visone
+     */
     if (fp == NULL || prenotazioni == NULL) return;
     unsigned int size = 0, i;
     Prenotazione *p = ottieni_vettore_prenotazioni_per_file(prenotazioni, &size);
@@ -93,6 +102,9 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
 }
 
 static Prenotazioni carica_prenotazioni(FILE *fp) {
+    /*
+     * Autore: Marco Visone
+     */
     if (fp == NULL) return NULL;
     unsigned int size = 0, i;
     if (fread(&size, sizeof size, 1, fp) != 1) return NULL;
