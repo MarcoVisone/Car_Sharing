@@ -382,3 +382,11 @@ void imposta_storico_lista(Data data, ListaPre lista_prenotazione){
 
   data->storico = lista_prenotazione;
 }
+
+void imposta_frequenza(Data data, int frequenza){
+    if(data == NULL){
+        return;
+    }
+
+    data->frequenza = frequenza;
+}

@@ -262,4 +262,6 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni);
  */
 void imposta_storico_lista(Data data, ListaPre lista_prenotazione);
 
+void imposta_frequenza(Data data, int frequenza);
+
 #endif // DATA_H
