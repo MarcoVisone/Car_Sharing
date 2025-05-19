@@ -360,7 +360,6 @@ Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, u
     unsigned int num_nodi = prenotazioni->num_nodi;
     Prenotazione *result = malloc(sizeof(Prenotazione) * num_nodi);
     if (result == NULL){
-        printf("Ciao1\n");
         return NULL;
     }
 
