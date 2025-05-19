@@ -4,29 +4,27 @@
 #include "utils/gestore_file.h"
 #include "modelli/intervallo.h"
 #include "modelli/prenotazione.h"
+#include "strutture_dati/lista.h"
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/veicolo.h"
 #include "modelli/data.h"
 #include "modelli/utente.h"
 
+#define DIMENSIONE_BUFFER 1024
+
+static char buffer[DIMENSIONE_BUFFER];
+static uint8_t password[DIMENSIONE_PASSWORD];
+
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione);
+
 static Prenotazione carica_prenotazione(FILE *fp);
+
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
+
 static Prenotazioni carica_prenotazioni(FILE *fp);
 
-/*
-    Scrivere nel file la grandezza del vettore (funzione fwrite)
-    poi iterare il vettore e fare fwrite di ogni campo del veicolo e per prenotazioni usare
-    la funzione salva_prenotazioni passando il file_prenotazioni
-*/
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
 
-/*
-    Prendere dal file la grandezza del veicolo con fread,
-    leggere ogni campo del veicolo e alla fine creare un veicolo con
-    quei campi (usare carica_prenotazioni quando si devono prendere le prenotazioni)
-    e restituirlo
-*/
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
 
 static void salva_data(FILE *file_data, Data d);
@@ -72,35 +70,30 @@ static Prenotazione carica_prenotazione(FILE *fp){
     unsigned int len;
     if(fread(&len, sizeof(len), 1, fp) != 1) return NULL;
 
-    char *cliente = malloc(sizeof(char) * len);
-    if(cliente == NULL) return NULL;
-
-    if(fread(cliente, sizeof(char), len, fp) != len){
-        free(cliente);
+    if (len >= DIMENSIONE_BUFFER) {
+        return NULL;
+    }
+    if (fread(buffer, sizeof(char), len, fp) != len) {
         return NULL;
     }
 
     double costo;
     if(fread(&costo, sizeof(costo), 1, fp) != 1){
-        free(cliente);
         return NULL;
     }
 
     time_t inizio, fine;
     if(fread(&inizio, sizeof(inizio), 1, fp) != 1 ||
        fread(&fine, sizeof(fine), 1, fp) != 1){
-        free(cliente);
         return NULL;
     }
 
     Intervallo i = crea_intervallo(inizio, fine);
     if(i == NULL){
-        free(cliente);
         return NULL;
     }
 
-    Prenotazione p = crea_prenotazione(cliente, i, costo);
-    free(cliente);
+    Prenotazione p = crea_prenotazione(buffer, i, costo);
     return p;
 }
 
@@ -190,6 +183,11 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
 
 	Veicolo v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, posizione_veicolo, tariffa, p);
 
+	free(tipo_veicolo);
+	free(targa_veicolo);
+	free(modello_veicolo);
+	free(posizione_veicolo);
+
 	return v;
 }
 
@@ -264,8 +262,7 @@ static void salva_data(FILE *file_data, Data d){
         return;
     }
 
-    unsigned int dimensione;
-    Prenotazione *lista_prenotazioni = ottieni_vettore_storico(d, &dimensione);
+    ListaPre lista_prenotazioni = ottieni_storico_lista(d);
     if(lista_prenotazioni == NULL) return;
 
     int frequenza = ottieni_frequenza_lista(d);
@@ -275,7 +272,8 @@ static void salva_data(FILE *file_data, Data d){
     fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
 
     for(int i = 0; i < numero_prenotazioni; i++){
-        salva_prenotazione(file_data, lista_prenotazioni[i]);
+        salva_prenotazione(file_data, (Prenotazione)ottieni_item(lista_prenotazioni));
+        lista_prenotazioni = ottieni_prossimo(lista_prenotazioni);
     }
 }
 
@@ -399,41 +397,72 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
  * Side-effect:
  *    lettura da file, allocazione dinamica di memoria
  */
-static Utente carica_utente(FILE *file_utente, FILE *file_data){
-    if (file_utente == NULL) return NULL;
+static Utente carica_utente(FILE *file_utente, FILE *file_data) {
+    if (file_utente == NULL)
+        return NULL;
 
-    unsigned int len = 0;
-    fread(&len, sizeof(unsigned int), 1, file_utente);
-    char *nome = malloc(len*sizeof(char));
-    fread(nome, sizeof(char), len, file_utente);
+    Utente u = crea_utente(NULL, NULL, NULL, NULL, 0);
+    if (u == NULL)
+        return NULL;
 
-    fread(&len, sizeof(unsigned int), 1, file_utente);
-    char *cognome = malloc(len*sizeof(char));
-    fread(cognome, sizeof(char), len, file_utente);
-
-    fread(&len, sizeof(unsigned int), 1, file_utente);
-    char *email = malloc(len*sizeof(char));
-    fread(email, sizeof(char), len, file_utente);
-
-    uint8_t *password = malloc(sizeof(uint8_t)*DIMENSIONE_PASSWORD);
-    fread(password, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
-
+    unsigned int len;
     Byte permesso;
-    fread(&permesso, sizeof(Byte), 1, file_utente);
-
     Data data = NULL;
-    if(permesso == CLIENTE){
-      data = carica_data(file_data);
+    size_t n;
+
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_NOME) {
+        distruggi_utente(u);
+        return NULL;
     }
+    n = fread(buffer, sizeof(char), len, file_utente);
+    if (n != len) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    imposta_nome(u, buffer);
 
-    Utente u;
-    u = crea_utente(email, password, nome, cognome, permesso);
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_COGNOME) {
+         distruggi_utente(u);
+         return NULL;
+    }
+    n = fread(buffer, sizeof(char), len, file_utente);
+    if (n != len) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    imposta_cognome(u, buffer);
+
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_EMAIL) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    n = fread(buffer, sizeof(char), len, file_utente);
+    if (n != len) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    imposta_email(u, buffer);
+
+    if (fread(password, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    imposta_password(u, password);
+
+    if (fread(&permesso, sizeof(permesso), 1, file_utente) != 1) {
+        distruggi_utente(u);
+        return NULL;
+    }
+    imposta_permesso(u, permesso);
+
+    if (permesso == CLIENTE) {
+        data = carica_data(file_data);
+        if (data == NULL) {
+            distruggi_utente(u);
+            return NULL;
+        }
+    }
     imposta_data(u, data);
-
-    free(nome);
-    free(cognome);
-    free(email);
-    free(password);
 
     return u;
 }
