@@ -272,19 +272,21 @@ void azzera_frequenza(Data data){
  *    allocazione dinamica di memoria
  */
 Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
-  if (data == NULL) {
-    return NULL;
-  }
-  Prenotazione *vettore_prenotazione = malloc(sizeof(Prenotazione)*data->numero_prenotazioni);
+    if (data == NULL) {
+      return NULL;
+    }
 
-  ListaPre curr = data->storico;
-  unsigned int i = 0;
-  while (curr != NULL) {
-    vettore_prenotazione[i] = ottieni_item(curr);
-    curr = ottieni_prossimo(curr);
-  }
-  *dimensione = data->numero_prenotazioni;
-  return vettore_prenotazione;
+    Prenotazione *vettore_prenotazione = (Prenotazione*) calloc(data->numero_prenotazioni, sizeof(Prenotazione));
+
+    ListaPre curr = data->storico;
+    unsigned int i = 0;
+    while (curr != NULL) {
+        vettore_prenotazione[i] = (Prenotazione)ottieni_item(curr);
+        curr = ottieni_prossimo(curr);
+        i++;
+    }
+    *dimensione = i;
+    return vettore_prenotazione;
 }
 
 /*
@@ -312,10 +314,10 @@ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
  *    nessuno
  */
 int ottieni_numero_prenotazioni(Data data){
-  if (data == NULL) {
-    return -1;
-  }
-  return data->numero_prenotazioni;
+    if (data == NULL) {
+        return -1;
+    }
+    return data->numero_prenotazioni;
 }
 
 /*
@@ -344,10 +346,10 @@ int ottieni_numero_prenotazioni(Data data){
  *    modifica della struttura Data
  */
 void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
-  if (data == NULL) {
-    return;
-  }
-  data->numero_prenotazioni = numero_prenotazioni;
+    if (data == NULL) {
+        return;
+    }
+    data->numero_prenotazioni = numero_prenotazioni;
 }
 
 /*
@@ -376,11 +378,11 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
  *    modifica della struttura Data
  */
 void imposta_storico_lista(Data data, ListaPre lista_prenotazione){
-  if (data == NULL) {
-    return;
-  }
+    if (data == NULL) {
+        return;
+    }
 
-  data->storico = lista_prenotazione;
+    data->storico = lista_prenotazione;
 }
 
 void imposta_frequenza(Data data, int frequenza){
