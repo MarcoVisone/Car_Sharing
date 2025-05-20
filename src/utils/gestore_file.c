@@ -400,7 +400,6 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
 static Utente carica_utente(FILE *file_utente, FILE *file_data) {
     if (file_utente == NULL)
         return NULL;
-
     Utente u = crea_utente(NULL, NULL, NULL, NULL, 0);
     if (u == NULL)
         return NULL;
@@ -546,8 +545,9 @@ Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_fil
     if (file_data == NULL) return NULL;
 
     fread(num_utenti, sizeof(unsigned int), 1, file_utente);
-
     Utente *vettore = malloc(sizeof(Utente) * (*num_utenti));
+
+    if(vettore == NULL) return NULL;
 
     for (unsigned int i = 0; i < *num_utenti; i++){
         vettore[i] = carica_utente(file_utente, file_data);
