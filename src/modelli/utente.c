@@ -57,8 +57,8 @@ Utente crea_utente(char *email, uint8_t *password,  char *nome, char *cognome, B
     snprintf(u->nome, DIMENSIONE_NOME, "%s", nome);
     snprintf(u->cognome, DIMENSIONE_COGNOME, "%s", cognome);
     snprintf(u->email, DIMENSIONE_EMAIL, "%s", email);
-    memcpy(u->password, password, DIMENSIONE_PASSWORD);
-
+    if(password != NULL)
+        memcpy(u->password, password, DIMENSIONE_PASSWORD);
     u->permesso = permesso;
     if (permesso == CLIENTE) {
         u->data = crea_data();
