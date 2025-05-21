@@ -6,6 +6,30 @@
 
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 1)
 
+/*
+ * Funzione: risposta_password
+ * ---------------------------
+ *
+ * Fornisce un messaggio all'utente in base al livello di sicurezza della password.
+ *
+ * Implementazione:
+ *    In base al valore di 'lvl', stampa un messaggio che spiega cosa manca
+ *    nella password inserita. Se il livello è sufficiente (valore diverso dai casi),
+ *    conferma che la password è valida e restituisce 1. Altrimenti restituisce -1.
+ *
+ * Parametri:
+ *    lvl: livello di sicurezza della password, determinato da controlli precedenti
+ *
+ * Pre-condizione:
+ *    lvl deve essere un valore intero compreso tra -1 e un massimo coerente con il sistema
+ *
+ * Post-condizione:
+ *    Stampa un messaggio a video in base al livello ricevuto
+ *    Ritorna 1 se la password è considerata valida, -1 altrimenti
+ *
+ * Side-effect:
+ *    Output su console
+ */
 static Byte risposta_password(Byte lvl){
   switch (lvl){
     case -1:
@@ -29,8 +53,33 @@ static Byte risposta_password(Byte lvl){
   return -1;
 }
 
-
-void *ottieni_stringa(char *stringa, int dimensione){
+/*
+ * Funzione: ottieni_stringa
+ * -------------------------
+ *
+ * Legge una stringa da input standard, rimuovendo newline e spazi finali.
+ *
+ * Implementazione:
+ *    Utilizza fgets per leggere la stringa da stdin fino alla dimensione specificata.
+ *    Scorre la stringa e termina al primo carattere di newline ('\n') o spazio (' '),
+ *    sostituendolo con il terminatore di stringa '\0'.
+ *
+ * Parametri:
+ *    stringa: puntatore al buffer in cui memorizzare la stringa letta
+ *    dimensione: dimensione massima del buffer (in caratteri)
+ *
+ * Pre-condizione:
+ *    stringa deve essere un puntatore valido a un buffer allocato
+ *    dimensione deve essere maggiore di 0
+ *
+ * Post-condizione:
+ *    La stringa letta da input è memorizzata in 'stringa'
+ *    I caratteri '\n' o ' ' vengono rimossi se presenti
+ *
+ * Side-effect:
+ *    Lettura da stdin
+ */
+void ottieni_stringa(char *stringa, int dimensione){
   fgets(stringa, dimensione, stdin);
   while(*stringa){
     if (*stringa == '\n'|| *stringa == ' '){
@@ -41,6 +90,32 @@ void *ottieni_stringa(char *stringa, int dimensione){
   }
 }
 
+/*
+ * Funzione: interfaccia_accesso
+ * -----------------------------
+ *
+ * Gestisce l'interfaccia di accesso dell'utente, richiedendo l'inserimento
+ * di email e password e verificandone la correttezza.
+ *
+ * Implementazione:
+ *    Richiede all'utente l'inserimento di email e password.
+ *    La password inserita viene cifrata con MD5 e confrontata con quella memorizzata.
+ *    Se l'accesso fallisce, l'utente può ritentare fino a 3 volte o scegliere di uscire.
+ *    Restituisce 1 se l'accesso ha successo, -1 se l'utente sceglie di uscire.
+ *
+ * Parametri:
+ *    tabella_utenti: struttura contenente la lista di utenti registrati
+ *
+ * Pre-condizione:
+ *    tabella_utenti deve essere inizializzata e non nullo
+ *
+ * Post-condizione:
+ *    Se le credenziali sono corrette, restituisce 1
+ *    Se l'utente sceglie di uscire, restituisce -1
+ *
+ * Side-effect:
+ *    Nessuno
+ */
 Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
   char email[DIMENSIONE_EMAIL];
   char password[DIMENSIONE_STRINGA_PASSWORD];
@@ -76,6 +151,34 @@ Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
   return 1;
 }
 
+/*
+ * Funzione: interfaccia_registrazione
+ * -----------------------------------
+ *
+ * Gestisce l'interfaccia di registrazione di un nuovo utente.
+ *
+ * Implementazione:
+ *    Richiede l'inserimento di nome, cognome, email e password.
+ *    Verifica la forza della password e chiede conferma.
+ *    Se la conferma è corretta, la password viene cifrata con MD5.
+ *    Viene creato un nuovo utente e aggiunto alla tabella.
+ *    Restituisce 1 se la registrazione ha successo, 0 altrimenti.
+ *
+ * Parametri:
+ *    tabella_utenti: struttura contenente la lista di utenti registrati
+ *    permesso: livello di permesso da assegnare al nuovo utente
+ *
+ * Pre-condizione:
+ *    tabella_utenti deve essere inizializzata e non nullo
+ *    permesso deve essere un valore valido
+ *
+ * Post-condizione:
+ *    Se la registrazione va a buon fine, l'utente è inserito in tabella
+ *    Ritorna 1 in caso di successo, 0 in caso di fallimento
+ *
+ * Side-effect:
+ *    Aggiunta di un nuovo utente alla tabella utenti
+ */
 Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
   char nome[DIMENSIONE_NOME];
   char cognome[DIMENSIONE_COGNOME];

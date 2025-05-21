@@ -11,5 +11,5 @@ void interfaccia_accesso(TabellaUtenti tabella_utenti);
 
 void interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
 
-char *ottieni_stringa(char *stringa, int dimensione);
+void ottieni_stringa(char *stringa, int dimensione);
 #endif //INTERFACCIA_H
