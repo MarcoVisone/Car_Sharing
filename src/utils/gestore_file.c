@@ -35,10 +35,11 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 
 static Utente carica_utente(FILE *file_utente, FILE *file_data);
 
+/*
+ * Autore: Marco Visone
+ * Data: 15/05/2025
+ */
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
-    /*
-     * Autore: Marco Visone
-     */
     if(fp == NULL || prenotazione == NULL) return;
 
     char *cliente = ottieni_cliente_prenotazione(prenotazione);
@@ -61,10 +62,11 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
     fwrite(&fine, sizeof(fine), 1, fp);
 }
 
+/*
+ * Autore: Marco Visone
+ * Data: 15/05/2025
+ */
 static Prenotazione carica_prenotazione(FILE *fp){
-    /*
-     * Autore: Marco Visone
-     */
     if(fp == NULL) return NULL;
 
     unsigned int len;
@@ -97,11 +99,11 @@ static Prenotazione carica_prenotazione(FILE *fp){
     return p;
 }
 
-
+/*
+ * Autore: Marco Visone
+ * Data: 15/05/2025
+ */
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
-    /*
-     * Autore: Marco Visone
-     */
     if (fp == NULL || prenotazioni == NULL) return;
     unsigned int size = 0, i;
     Prenotazione *p = ottieni_vettore_prenotazioni_per_file(prenotazioni, &size);
@@ -114,10 +116,11 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     }
 }
 
+/*
+ * Autore: Marco Visone
+ * Data: 15/05/2025
+ */
 static Prenotazioni carica_prenotazioni(FILE *fp) {
-    /*
-     * Autore: Marco Visone
-     */
     if (fp == NULL) return NULL;
     unsigned int size = 0, i;
     if (fread(&size, sizeof size, 1, fp) != 1) return NULL;
@@ -131,6 +134,37 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
     return pren;
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 18/05/2025
+ *
+ * Funzione: salva_veicolo
+ * -----------------------
+ *
+ * salva le informazioni di un singolo veicolo su un file binario, includendo anche le sue prenotazioni
+ *
+ * Implementazione:
+ *    - Scrive nel file file_veicolo i seguenti campi, ciascuno preceduto dalla sua lunghezza:
+ *        - tipo del veicolo, targa, modello, posizione, tariffa
+ *    - Le prenotazioni associate vengono salvate nel file file_prenotazioni tramite la funzione salva_prenotazioni
+ *
+ * Parametri:
+ *    file_veicolo: puntatore a FILE aperto in modalità scrittura binaria, destinato ai dati del veicolo
+ *    file_prenotazioni: puntatore a FILE aperto in modalità scrittura binaria, destinato alle prenotazioni
+ *    v: veicolo da salvare
+ *
+ * Pre-condizioni:
+ *    file_veicolo: deve essere diverso da NULL
+ *    file_prenotazioni: deve essere diverso da NULL
+ *    v: deve essere diverso da NULL
+ *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    - I dati del veicolo vengono scritti nel file file_veicolo
+ *    - Le prenotazioni vengono scritte nel file file_prenotazioni
+ */
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v){
 	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
 
@@ -156,6 +190,36 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
 	salva_prenotazioni(file_prenotazioni, ottieni_prenotazioni(v));
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 18/05/2025
+ *
+ * Funzione: carica_veicolo
+ * ------------------------
+ *
+ * carica un veicolo da un file binario e le relative prenotazioni da un secondo file binario
+ *
+ * Implementazione:
+ *    - Legge dal file file_veicolo i campi stringa tipo, targa, modello, posizione
+ *      preceduti dalla loro lunghezza, e un double tariffa
+ *    - Carica le prenotazioni associate dal file file_prenotazioni usando la funzione carica_prenotazioni
+ *    - Crea il veicolo con i dati letti e lo restituisce.
+ *
+ * Parametri:
+ *    file_veicolo: file binario da cui leggere i dati del veicolo
+ *    file_prenotazioni: file binario da cui leggere le prenotazioni associate al veicolo
+ *
+ * Pre-condizioni:
+ *    file_veicolo: deve essere diverso da NULL
+ *    file_prenotazioni: deve essere diverso da NULL e
+ *    deve avere il formato previsto (lunghezza stringa seguita dalla stringa)
+ *
+ * Post-condizioni:
+ *    restituisce NULL se uno dei file è NULL, altrimenti restituisce un nuovo oggetto Veicolo
+ *
+ * Side-effect:
+ *    Alloca memoria dinamicamente per le stringhe temporanee (poi liberate), e per un nuovo oggetto Veicolo
+ */
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
 	if (file_veicolo == NULL || file_prenotazioni == NULL) return NULL;
 
@@ -192,9 +256,45 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
 }
 
 /*
-    Iterare il vettore e usare per ogni cella la funzione salva_veicolo
-*/
+ * Autore: Russo Nello Manuel
+ * Data: 18/05/2025
+ *
+ * Funzione: salva_vettore_veicoli
+ * -------------------------------
+ *
+ * salva su un file binario un vettore di veicoli e su un altro le relative prenotazioni
+ *
+ * Implementazione:
+ *    - Apre due file binari in modalità scrittura:
+ *        - uno per i dati dei veicoli, nome_file_veicolo
+ *        - uno per le prenotazioni associate, nome_file_prenotazioni
+ *    - Scrive nel file dei veicoli il numero totale di veicoli da salvare
+ *    - Per ogni veicolo nel vettore, chiama la funzione salva_veicolo
+ *      che scrive i dati nei rispettivi file
+ *    - Chiude entrambi i file al termine
+ *
+ * Parametri:
+ *    nome_file_veicolo: file in cui salvare i dati dei veicoli
+ *    nome_file_prenotazioni: file in cui salvare le prenotazioni
+ *    vettore: array di veicoli da salvare
+ *    num_veicoli: numero di elementi nel vettore
+ *
+ * Pre-condizioni:
+ *    nome_file_veicolo: deve essere diverso da NULL
+ *    nome_file_prenotazioni: deve essere diverso da NULL
+ *    vettore: deve essere diverso da NULL
+ *    num_veicoli: deve essere maggiore di 0
+ *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    i dati dei veicoli e delle relative prenotazioni vengono scritti
+ *    nei file specificati in formato binario
+ */
 void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int num_veicoli){
+	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || num_veicolo <= 0) return;
+
 	FILE *file_veicolo = fopen(nome_file_veicolo, "wb");
     if (file_veicolo == NULL) return;
 
@@ -211,7 +311,40 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
     fclose(file_prenotazioni);
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 18/05/2025
+ *
+ * Funzione: carica_vettore_veicoli
+ * --------------------------------
+ *
+ * carica un insieme di veicoli da un file binario e le relative prenotazioni da un secondo file binario
+ *
+ * Implementazione:
+ *    - Apre due file binari in lettura: uno per i veicoli e uno per le prenotazioni
+ *    - Legge il numero totale di veicoli da caricare dal file dei veicoli
+ *    - Alloca dinamicamente un array di puntatori a Veicolo
+ *    - Per ogni veicolo, richiama la funzione carica_veicolo per leggere i dati e le prenotazioni
+ *
+ * Parametri:
+ *    nome_file_veicolo: nome del file contenente i dati dei veicoli
+ *    nome_file_prenotazioni: nome del file contenente le prenotazioni associate
+ *    num_veicoli: puntatore a variabile dove verrà salvato il numero di veicoli caricati
+ *
+ * Pre-condizioni:
+ *    nome_file_veicolo: deve essere diverso da NULL
+ *    nome_file_prenotazioni: deve essere diverso da NULL
+ *    num_veicoli: non deve essere NULL
+ *
+ * Post-condizioni:
+ *    - Restituisce un array di Veicolo e ne imposta la dimensione in num_veicoli, restituisce NULL in caso di errore
+ *
+ * Side-effect:
+ *    - Alloca memoria dinamicamente per il vettore restituito (va liberata dal chiamante)
+ */
 Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, unsigned int *num_veicoli){
+	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || num_veicoli == NULL) return NULL;
+
 	FILE *file_veicolo = fopen(nome_file_veicolo, "rb");
     if (file_veicolo == NULL) return NULL;
 
