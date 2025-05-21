@@ -121,6 +121,29 @@ Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, char *email);
  */
 Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email);
 
+/*
+ * Funzione: carica_utenti
+ * ------------------------
+ *
+ * carica un insieme di utenti in una tabella hash
+ *
+ * Parametri:
+ *    tabella_utenti: puntatore alla tabella hash in cui inserire i utenti
+ *    utente: array di puntatori a utenti da caricare
+ *    dimensione: numero di utenti presenti nell'array
+ *
+ * Pre-condizioni:
+ *    - tabella_utenti: non deve essere NULL
+ *    - utente: non deve essere NULL
+ *    - dimensione: deve essere maggiore di 0
+ *
+ * Post-condizioni:
+ *    Non restituisce niente
+ *
+ * Side-effect:
+ *    Gli utenti vengono inseriti nella tabella hash. Se un utente ha un'email
+ *    uguale rispetto a uno già presente, l'utente non viene inserito
+ */
 void carica_utenti(TabellaUtenti tabella_utenti, Utente *utente, unsigned int dimensione);
 
 #endif // HASHMAP_UTENTI_H
