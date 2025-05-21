@@ -168,7 +168,7 @@ Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo 
  *
  * Side-effect:
  *    I veicoli vengono inseriti nella tabella hash. Se un veicolo ha una targa
- *    uguale rispetto a uno già presente il veicolo non viene inserito
+ *    uguale rispetto a uno già presente, il veicolo non viene inserito
  */
 void carica_veicoli(TabellaVeicoli tabella_veicoli, Veicolo *veicolo, unsigned int dimensione);
 
