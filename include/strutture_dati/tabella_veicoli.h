@@ -147,6 +147,29 @@ Byte rimuovi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa);
  */
 Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo intervallo, unsigned int *dimensione);
 
+/*
+ * Funzione: carica_veicoli
+ * ------------------------
+ *
+ * carica un insieme di veicoli in una tabella hash
+ *
+ * Parametri:
+ *    tabella_veicoli: puntatore alla tabella hash in cui inserire i veicoli
+ *    veicolo: array di puntatori a veicoli da caricare
+ *    dimensione: numero di veicoli presenti nell'array
+ *
+ * Pre-condizioni:
+ *    - tabella_veicoli: non deve essere NULL
+ *    - veicolo: non deve essere NULL
+ *    - dimensione: deve essere maggiore di 0
+ *
+ * Post-condizioni:
+ *    Non restituisce niente
+ *
+ * Side-effect:
+ *    I veicoli vengono inseriti nella tabella hash. Se un veicolo ha una targa
+ *    uguale rispetto a uno già presente il veicolo non viene inserito
+ */
 void carica_veicoli(TabellaVeicoli tabella_veicoli, Veicolo *veicolo, unsigned int dimensione);
 
 #endif //HASHMAP_VEICOLI_H

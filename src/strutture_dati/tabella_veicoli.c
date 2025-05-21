@@ -224,7 +224,33 @@ Veicolo *ottieni_veicoli_disponibili(TabellaVeicoli tabella_veicoli, Intervallo 
     return vettore;
 }
 
-
+/*
+ * Funzione: carica_veicoli
+ * ------------------------
+ *
+ * carica un insieme di veicoli in una tabella hash
+ *
+ * Implementazione:
+ *    itera sull'array di veicoli fornito e li inserisce uno a uno nella tabella
+ *    usando la funzione aggiungi_veicolo_in_tabella.
+ *
+ * Parametri:
+ *    tabella_veicoli: puntatore alla tabella hash in cui inserire i veicoli
+ *    veicolo: array di puntatori a veicoli da caricare
+ *    dimensione: numero di veicoli presenti nell'array
+ *
+ * Pre-condizioni:
+ *    - tabella_veicoli: non deve essere NULL
+ *    - veicolo: non deve essere NULL
+ *    - dimensione: deve essere maggiore di 0
+ *
+ * Post-condizioni:
+ *    Non restituisce niente
+ *
+ * Side-effect:
+ *    I veicoli vengono inseriti nella tabella hash. Se un veicolo ha una targa
+ *    uguale rispetto a uno già presente il veicolo non viene inserito
+ */
 void carica_veicoli(TabellaVeicoli tabella_veicoli, Veicolo *veicolo, unsigned int dimensione){
 	if(tabella_veicoli == NULL || veicolo == NULL || !dimensione) return;
 
