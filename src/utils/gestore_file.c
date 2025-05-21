@@ -283,7 +283,7 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
  *    nome_file_veicolo: deve essere diverso da NULL
  *    nome_file_prenotazioni: deve essere diverso da NULL
  *    vettore: deve essere diverso da NULL
- *    num_veicoli: deve essere maggiore di 0
+ *    num_veicoli: deve essere diverso di 0
  *
  * Post-condizioni:
  *    non restituisce niente
@@ -293,7 +293,7 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
  *    nei file specificati in formato binario
  */
 void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int num_veicoli){
-	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || num_veicolo <= 0) return;
+	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || !num_veicoli) return;
 
 	FILE *file_veicolo = fopen(nome_file_veicolo, "wb");
     if (file_veicolo == NULL) return;
