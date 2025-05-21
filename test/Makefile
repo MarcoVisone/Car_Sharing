@@ -41,8 +41,4 @@ $(TARGET): $(SRC)
 clean:
 	rm -f $(TARGET)
 
-# Esecuzione dei test
-run: $(TARGET)
-	./$(TARGET)
-
 .PHONY: all clean run
