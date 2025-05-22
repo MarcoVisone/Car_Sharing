@@ -17,6 +17,6 @@ void ottieni_stringa(char *stringa, int dimensione);
 
 Intervallo richiedi_intervallo_prenotazione(Intervallo i);
 
-Byte interfaccia_prenotazione(TabellaVeicoli tabella_veicoli);
+Byte interfaccia_prenotazione(TabellaVeicoli tabella_veicoli, Intervallo i);
 
 #endif //INTERFACCIA_H
