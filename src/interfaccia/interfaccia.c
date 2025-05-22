@@ -254,3 +254,36 @@ Intervallo richiedi_intervallo_prenotazione(Intervallo i){
 
       return i;
 }
+
+static void stampa_riga_separatrice() {
+    printf("+------------+--------------------------------+--------------------------------+--------------+------------------------+\n");
+}
+
+static void stampa_intestazione_tabella() {
+    stampa_riga_separatrice();
+    printf("| %-10s | %-30s | %-30s | %-12s | %-22s |\n",
+           "Targa", "Modello", "Posizione", "Tariffa", "Tipo");
+    stampa_riga_separatrice();
+}
+
+static void stampa_veicolo(const TabellaVeicoli v) {
+    printf("| %-10s | %-30s | %-30s | %12.2f | %-22s |\n",
+           ottieni_targa(v),
+           ottieni_modello(v),
+           ottieni_posizione(v),
+           ottieni_tariffa(v),
+           ottieni_tipo_veicolo(v));
+}
+
+Byte interfaccia_prenotazione(TabellaVeicoli tabella_veicoli, Intervallo i){
+    unsigned int dimensione;
+    Veicolo *v = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
+
+    printf("TABELLA VEICOLI DISPONIBILI:\n);
+
+	stampa_intestazione_tabella();
+    for (int i = 0; i < dimensione; i++) {
+        stampa_veicolo(v[i]);
+    }
+    stampa_riga_separatrice();
+}
