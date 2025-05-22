@@ -5,11 +5,18 @@
 #ifndef INTERFACCIA_H
 #define INTERFACCIA_H
 typedef struct tabella_hash *TabellaUtenti;
+typedef struct tabella_hash *TabellaVeicoli;
+typedef struct Intervallo *Intervallo;
 typedef char Byte;
 
-void interfaccia_accesso(TabellaUtenti tabella_utenti);
+Byte interfaccia_accesso(TabellaUtenti tabella_utenti);
 
-void interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
+Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
 
 void ottieni_stringa(char *stringa, int dimensione);
+
+Intervallo richiedi_intervallo_prenotazione(Intervallo i);
+
+Byte interfaccia_prenotazione(TabellaVeicoli tabella_veicoli);
+
 #endif //INTERFACCIA_H
