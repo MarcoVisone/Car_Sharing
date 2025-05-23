@@ -238,30 +238,29 @@ Intervallo richiedi_intervallo_prenotazione(){
     char fine[DIMENSIONE_INTERVALLO];
     char scelta;
     Intervallo i;
+
     do{
-        printf("Inserisci il giorno, il mese, l'anno e l'orario iniziali ");
-        printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
+        printf("Inserisci la data e l'orario iniziali (formato: gg/mm/aaaa HH:MM): ");
         fgets(inizio, DIMENSIONE_INTERVALLO, stdin);
         inizio[strcspn(inizio, "\n")] = '\0';
-        while(getchar()!='\n');
 
-        printf("Inserisci il giorno, il mese, l'anno e l'orario finali ");
-        printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
+        printf("Inserisci la data e l'orario finali (formato: gg/mm/aaaa HH:MM): ");
         fgets(fine, DIMENSIONE_INTERVALLO, stdin);
         fine[strcspn(inizio, "\n")] = '\0';
-        while(getchar()!='\n');
-
-        printf("%s - %s\n", inizio, fine);
 
         i = converti_data_in_intervallo(inizio, fine);
 
-        if(i == NULL || inizio_intervallo(i) < time(NULL)) printf("Intervallo non valido\n");
+        if(i == NULL || inizio_intervallo(i) < time(NULL)){
+            distruggi_intervallo(i);
+            i = NULL;
+            printf("Intervallo non valido\n");
+            printf("Vuoi uscire? (S/N): ");
+            scelta = getchar();
+            while(getchar() != '\n');
 
-        printf("Vuoi uscire? (S/N): ");
-        scelta = getchar();
-
-        if(scelta == 's' || scelta == 'S'){
-            return NULL;
+            if(scelta == 's' || scelta == 'S'){
+                return NULL;
+            }
         }
     }while(i == NULL);
 
