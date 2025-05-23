@@ -184,7 +184,7 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
         return 0;
     }
 
-    return (interno->inizio <= esterno->fine) && (esterno->inizio <= interno->fine);
+    return (interno->inizio < esterno->fine) && (esterno->inizio < interno->fine);
 }
 
 /*
