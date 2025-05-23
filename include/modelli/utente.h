@@ -8,9 +8,9 @@
 #include <stdint.h>
 #include "modelli/byte.h"
 
-#define DIMENSIONE_NOME (64 + 1)
-#define DIMENSIONE_COGNOME (64 + 1)
-#define DIMENSIONE_EMAIL (319 + 1)
+#define DIMENSIONE_NOME (64 + 2)
+#define DIMENSIONE_COGNOME (64 + 2)
+#define DIMENSIONE_EMAIL (319 + 2)
 #define DIMENSIONE_PASSWORD 16
 
 #define ADMIN 0
