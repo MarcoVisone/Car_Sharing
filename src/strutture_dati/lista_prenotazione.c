@@ -16,20 +16,20 @@
  * Funzione ausiliaria per distruggere una prenotazione castata da void*.
  *
  * Implementazione:
- *    Prenotazione p = (Prenotazione)prenotazione;
- *    distruggi_prenotazione(p);
+ *    Effettua il cast del puntatore void* a Prenotazione
+ *    e chiama la funzione specifica di distruzione.
  *
  * Parametri:
- *    prenotazione: puntatore generico a una prenotazione
+ *    prenotazione: puntatore generico alla prenotazione
  *
  * Pre-condizioni:
- *    prenotazione deve puntare a una struttura Prenotazione valida.
+ *    prenotazione deve puntare a una struttura Prenotazione valida
  *
- * Post-condizione:
- *    La prenotazione viene distrutta liberando la memoria associata.
+ * Post-condizioni:
+ *    la memoria della prenotazione viene deallocata
  *
  * Side-effect:
- *    Libera la memoria della prenotazione puntata
+ *    Dealloca memoria della prenotazione
  */
 static void distruggi_prenotazione_t(void *prenotazione){
     Prenotazione p = (Prenotazione)prenotazione;
@@ -39,24 +39,23 @@ static void distruggi_prenotazione_t(void *prenotazione){
 /*
  * Funzione: distruggi_lista_prenotazione
  * --------------------------------------
- * Libera tutta la memoria occupata dalla lista delle prenotazioni,
- * distruggendo ogni nodo e la prenotazione associata.
+ * Libera tutta la memoria della lista di prenotazioni.
  *
  * Implementazione:
- *    Controlla se la lista è vuota, altrimenti itera sui nodi distruggendoli
- *    e rilasciando la memoria delle prenotazioni tramite la funzione ausiliaria.
+ *    Scorre la lista nodo per nodo, deallocando ogni nodo
+ *    e la prenotazione associata usando distruggi_prenotazione_t.
  *
  * Parametri:
- *    l: la lista di prenotazioni da distruggere
+ *    l: lista da distruggere
  *
  * Pre-condizioni:
- *    La lista può essere vuota o contenere nodi validi.
+ *    l può essere NULL (in tal caso non fa nulla)
  *
- * Post-condizione:
- *    Tutti i nodi e le prenotazioni contenute nella lista vengono distrutti.
+ * Post-condizioni:
+ *    tutta la memoria della lista e delle prenotazioni viene liberata
  *
  * Side-effect:
- *    Libera memoria di ogni nodo della lista e delle prenotazioni contenute
+ *    Dealloca memoria per tutti i nodi e prenotazioni
  */
 void distruggi_lista_prenotazione(ListaPre l){
     if(lista_vuota(l)) return;
@@ -75,22 +74,23 @@ void distruggi_lista_prenotazione(ListaPre l){
  * Aggiunge una prenotazione all'inizio della lista.
  *
  * Implementazione:
- *    Chiama la funzione generica aggiungi_nodo per inserire la prenotazione
- *    all'inizio della lista.
+ *    Utilizza la funzione generica aggiungi_nodo per inserire
+ *    la prenotazione in testa alla lista.
  *
  * Parametri:
- *    l: lista di prenotazioni
+ *    l: testa corrente della lista
  *    p: prenotazione da aggiungere
  *
  * Pre-condizioni:
- *    La lista può essere vuota o non vuota.
- *    La prenotazione p deve essere valida.
+ *    p non deve essere NULL
  *
- * Post-condizione:
- *    La prenotazione viene aggiunta in testa alla lista.
+ * Post-condizioni:
+ *    restituisce la nuova testa della lista con la prenotazione aggiunta,
+ *    oppure NULL in caso di errore di allocazione
  *
- * Ritorna:
- *    La nuova testa della lista contenente la prenotazione aggiunta
+ * Side-effect:
+ *    Alloca memoria per un nuovo nodo
+ *    Modifica la struttura della lista
  */
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
     return aggiungi_nodo(p, l);
@@ -99,26 +99,26 @@ ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
 /*
  * Funzione: rimuovi_prenotazione_lista
  * ------------------------------------
- * Rimuove dalla lista la prenotazione che ha lo stesso intervallo
- * temporale della prenotazione passata come parametro.
+ * Rimuove la prima prenotazione con intervallo uguale a quello fornito.
  *
  * Implementazione:
- *    Scorre la lista cercando una prenotazione con intervallo uguale;
- *    se la trova, la rimuove aggiornando i puntatori.
+ *    Scorre la lista cercando una prenotazione con intervallo uguale.
+ *    Se trovata, rimuove il nodo e dealloca memoria.
  *
  * Parametri:
- *    l: lista di prenotazioni
- *    p: prenotazione da rimuovere (usata come riferimento per l'intervallo)
+ *    l: testa corrente della lista
+ *    p: prenotazione di riferimento per l'intervallo
  *
  * Pre-condizioni:
- *    La lista può contenere o meno la prenotazione.
- *    La prenotazione p deve essere valida.
+ *    p non deve essere NULL
  *
- * Post-condizione:
- *    Se presente, la prenotazione con intervallo uguale viene rimossa dalla lista.
+ * Post-condizioni:
+ *    restituisce la testa della lista (potenzialmente modificata)
+ *    se trovata, la prenotazione viene rimossa e la memoria liberata
  *
- * Ritorna:
- *    La testa della lista eventualmente modificata
+ * Side-effect:
+ *    Potrebbe deallocare memoria del nodo e della prenotazione
+ *    Modifica la struttura della lista
  */
 ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
     ListaPre curr = l;
@@ -142,22 +142,21 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
 /*
  * Funzione: ottieni_prenotazione_lista
  * ------------------------------------
- * Restituisce la prenotazione contenuta nel nodo corrente della lista.
+ * Restituisce la prenotazione contenuta nel nodo corrente.
  *
  * Implementazione:
- *    Chiama la funzione generica ottieni_item sul nodo corrente.
+ *    Utilizza la funzione generica ottieni_item per estrarre
+ *    la prenotazione dal nodo.
  *
  * Parametri:
- *    l: lista di prenotazioni
+ *    l: nodo della lista
  *
  * Pre-condizioni:
- *    La lista deve contenere almeno un nodo valido.
+ *    l non deve essere NULL
  *
- * Post-condizione:
- *    Nessuna
- *
- * Ritorna:
- *    La prenotazione contenuta nel nodo corrente della lista
+ * Post-condizioni:
+ *    restituisce la prenotazione contenuta nel nodo,
+ *    oppure NULL se l è NULL
  */
 Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
