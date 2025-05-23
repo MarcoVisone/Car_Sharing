@@ -1,0 +1,2 @@
+TC3:
+    Dato un utente esce lo storico di prenotazione

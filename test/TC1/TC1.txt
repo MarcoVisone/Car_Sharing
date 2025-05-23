@@ -1,0 +1,4 @@
+TC1:
+    Verifica della corretta creazione delle prenotazioni e dell'aggiornamento della
+    disponibilità dei veicoli.
+    Test del calcolo del costo del noleggio in base al tempo di utilizzo.
