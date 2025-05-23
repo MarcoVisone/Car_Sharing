@@ -54,7 +54,7 @@ struct veicolo{
 Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, double tariffa, Prenotazioni prenotazioni){
     Veicolo v = malloc(sizeof(struct veicolo));
     if(v == NULL || tipo == NULL || modello == NULL || posizione == NULL ||
-	   tariffa <= 0 || strlen(targa) != NUM_CARATTERI_TARGA - 1) return NULL;
+	   tariffa <= 0 || strlen(targa) != NUM_CARATTERI_TARGA - 2) return NULL;
 
 	snprintf(v->targa, NUM_CARATTERI_TARGA, "%s", targa);
 
