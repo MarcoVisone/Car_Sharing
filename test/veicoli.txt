@@ -1,6 +1,6 @@
-AB123CD;Fiat Panda;Milano Centrale;0.50;Utilitaria
-CD456EF;Tesla Model 3;Roma Termini;1.20;Elettrico
-GH789IJ;Ford Transit;Bologna Centro;0.75;Furgone
-KL321MN;Renault Clio;Napoli Stazione;0.45;Utilitaria
-OP654QR;BMW X5;Firenze SMN;1.00;SUV
-ST987UV;Volkswagen ID.4;Torino Porta Susa;1.10;Elettrico
+AB123CD;Fiat Panda;Milano Centrale;0.015;Utilitaria
+CD456EF;Tesla Model 3;Roma Termini;0.012;Elettrico
+GH789IJ;Ford Transit;Bologna Centro;0.016;Furgone
+KL321MN;Renault Clio;Napoli Stazione;0.023;Utilitaria
+OP654QR;BMW X5;Firenze SMN;0.026;SUV
+ST987UV;Volkswagen ID.4;Torino Porta Susa;0.025;Elettrico

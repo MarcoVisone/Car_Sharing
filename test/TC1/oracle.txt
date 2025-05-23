@@ -1,3 +1,3 @@
-OK mario.rossi@email.com AB123CD 10/06/25 09:00 10/06/25 12:00 Costo=90.00€
-OCCUPATO Veicolo non disponibile anna.verdi@email.com AB123CD 10/06/25 10:00 10/06/25 11:00
-OK luca.bianchi@email.com AB123CD 10/06/25 13:00 10/06/25 14:00 Costo=30.00€
+OK mario.rossi@email.com AB123CD 10/06/25 09:00 10/06/25 10:00 Costo=0.90
+OCCUPATO anna.verdi@email.com AB123CD 10/06/25 10:00 10/06/25 11:00
+OK luca.bianchi@email.com AB123CD 10/06/25 13:00 10/06/25 14:00 Costo=0.90

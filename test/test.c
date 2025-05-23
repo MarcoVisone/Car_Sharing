@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <string.h>
+#include "modelli/intervallo.h"
+#include "modelli/prenotazione.h"
 #include "modelli/veicolo.h"
+#include "strutture_dati/lista.h"
+#include "strutture_dati/prenotazioni.h"
+#include "strutture_dati/tabella_hash.h"
 #include "strutture_dati/tabella_veicoli.h"
 #include "modelli/utente.h"
 #include "strutture_dati/tabella_utenti.h"
 #include "utils/md5.h"
+#include "utils/utils.h"
 
 #define GRANDEZZA_RIGA 500
 
@@ -12,7 +18,11 @@ int txt_in_utenti(FILE *fp, TabellaUtenti tabella);
 
 int txt_in_veicoli(FILE *fp, TabellaVeicoli tabella);
 
+int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
+int test_case_due(TabellaVeicoli tabella_veicoli);
+
+int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
 int main(int argc, char **argv){
     if(argc < 4){
@@ -44,7 +54,7 @@ int main(int argc, char **argv){
     }
 
     TabellaVeicoli tabella_veicoli = crea_tabella_veicoli(numero_veicoli);
-    if(txt_in_veicoli(file_utenti, tabella_veicoli)){
+    if(txt_in_veicoli(file_veicoli, tabella_veicoli)){
         printf("Errore caricamento utenti!\n(Controlla il formato targa;modello;posizione;tariffa;tipo)");
         return -1;
     }
@@ -53,7 +63,25 @@ int main(int argc, char **argv){
 
     while(fgets(linea, sizeof(linea), file_test_suite)){
         linea[strcspn(linea, "\n")] = 0;
-
+        char *tc = strtok(linea, " ");
+        if(strcmp(tc, "TC1") == 0){
+            if(test_case_uno(tabella_utenti, tabella_veicoli) < 0){
+                printf("Errore TC1\n");
+                continue;
+            }
+        }
+        if(strcmp(tc, "TC2") == 0){
+            if(test_case_due(tabella_veicoli) < 0){
+                printf("Errore TC2\n");
+                continue;
+            }
+        }
+        if(strcmp(tc, "TC3") == 0){
+            if(test_case_tre(tabella_utenti, tabella_veicoli) < 0){
+                printf("Errore TC3\n");
+                continue;
+            }
+        }
     }
 
     return 0;
@@ -101,7 +129,7 @@ int txt_in_veicoli(FILE *fp, TabellaVeicoli tabella){
         sscanf(tariffa_str, "%lf", &tariffa);
 
         if (targa && modello && posizione && tariffa_str) {
-            Veicolo v = crea_veicolo(tipo, targa, modello, posizione, tariffa, NULL);
+            Veicolo v = crea_veicolo(tipo, targa, modello, posizione, tariffa, crea_prenotazioni());
             if(!aggiungi_veicolo_in_tabella(tabella, v)) return -1;
         } else {
             return -1;
@@ -110,3 +138,119 @@ int txt_in_veicoli(FILE *fp, TabellaVeicoli tabella){
 
     return 0;
 }
+
+int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
+    FILE *file_input = fopen("TC1/input.txt", "r");
+    FILE *file_output = fopen("TC1/output.txt", "w");
+    if(!(file_input && file_output)) return -1;
+
+    char linea[GRANDEZZA_RIGA];
+    while (fgets(linea, sizeof(linea), file_input)) {
+        linea[strcspn(linea, "\n")] = 0;
+
+        char *email = strtok(linea, ";");
+        char *targa = strtok(NULL, ";");
+        char *data_inizio = strtok(NULL, ";");
+        char *data_fine = strtok(NULL, ";");
+
+        Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, targa);
+        if(v == NULL){
+            fclose(file_input);
+            fclose(file_output);
+            return -1;
+        }
+
+        Intervallo i = converti_data_in_intervallo(data_inizio, data_fine);
+        Prenotazione pre = crea_prenotazione(email, targa, i, calcola_costo(ottieni_tariffa(v), i));
+        Byte codice = aggiungi_prenotazione(ottieni_prenotazioni(v), pre);
+        Utente u = cerca_utente_in_tabella(tabella_utenti, email);
+        if(u == NULL) return -1;
+        if(codice == OK)
+            if(!aggiungi_a_storico_utente(u, pre)) return -1;
+        fprintf(file_output, "%s %s %s %s %s",
+                codice == OCCUPATO?"OCCUPATO":"OK",
+                ottieni_cliente_prenotazione(pre),
+                ottieni_targa(v),
+                data_inizio,
+                data_fine);
+        if(codice == OK){
+            fprintf(file_output," Costo=%0.2lf", ottieni_costo_prenotazione(pre));
+        }
+        fprintf(file_output, "\n");
+    }
+
+    fclose(file_input);
+    fclose(file_output);
+
+    return 1;
+}
+
+int test_case_due(TabellaVeicoli tabella_veicoli){
+    FILE *file_input = fopen("TC2/input.txt", "r");
+    FILE *file_output = fopen("TC2/output.txt", "w");
+    if(!(file_input && file_output)) return -1;
+
+    char linea[GRANDEZZA_RIGA];
+    while (fgets(linea, sizeof(linea), file_input)) {
+        linea[strcspn(linea, "\n")] = 0;
+
+        char *inizio = strtok(linea, ";");
+        char *fine = strtok(NULL, ";");
+
+        Intervallo i = converti_data_in_intervallo(inizio, fine);
+        if(i == NULL) return -1;
+
+        fprintf(file_output, "Veicoli disponibili per il %s - %s: ", inizio, fine);
+
+        unsigned int dimensione;
+        Veicolo *vettore_veicoli = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
+        if(vettore_veicoli == NULL) return -1;
+        for(unsigned int i = 0; i < dimensione; i++){
+            if(vettore_veicoli[i] != NULL)
+                fprintf(file_output, "'%s' ", ottieni_targa(vettore_veicoli[i]));
+        }
+        fprintf(file_output, "\n");
+    }
+
+    fclose(file_input);
+    fclose(file_output);
+
+    return 1;
+}
+
+int test_case_tre(TabellaUtenti tabella_utenti, TabellaUtenti tabella_veicoli){
+    FILE *file_input = fopen("TC3/input.txt", "r");
+    FILE *file_output = fopen("TC3/output.txt", "w");
+    if(!(file_input && file_output)) return -1;
+
+    char linea[GRANDEZZA_RIGA];
+    while (fgets(linea, sizeof(linea), file_input)) {
+        linea[strcspn(linea, "\n")] = 0;
+
+        Utente u = cerca_utente_in_tabella(tabella_utenti, linea);
+        if(u == NULL) return -1;
+        fprintf(file_output, "Prenotazioni di %s:\n", linea);
+        for(ListaPre lista = ottieni_storico_utente(u); !lista_vuota(lista); lista = ottieni_prossimo(lista)){
+            Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(ottieni_item(lista)));
+            if(v == NULL){
+                fclose(file_input);
+                fclose(file_output);
+                return -1;
+            }
+            fprintf(file_output, "\t- Veicolo: %s %s\n\t\t- Data: %s\n\t\t- Costo: %0.2lf\n",
+                   ottieni_modello(v),
+                   ottieni_targa(v),
+                   intervallo_in_stringa(ottieni_intervallo_prenotazione(ottieni_item(lista))),
+                   ottieni_costo_prenotazione(ottieni_item(lista)));
+        }
+        printf("\n");
+    }
+    fclose(file_input);
+    fclose(file_output);
+    return 1;
+}
+
+/*Prenotazioni di mario.rossi@email.com:
+    - Veicolo: Fiat Panda AB123CD
+        - Data: 10/06/25 09:00 al 10/06/25 10:30
+        - Costo: 1.35€ */
