@@ -21,21 +21,17 @@ typedef struct intervallo* Intervallo;
  *    fine: timestamp di fine dell'intervallo
  *
  * Pre-condizioni:
- *    inizio deve essere un timestamp valido
- *    fine deve essere un timestamp valido
- *    inizio deve essere <= fine
+ *    - inizio deve essere un timestamp valido
+ *    - fine deve essere un timestamp valido
+ *    - inizio deve essere <= fine
  *
- * Post-condizione:
- *    restituisce un nuovo intervallo se l'allocazione è andata a buon fine,
- *    altrimenti restituisce NULL
- *
- * Restituisce:
- *    Un nuovo intervallo
+ * Post-condizioni:
+ *    restituisce un nuovo Intervallo allocato dinamicamente,
+ *    oppure NULL in caso di errore o parametri non validi
  *
  * Side-effect:
- *    Alloca memoria
+ *    Alloca memoria per la struttura intervallo
  */
-
 Intervallo crea_intervallo(time_t inizio, time_t fine);
 
 /*
@@ -47,13 +43,10 @@ Intervallo crea_intervallo(time_t inizio, time_t fine);
  *    i: puntatore all'intervallo da distruggere
  *
  * Pre-condizioni:
- *    i non può essere NULL
+ *    i deve essere un puntatore valido (può essere NULL)
  *
- * Post-condizione:
- *    la memoria dell'intervallo viene deallocata
- *
- * Ritorna:
- *    non restituisce niente
+ * Post-condizioni:
+ *    la memoria dell'intervallo viene deallocata se i non è NULL
  *
  * Side-effect:
  *    Dealloca memoria
@@ -69,16 +62,10 @@ void distruggi_intervallo(Intervallo i);
  *    i: puntatore all'intervallo
  *
  * Pre-condizioni:
- *    i non può essere NULL
+ *    i deve essere un puntatore valido (può essere NULL)
  *
- * Post-condizione:
- *    ritorna il timestamp di inizio o 0 se l'intervallo è NULL
- *
- * Ritorna:
- *    Il timestamp di inizio
- *
- * Side-effect:
- *    Nessuno
+ * Post-condizioni:
+ *    restituisce il timestamp di inizio o 0 se l'intervallo è NULL
  */
 time_t inizio_intervallo(Intervallo i);
 
@@ -91,16 +78,10 @@ time_t inizio_intervallo(Intervallo i);
  *    i: puntatore all'intervallo
  *
  * Pre-condizioni:
- *    i non può essere NULL
+ *    i deve essere un puntatore valido (può essere NULL)
  *
- * Post-condizione:
- *    ritorna il timestamp di fine o 0 se l'intervallo è NULL
- *
- * Ritorna:
- *    Il timestamp di fine
- *
- * Side-effect:
- *    Nessuno
+ * Post-condizioni:
+ *    restituisce il timestamp di fine o 0 se l'intervallo è NULL
  */
 time_t fine_intervallo(Intervallo i);
 
@@ -114,16 +95,12 @@ time_t fine_intervallo(Intervallo i);
  *    esterno: secondo intervallo da controllare
  *
  * Pre-condizioni:
- *    entrambi gli intervalli non possono essere NULL
+ *    - interno non deve essere NULL
+ *    - esterno non deve essere NULL
  *
- * Post-condizione:
- *    ritorna 1 se gli intervalli si sovrappongono, 0 altrimenti
- *
- * Ritorna:
- *    1 se c'è sovrapposizione, 0 altrimenti
- *
- * Side-effect:
- *    Nessuno
+ * Post-condizioni:
+ *    restituisce 1 (true) se gli intervalli si sovrappongono,
+ *    0 (false) altrimenti o in caso di parametri non validi
  */
 Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
 
@@ -137,45 +114,41 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
  *    fine: stringa con data/ora di fine (formato "dd/mm/yyyy HH:MM")
  *
  * Pre-condizioni:
- *    Entrambe le stringhe devono essere nel formato corretto
- *    e devono essere non NULL
+ *    - inizio non deve essere NULL e deve essere nel formato corretto
+ *    - fine non deve essere NULL e deve essere nel formato corretto
  *
- * Post-condizione:
- *    ritorna un nuovo intervallo o NULL in caso di errore
- *
- * Ritorna:
- *    Un nuovo intervallo
+ * Post-condizioni:
+ *    restituisce un nuovo Intervallo allocato dinamicamente,
+ *    oppure NULL in caso di errore o parametri non validi
  *
  * Side-effect:
- *    Alloca memoria
+ *    Alloca memoria per la struttura intervallo
  */
 Intervallo converti_data_in_intervallo(const char *inizio, const char *fine);
 
 /*
  * Funzione: duplica_intervallo
- * -----------------------------
+ * ----------------------------
  * Crea una copia dell'intervallo specificato.
  *
  * Parametri:
  *    i: puntatore all'intervallo da duplicare
  *
  * Pre-condizioni:
- *    i non può essere NULL
+ *    i deve essere un puntatore valido (può essere NULL)
  *
- * Post-condizione:
- *    ritorna una copia dell'intervallo o NULL se p è NULL
- *
- * Ritorna:
- *    Un nuovo intervallo identico a quello passato
+ * Post-condizioni:
+ *    restituisce una nuova copia dell'intervallo,
+ *    oppure NULL se i è NULL o in caso di errore
  *
  * Side-effect:
- *    Alloca memoria
+ *    Alloca memoria per la nuova struttura intervallo
  */
 Intervallo duplica_intervallo(Intervallo i);
 
 /*
  * Funzione: compara_intervalli
- * -----------------------------
+ * ----------------------------
  * Confronta due intervalli in base al loro tempo di inizio.
  *
  * Parametri:
@@ -183,16 +156,14 @@ Intervallo duplica_intervallo(Intervallo i);
  *    b: secondo intervallo da confrontare
  *
  * Pre-condizioni:
- *    a e b non devono essere NULL
+ *    - a non deve essere NULL
+ *    - b non deve essere NULL
  *
- * Post-condizione:
- *    ritorna -1, 0 o 1 in base all'ordinamento
- *
- * Ritorna:
- *    -1 se a inizia prima di b, 1 se a inizia dopo b, 0 se iniziano insieme
- *
- * Side-effect:
- *    Nessuno
+ * Post-condizioni:
+ *    restituisce:
+ *    - -1 se a inizia prima di b
+ *    - 1 se a inizia dopo b
+ *    - 0 se iniziano nello stesso momento o in caso di errori
  */
 Byte compara_intervalli(Intervallo a, Intervallo b);
 
@@ -205,16 +176,15 @@ Byte compara_intervalli(Intervallo a, Intervallo b);
  *    i: puntatore all'intervallo da convertire
  *
  * Pre-condizioni:
- *    i non può essere NULL
+ *    i deve essere un puntatore valido (può essere NULL)
  *
- * Post-condizione:
- *    ritorna una stringa formattata o NULL se i è NULL
- *
- * Ritorna:
- *    Stringa nel formato "dd/mm/yyyy HH:MM -> dd/mm/yyyy HH:MM"
+ * Post-condizioni:
+ *    restituisce una stringa allocata dinamicamente nel formato
+ *    "dd/mm/yyyy HH:MM -> dd/mm/yyyy HH:MM",
+ *    oppure NULL se i è NULL o in caso di errore
  *
  * Side-effect:
- *    Alloca memoria
+ *    Alloca memoria per la stringa risultante
  */
 char *intervallo_in_stringa(Intervallo i);
 
