@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 1)
-#define DIMENSIONE_INTERVALLO (10 + 1)
+#define DIMENSIONE_INTERVALLO (16 + 1)
 
 static void stampa_veicolo(const Veicolo v, Intervallo i);
 
@@ -239,7 +239,7 @@ Intervallo richiedi_intervallo_prenotazione(){
       char scelta;
       Intervallo i;
       do{
-          printf("Inserisci il giorno, il mese, l'anno e l'orario iniali ");
+          printf("Inserisci il giorno, il mese, l'anno e l'orario iniziali ");
           printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
           fgets(inizio, DIMENSIONE_INTERVALLO, stdin);
           inizio[strlen(inizio) - 1] = '\0';
