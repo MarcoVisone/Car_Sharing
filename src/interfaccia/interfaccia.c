@@ -234,34 +234,38 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
 }
 
 Intervallo richiedi_intervallo_prenotazione(){
-      char inizio[DIMENSIONE_INTERVALLO];
-      char fine[DIMENSIONE_INTERVALLO];
-      char scelta;
-      Intervallo i;
-      do{
-          printf("Inserisci il giorno, il mese, l'anno e l'orario iniziali ");
-          printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
-          fgets(inizio, DIMENSIONE_INTERVALLO, stdin);
-          inizio[strlen(inizio) - 1] = '\0';
+    char inizio[DIMENSIONE_INTERVALLO];
+    char fine[DIMENSIONE_INTERVALLO];
+    char scelta;
+    Intervallo i;
+    do{
+        printf("Inserisci il giorno, il mese, l'anno e l'orario iniziali ");
+        printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
+        fgets(inizio, DIMENSIONE_INTERVALLO, stdin);
+        inizio[strcspn(inizio, "\n")] = '\0';
+        while(getchar()!='\n');
 
-          printf("Inserisci il giorno, il mese, l'anno e l'orario finali ");
-          printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
-          fgets(fine, DIMENSIONE_INTERVALLO, stdin);
-          fine[strlen(fine) - 1] = '\0';
+        printf("Inserisci il giorno, il mese, l'anno e l'orario finali ");
+        printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
+        fgets(fine, DIMENSIONE_INTERVALLO, stdin);
+        fine[strcspn(inizio, "\n")] = '\0';
+        while(getchar()!='\n');
 
-          i = converti_data_in_intervallo(inizio, fine);
+        printf("%s - %s\n", inizio, fine);
 
-          if(i==NULL || inizio_intervallo(i) < time(NULL)) printf("Intervallo non valido\n");
+        i = converti_data_in_intervallo(inizio, fine);
 
-          printf("Vuoi uscire? (S/N): ");
-          scelta = getchar();
+        if(i == NULL || inizio_intervallo(i) < time(NULL)) printf("Intervallo non valido\n");
 
-          if(scelta == 's' || scelta == 'S'){
+        printf("Vuoi uscire? (S/N): ");
+        scelta = getchar();
+
+        if(scelta == 's' || scelta == 'S'){
             return NULL;
-          }
-      }while(i == NULL);
+        }
+    }while(i == NULL);
 
-      return i;
+    return i;
 }
 
 static void stampa_riga_separatrice() {
