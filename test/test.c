@@ -5,7 +5,6 @@
 #include "modelli/veicolo.h"
 #include "strutture_dati/lista.h"
 #include "strutture_dati/prenotazioni.h"
-#include "strutture_dati/tabella_hash.h"
 #include "strutture_dati/tabella_veicoli.h"
 #include "modelli/utente.h"
 #include "strutture_dati/tabella_utenti.h"
@@ -13,6 +12,7 @@
 #include "utils/utils.h"
 
 #define GRANDEZZA_RIGA 500
+#define MASSIMO_PERCORSO_FILE 1024
 
 int txt_in_utenti(FILE *fp, TabellaUtenti tabella);
 
@@ -23,6 +23,8 @@ int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 int test_case_due(TabellaVeicoli tabella_veicoli);
 
 int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
+
+int compara_file(FILE *a, FILE *b);
 
 int main(int argc, char **argv){
     if(argc < 4){
@@ -61,6 +63,12 @@ int main(int argc, char **argv){
 
     char linea[GRANDEZZA_RIGA];
 
+    FILE *file_result = fopen("result.txt", "w");
+    if(file_result == NULL){
+        printf("Errore apertura file result.txt!\n");
+        return -1;
+    }
+
     while(fgets(linea, sizeof(linea), file_test_suite)){
         linea[strcspn(linea, "\n")] = 0;
         char *tc = strtok(linea, " ");
@@ -82,6 +90,24 @@ int main(int argc, char **argv){
                 continue;
             }
         }
+
+        char nome_file_oracle[MASSIMO_PERCORSO_FILE] = {0};
+        snprintf(nome_file_oracle, MASSIMO_PERCORSO_FILE, "%s/oracle.txt", tc);
+
+        char nome_file_output[MASSIMO_PERCORSO_FILE] = {0};
+        snprintf(nome_file_output, MASSIMO_PERCORSO_FILE, "%s/output.txt", tc);
+
+
+        FILE *oracle_file = fopen(nome_file_oracle, "r");
+        FILE *output_file = fopen(nome_file_output, "r");
+
+        if((oracle_file == NULL) || (output_file == NULL)){
+            printf("Errore apertura file oracle o output\n");
+            return -1;
+        }
+
+        int risultato = compara_file(oracle_file, output_file);
+        fprintf(file_result, "%s: %sHA SUPERATO IL TEST\n", tc, risultato ? "NON " : "");
     }
 
     return 0;
@@ -204,10 +230,13 @@ int test_case_due(TabellaVeicoli tabella_veicoli){
 
         unsigned int dimensione;
         Veicolo *vettore_veicoli = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
+        const char *sep = "";
         if(vettore_veicoli == NULL) return -1;
         for(unsigned int i = 0; i < dimensione; i++){
-            if(vettore_veicoli[i] != NULL)
-                fprintf(file_output, "'%s' ", ottieni_targa(vettore_veicoli[i]));
+            if(vettore_veicoli[i] != NULL){
+                fprintf(file_output, "%s'%s'", sep, ottieni_targa(vettore_veicoli[i]));
+                sep = " ";
+            }
         }
         fprintf(file_output, "\n");
     }
@@ -224,11 +253,18 @@ int test_case_tre(TabellaUtenti tabella_utenti, TabellaUtenti tabella_veicoli){
     if(!(file_input && file_output)) return -1;
 
     char linea[GRANDEZZA_RIGA];
+    //Creo una nuova linea per evitare di mettere un \n in più
+    const char *nuova_linea = "";
+
+    //Creo un tab perchè \t poi viene contato come carattere diverso da 4 spazi usati nel oracle
+    const char *tab = "    ";
+
     while (fgets(linea, sizeof(linea), file_input)) {
         linea[strcspn(linea, "\n")] = 0;
 
         Utente u = cerca_utente_in_tabella(tabella_utenti, linea);
         if(u == NULL) return -1;
+        fprintf(file_output, "%s", nuova_linea);
         fprintf(file_output, "Prenotazioni di %s:\n", linea);
         for(ListaPre lista = ottieni_storico_utente(u); !lista_vuota(lista); lista = ottieni_prossimo(lista)){
             Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(ottieni_item(lista)));
@@ -237,20 +273,26 @@ int test_case_tre(TabellaUtenti tabella_utenti, TabellaUtenti tabella_veicoli){
                 fclose(file_output);
                 return -1;
             }
-            fprintf(file_output, "\t- Veicolo: %s %s\n\t\t- Data: %s\n\t\t- Costo: %0.2lf\n",
+            fprintf(file_output, "%s- Veicolo: %s %s\n%s%s- Data: %s\n%s%s- Costo: %0.2lf€\n",
+                   tab,
                    ottieni_modello(v),
                    ottieni_targa(v),
+                   tab,
+                   tab,
                    intervallo_in_stringa(ottieni_intervallo_prenotazione(ottieni_item(lista))),
+                   tab,
+                   tab,
                    ottieni_costo_prenotazione(ottieni_item(lista)));
         }
-        printf("\n");
+        nuova_linea = "\n";
     }
     fclose(file_input);
     fclose(file_output);
     return 1;
 }
 
-/*Prenotazioni di mario.rossi@email.com:
-    - Veicolo: Fiat Panda AB123CD
-        - Data: 10/06/25 09:00 al 10/06/25 10:30
-        - Costo: 1.35€ */
+int compara_file(FILE *a, FILE *b) {
+    int ca, cb;
+    for(ca = getc(a), cb = getc(b); (ca != EOF && cb != EOF) && (ca == cb); ca = getc(a), cb = getc(b));
+    return ca != cb;
+}
