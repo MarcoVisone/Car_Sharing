@@ -29,7 +29,7 @@ typedef struct prenotazione *Prenotazione;
  * Ritorna:
  *    Prenotazione creata
  */
-Prenotazione crea_prenotazione(char *cliente, Intervallo i, double costo);
+Prenotazione crea_prenotazione(char *cliente, char *targa, Intervallo i, double costo);
 
 /*
  * Funzione: distruggi_prenotazione
@@ -71,6 +71,8 @@ void distruggi_prenotazione(Prenotazione p);
  *    Nome del cliente
  */
 char *ottieni_cliente_prenotazione(Prenotazione p);
+
+char *ottieni_veicolo_prenotazione(Prenotazione p);
 
 /*
  * Funzione: ottieni_intervallo_prenotazione
@@ -132,7 +134,10 @@ double ottieni_costo_prenotazione(Prenotazione p);
  * Ritorna:
  *    non restituisce niente
  */
-void imposta_cliente_prenotazione(Prenotazione p, char *cliente);
+void imposta_cliente_prenotazione(Prenotazione p, const char *cliente);
+
+void imposta_veicolo_prenotazione(Prenotazione p, const char *targa);
+
 
 /*
  * Funzione: imposta_intervallo_prenotazione
