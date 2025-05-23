@@ -14,16 +14,155 @@
 #define GRANDEZZA_RIGA 500
 #define MASSIMO_PERCORSO_FILE 1024
 
+/*
+ * Funzione: txt_in_utenti
+ * -----------------------
+ * Carica gli utenti da un file di testo nella tabella utenti.
+ *
+ * Implementazione:
+ *    Legge il file riga per riga, estrae i campi separati da punto e virgola,
+ *    calcola l'hash della password e crea l'utente.
+ *
+ * Parametri:
+ *    fp: puntatore al file da leggere
+ *    tabella: tabella utenti in cui inserire i dati
+ *
+ * Pre-condizioni:
+ *    - fp deve essere un file aperto in lettura
+ *    - tabella deve essere una tabella utenti valida
+ *
+ * Post-condizioni:
+ *    restituisce 0 se il caricamento è avvenuto con successo,
+ *    -1 in caso di errore di formato o allocazione
+ *
+ * Side-effect:
+ *    Modifica la tabella utenti aggiungendo nuovi utenti
+ */
 int txt_in_utenti(FILE *fp, TabellaUtenti tabella);
 
+/*
+ * Funzione: txt_in_veicoli
+ * ------------------------
+ * Carica i veicoli da un file di testo nella tabella veicoli.
+ *
+ * Implementazione:
+ *    Legge il file riga per riga, estrae i campi separati da punto e virgola,
+ *    converte la tariffa in double e crea il veicolo.
+ *
+ * Parametri:
+ *    fp: puntatore al file da leggere
+ *    tabella: tabella veicoli in cui inserire i dati
+ *
+ * Pre-condizioni:
+ *    - fp deve essere un file aperto in lettura
+ *    - tabella deve essere una tabella veicoli valida
+ *
+ * Post-condizioni:
+ *    restituisce 0 se il caricamento è avvenuto con successo,
+ *    -1 in caso di errore di formato o allocazione
+ *
+ * Side-effect:
+ *    Modifica la tabella veicoli aggiungendo nuovi veicoli
+ */
 int txt_in_veicoli(FILE *fp, TabellaVeicoli tabella);
 
+/*
+ * Funzione: test_case_uno
+ * ----------------------
+ * Esegue il test case 1: aggiunta di prenotazioni.
+ *
+ * Implementazione:
+ *    Legge un file di input con email, targa e date, crea prenotazioni
+ *    e verifica la disponibilità, scrivendo i risultati su file.
+ *
+ * Parametri:
+ *    tabella_utenti: tabella degli utenti registrati
+ *    tabella_veicoli: tabella dei veicoli disponibili
+ *
+ * Pre-condizioni:
+ *    - Entrambe le tabelle devono essere inizializzate
+ *    - I file TC1/input.txt e TC1/output.txt devono essere accessibili
+ *
+ * Post-condizioni:
+ *    restituisce 1 se il test è stato eseguito correttamente,
+ *    -1 in caso di errore
+ *
+ * Side-effect:
+ *    Crea/modifica il file TC1/output.txt con i risultati
+ */
 int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
+/*
+ * Funzione: test_case_due
+ * ----------------------
+ * Esegue il test case 2: verifica disponibilità veicoli.
+ *
+ * Implementazione:
+ *    Legge un file di input con intervalli di date e verifica quali veicoli
+ *    sono disponibili in quei periodi, scrivendo i risultati su file.
+ *
+ * Parametri:
+ *    tabella_veicoli: tabella dei veicoli disponibili
+ *
+ * Pre-condizioni:
+ *    - La tabella veicoli deve essere inizializzata
+ *    - I file TC2/input.txt e TC2/output.txt devono essere accessibili
+ *
+ * Post-condizioni:
+ *    restituisce 1 se il test è stato eseguito correttamente,
+ *    -1 in caso di errore
+ *
+ * Side-effect:
+ *    Crea/modifica il file TC2/output.txt con i risultati
+ */
 int test_case_due(TabellaVeicoli tabella_veicoli);
 
+/*
+ * Funzione: test_case_tre
+ * ----------------------
+ * Esegue il test case 3: visualizzazione storico prenotazioni utente.
+ *
+ * Implementazione:
+ *    Legge un file di input con email di utenti e genera un report
+ *    con tutte le loro prenotazioni, scrivendo i risultati su file.
+ *
+ * Parametri:
+ *    tabella_utenti: tabella degli utenti registrati
+ *    tabella_veicoli: tabella dei veicoli disponibili
+ *
+ * Pre-condizioni:
+ *    - Entrambe le tabelle devono essere inizializzate
+ *    - I file TC3/input.txt e TC3/output.txt devono essere accessibili
+ *
+ * Post-condizioni:
+ *    restituisce 1 se il test è stato eseguito correttamente,
+ *    -1 in caso di errore
+ *
+ * Side-effect:
+ *    Crea/modifica il file TC3/output.txt con i risultati
+ */
 int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
+/*
+ * Funzione: compara_file
+ * ----------------------
+ * Confronta il contenuto di due file byte per byte.
+ *
+ * Implementazione:
+ *    Legge contemporaneamente i due file e confronta i caratteri
+ *    finché non trova una differenza o raggiunge la fine di uno dei file.
+ *
+ * Parametri:
+ *    a: primo file da confrontare
+ *    b: secondo file da confrontare
+ *
+ * Pre-condizioni:
+ *    - Entrambi i file devono essere aperti in lettura
+ *
+ * Post-condizioni:
+ *    restituisce 0 se i file sono identici,
+ *    1 se sono diversi
+ */
 int compara_file(FILE *a, FILE *b);
 
 int main(int argc, char **argv){
