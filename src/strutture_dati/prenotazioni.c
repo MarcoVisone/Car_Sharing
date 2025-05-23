@@ -11,6 +11,15 @@
 #include <stdio.h>
 #include <time.h>
 
+//Controlla elemento maggiore fra 2
+#define massimo(x, y) (x > y ? x: y)
+
+//Ottiene il campo massimo di un nodo, se nodo nullo restituisce 0
+#define ottieni_massimo(x) (x ? x->massimo: 0)
+
+//Ottiene il campo altezza di un nodo, se nodo nullo restituisce 0
+#define altezza(x) (x ? x->altezza : 0)
+
 struct nodo{
     Prenotazione prenotazione;
     time_t massimo;
@@ -24,8 +33,6 @@ struct albero{
     unsigned int num_nodi;
 };
 
-static time_t massimo(time_t a, time_t b);
-static int altezza(struct nodo *nodo);
 static struct nodo* nuovo_nodo(Prenotazione prenotazione);
 static void aggiorna_nodo(struct nodo *n);
 static struct nodo *ruota_destra(struct nodo *y);
@@ -39,14 +46,6 @@ static struct nodo *cancella_prenotazione_t(struct nodo *radice, Intervallo i, B
 static struct nodo *trova_minimo(struct nodo *nodo);
 static void prenotazioni_in_vettore_t(struct nodo *radice, Prenotazione *result, int *index);
 
-static time_t massimo(time_t a, time_t b){
-    return a > b ? a: b;
-}
-
-static int altezza(struct nodo *nodo) {
-    return nodo ? nodo->altezza : 0;
-}
-
 static struct nodo* nuovo_nodo(Prenotazione prenotazione) {
     struct nodo* nodo = malloc(sizeof(struct nodo));
     nodo->prenotazione = prenotazione;
@@ -54,10 +53,6 @@ static struct nodo* nuovo_nodo(Prenotazione prenotazione) {
     nodo->altezza = 1;
     nodo->massimo = fine_intervallo(ottieni_intervallo_prenotazione(prenotazione));
     return nodo;
-}
-
-static time_t ottieni_massimo(struct nodo *nodo){
-    return nodo ? nodo->massimo: 0;
 }
 
 static void aggiorna_nodo(struct nodo *n) {
@@ -202,10 +197,11 @@ static struct nodo *aggiungi_prenotazione_t(struct nodo *albero, Prenotazione pr
     time_t inizio = inizio_intervallo(ottieni_intervallo_prenotazione(albero->prenotazione));
     time_t nuovo_inizio = inizio_intervallo(ottieni_intervallo_prenotazione(prenotazione));
 
-    if(nuovo_inizio < inizio){
+    if(intervalli_si_sovrappongono(ottieni_intervallo_prenotazione(prenotazione), ottieni_intervallo_prenotazione(albero->prenotazione))){
+        return NULL;
+    }else if(nuovo_inizio < inizio){
         albero->sinistra = aggiungi_prenotazione_t(albero->sinistra, prenotazione);
-    }
-    else{
+    }else{
         albero->destra = aggiungi_prenotazione_t(albero->destra, prenotazione);
     }
 
@@ -322,13 +318,13 @@ void distruggi_prenotazioni(Prenotazioni prenotazioni) {
 Byte aggiungi_prenotazione(Prenotazioni albero, Prenotazione prenotazione){
     if(albero == NULL || prenotazione == NULL) return 0;
     albero->radice = aggiungi_prenotazione_t(albero->radice, prenotazione);
-    if(albero->radice == NULL) return 0;
+    if(albero->radice == NULL) return OCCUPATO;
     albero->num_nodi += 1;
-    return 1;
+    return OK;
 }
 
 Byte controlla_prenotazione(Prenotazioni prenotazioni, Intervallo i){
-    if(prenotazioni == NULL || i == NULL) return 0;
+    if(prenotazioni == NULL || i == NULL) return OK;
     return controlla_prenotazione_t(prenotazioni->radice, i);
 }
 
