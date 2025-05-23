@@ -9,10 +9,24 @@
 #include <string.h>
 #include <stdio.h>
 
+#define stdin_fflush() while(getchar() != '\n')
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 1)
-#define DIMENSIONE_INTERVALLO (16 + 1)
+#define DIMENSIONE_INTERVALLO (16 + 2)
 
+static void inserisci_stringa(char *stringa, unsigned int lunghezza);
 static void stampa_veicolo(const Veicolo v, Intervallo i);
+
+static void inserisci_stringa(char *stringa, unsigned int lunghezza){
+    fgets(stringa, lunghezza, stdin);
+
+    unsigned long indice = strcspn(stringa, "\n");
+    if(indice >= (DIMENSIONE_INTERVALLO-1)){
+        stdin_fflush(); //PULIZIA BUFFER IN CASO DI OVERFLOW
+    }
+
+    stringa[indice] = '\0';
+
+}
 
 /*
  * Funzione: risposta_password
@@ -241,12 +255,10 @@ Intervallo richiedi_intervallo_prenotazione(){
 
     do{
         printf("Inserisci la data e l'orario iniziali (formato: gg/mm/aaaa HH:MM): ");
-        fgets(inizio, DIMENSIONE_INTERVALLO, stdin);
-        inizio[strcspn(inizio, "\n")] = '\0';
+        inserisci_stringa(inizio, DIMENSIONE_INTERVALLO);
 
         printf("Inserisci la data e l'orario finali (formato: gg/mm/aaaa HH:MM): ");
-        fgets(fine, DIMENSIONE_INTERVALLO, stdin);
-        fine[strcspn(inizio, "\n")] = '\0';
+        inserisci_stringa(fine, DIMENSIONE_INTERVALLO);
 
         i = converti_data_in_intervallo(inizio, fine);
 
@@ -256,7 +268,7 @@ Intervallo richiedi_intervallo_prenotazione(){
             printf("Intervallo non valido\n");
             printf("Vuoi uscire? (S/N): ");
             scelta = getchar();
-            while(getchar() != '\n');
+            stdin_fflush();
 
             if(scelta == 's' || scelta == 'S'){
                 return NULL;
@@ -274,12 +286,12 @@ static void stampa_riga_separatrice() {
 static void stampa_intestazione_tabella() {
     stampa_riga_separatrice();
     printf("| %-10s | %-30s | %-30s | %-12s | %-22s |\n",
-           "Targa", "Modello", "Posizione", "Tariffa", "Tipo");
+           "Targa", "Modello", "Posizione", "Prezzo", "Tipo");
     stampa_riga_separatrice();
 }
 
 static void stampa_veicolo(const Veicolo v, Intervallo i) {
-    printf("| %-10s | %-30s | %-30s | %12.2f | %-22s |\n",
+    printf("| %-10s | %-30s | %-30s | %-10.2f € | %-22s |\n",
            ottieni_targa(v),
            ottieni_modello(v),
            ottieni_posizione(v),
@@ -309,8 +321,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
 
     while(1){
         printf("Inserisci la targa del veicolo che vuoi prenotare (per uscire digita E): ");
-        fgets(targa, NUM_CARATTERI_TARGA, stdin);
-        targa[strlen(targa) - 1] = '\0';
+        inserisci_stringa(targa, NUM_CARATTERI_TARGA);
 
         if(strcmp(targa, "E") == 0) return NULL;
 
