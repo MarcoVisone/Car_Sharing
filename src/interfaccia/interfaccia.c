@@ -1,6 +1,7 @@
-#include "modelli/interfaccia.h"
+#include "interfaccia/interfaccia.h"
 #include "modelli/tabella_utenti.h"
 #include "modelli/utenti.h"
+#include "modelli/veicolo.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -266,24 +267,54 @@ static void stampa_intestazione_tabella() {
     stampa_riga_separatrice();
 }
 
-static void stampa_veicolo(const TabellaVeicoli v) {
+static void stampa_veicolo(const TabellaVeicoli v, Intervallo i) {
     printf("| %-10s | %-30s | %-30s | %12.2f | %-22s |\n",
            ottieni_targa(v),
            ottieni_modello(v),
            ottieni_posizione(v),
-           ottieni_tariffa(v),
+           calcola_costo(ottieni_tariffa(v), i),
            ottieni_tipo_veicolo(v));
 }
 
-Byte interfaccia_prenotazione(TabellaVeicoli tabella_veicoli, Intervallo i){
+Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo i){
     unsigned int dimensione;
     Veicolo *v = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
 
-    printf("TABELLA VEICOLI DISPONIBILI:\n);
+    if(v == NULL){
+        printf("Nessun veicolo disponibile\n");
+        return NULL;
+    }
+    char targa[NUM_CARATTERI_TARGA];
+    char scelta;
+
+    printf("TABELLA VEICOLI DISPONIBILI:\n");
 
 	stampa_intestazione_tabella();
-    for (int i = 0; i < dimensione; i++) {
-        stampa_veicolo(v[i]);
+    for (int j = 0; j < dimensione; j++) {
+        if(v[j] == NULL) continue;
+        stampa_veicolo(v[j]);
     }
     stampa_riga_separatrice();
+
+    while(1){
+        printf("Inserisci la targa del veicolo che vuoi prenotare (per uscire digita E): ");
+        fgets(targa, NUM_CARATTERI_TARGA, stdin);
+        targa[strlen(targa) - 1] = '\0';
+
+        if(strcmp(targa, "E") == 0) return NULL;
+
+        Veicolo trovato = cerca_veicolo_in_tabella(tabella_veicoli, targa);
+
+        if(trovato != NULL){
+            printf("Sei sicuro di voler prenotare questo veicolo? (S/N): ");
+            scelta = getchar();
+
+            if(scelta == 's' || scelta == 'S'){
+                return trovato;
+            }
+        }
+        else if(trovato == NULL){
+            printf("Veicolo non trovato\n");
+        }
+    }
 }
