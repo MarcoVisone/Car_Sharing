@@ -76,7 +76,7 @@ static time_t converti_data_in_time_t(const char *data){
  *    Alloca memoria per la struttura intervallo
  */
 Intervallo crea_intervallo(time_t inizio, time_t fine){
-    if(inizio > fine) return NULL;
+    if(inizio >= fine) return NULL;
     Intervallo i = (Intervallo) malloc(sizeof(struct intervallo));
     if(i == NULL){
         return NULL;
