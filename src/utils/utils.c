@@ -2,6 +2,8 @@
 #include <time.h>
 #include <string.h>
 #include "utils/utils.h"
+
+#include "modelli/intervallo.h"
 #include "modelli/veicolo.h"
 #include "strutture_dati/prenotazioni.h"
 #include "strutture_dati/tabella_veicoli.h"
@@ -214,4 +216,15 @@ Byte controllo_password(char *password) {
     lvl++;
 
     return lvl;
+}
+
+double calcola_costo(double tariffa, Intervallo i){
+    time_t inizio = inizio_intervallo(i);
+    time_t fine = fine_intervallo(i);
+
+    time_t totale = fine - inizio;
+
+    totale = totale / 60;
+
+    return totale * tariffa;
 }

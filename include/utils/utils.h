@@ -6,7 +6,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "strutture_dati/tabella_veicoli.h"
+#include "modelli/byte.h"
+typedef struct tabella_hash *TabellaVeicoli;
+typedef struct intervallo *Intervallo;
 
 /*
  * Funzione: genera_tabella_veicoli
@@ -78,5 +80,7 @@ char* mia_strdup(const char* s);
  *    Nessuno
  */
 Byte controllo_password(char* password);
+
+double calcola_costo(double tariffa, Intervallo i);
 
 #endif //UTILS_H
