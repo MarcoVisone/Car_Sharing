@@ -1,3 +1,8 @@
+/*
+ * Autore: Marco Visone
+ * Data: 21/05/2025
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "modelli/intervallo.h"
