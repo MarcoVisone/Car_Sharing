@@ -44,11 +44,17 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
 
     char *cliente = ottieni_cliente_prenotazione(prenotazione);
     if(cliente == NULL) return;
-
     unsigned int len = (unsigned int)strlen(cliente) + 1;
     fwrite(&len, sizeof(len), 1, fp);
 
     fwrite(cliente, sizeof(char), len, fp);
+
+    char *targa = ottieni_veicolo_prenotazione(prenotazione);
+    if(targa == NULL) return;
+    len = strlen(targa) + 1;
+    fwrite(&len, sizeof(len), 1, fp);
+
+    fwrite(targa, sizeof(char), len, fp);
 
     double costo = ottieni_costo_prenotazione(prenotazione);
     fwrite(&costo, sizeof(costo), 1, fp);
@@ -69,6 +75,8 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
 static Prenotazione carica_prenotazione(FILE *fp){
     if(fp == NULL) return NULL;
 
+    Prenotazione p = crea_prenotazione(NULL, NULL, NULL, 0);
+
     unsigned int len;
     if(fread(&len, sizeof(len), 1, fp) != 1) return NULL;
 
@@ -78,11 +86,22 @@ static Prenotazione carica_prenotazione(FILE *fp){
     if (fread(buffer, sizeof(char), len, fp) != len) {
         return NULL;
     }
+    imposta_cliente_prenotazione(p, buffer);
+
+    if(fread(&len, sizeof(len), 1, fp) != 1) return NULL;
+    if(len >= DIMENSIONE_BUFFER){
+        return NULL;
+    }
+    if (fread(buffer, sizeof(char), len, fp) != len) {
+        return NULL;
+    }
+    imposta_veicolo_prenotazione(p, buffer);
 
     double costo;
     if(fread(&costo, sizeof(costo), 1, fp) != 1){
         return NULL;
     }
+    imposta_costo_prenotazione(p, costo);
 
     time_t inizio, fine;
     if(fread(&inizio, sizeof(inizio), 1, fp) != 1 ||
@@ -94,8 +113,7 @@ static Prenotazione carica_prenotazione(FILE *fp){
     if(i == NULL){
         return NULL;
     }
-
-    Prenotazione p = crea_prenotazione(buffer, i, costo);
+    imposta_intervallo_prenotazione(p, i);
     return p;
 }
 
