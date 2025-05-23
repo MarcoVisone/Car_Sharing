@@ -7,6 +7,12 @@
 #define VEICOLO_H
 #include "modelli/byte.h"
 
+#define NUM_CARATTERI_TARGA 7 + 1
+#define MAX_LUNGHEZZA_MODELLO 50 + 1
+#define MAX_LUNGHEZZA_POSIZIONE 200 + 1
+#define MAX_LUNGHEZZA_TARIFFA 9 + 1
+#define MAX_LUNGHEZZA_TIPO 30 + 1
+
 typedef struct intervallo *Intervallo;
 typedef struct prenotazione *Prenotazione;
 typedef struct albero *Prenotazioni;

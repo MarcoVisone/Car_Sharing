@@ -1,12 +1,19 @@
 #include "interfaccia/interfaccia.h"
-#include "modelli/tabella_utenti.h"
-#include "modelli/utenti.h"
+#include "utils/utils.h"
+#include "utils/md5.h"
+#include "modelli/intervallo.h"
+#include "modelli/utente.h"
+#include "strutture_dati/tabella_utenti.h"
 #include "modelli/veicolo.h"
+#include "strutture_dati/tabella_veicoli.h"
 #include <string.h>
 #include <stdio.h>
 
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 1)
 #define DIMENSIONE_INTERVALLO (10 + 1)
+
+static void stampa_veicolo(const Veicolo v, Intervallo i);
+
 /*
  * Funzione: risposta_password
  * ---------------------------
@@ -122,7 +129,7 @@ Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
     char password[DIMENSIONE_STRINGA_PASSWORD];
     uint8_t password_mod[DIMENSIONE_PASSWORD];
     Byte tentativi = 0;
-    Byte scelta;
+    char scelta;
 
     Utente utente;
 
@@ -134,7 +141,7 @@ Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
       ottieni_stringa(password, DIMENSIONE_STRINGA_PASSWORD);
       md5(password, strlen(password), password_mod);
 
-      utente = cerca_tabella_utenti(tabella_utenti, email);
+      utente = cerca_utente_in_tabella(tabella_utenti, email);
 
       if(utente && !hash_equals(ottieni_password(utente), password_mod, DIMENSIONE_PASSWORD)){
         printf("Email o password errati\n");
@@ -226,10 +233,11 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
     return 0;
 }
 
-Intervallo richiedi_intervallo_prenotazione(Intervallo i){
+Intervallo richiedi_intervallo_prenotazione(){
       char inizio[DIMENSIONE_INTERVALLO];
       char fine[DIMENSIONE_INTERVALLO];
-
+      char scelta;
+      Intervallo i;
       do{
           printf("Inserisci il giorno, il mese, l'anno e l'orario iniali ");
           printf("secondo questo formato: dd/mm/yyyy HH:MM: ");
@@ -267,7 +275,7 @@ static void stampa_intestazione_tabella() {
     stampa_riga_separatrice();
 }
 
-static void stampa_veicolo(const TabellaVeicoli v, Intervallo i) {
+static void stampa_veicolo(const Veicolo v, Intervallo i) {
     printf("| %-10s | %-30s | %-30s | %12.2f | %-22s |\n",
            ottieni_targa(v),
            ottieni_modello(v),
@@ -290,9 +298,9 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
     printf("TABELLA VEICOLI DISPONIBILI:\n");
 
 	stampa_intestazione_tabella();
-    for (int j = 0; j < dimensione; j++) {
+    for (unsigned int j = 0; j < dimensione; j++) {
         if(v[j] == NULL) continue;
-        stampa_veicolo(v[j]);
+        stampa_veicolo(v[j], i);
     }
     stampa_riga_separatrice();
 

@@ -11,12 +11,6 @@
 #include "modelli/prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
 
-#define NUM_CARATTERI_TARGA 7 + 1
-#define MAX_LUNGHEZZA_MODELLO 50 + 1
-#define MAX_LUNGHEZZA_POSIZIONE 200 + 1
-#define MAX_LUNGHEZZA_TARIFFA 9 + 1
-#define MAX_LUNGHEZZA_TIPO 30 + 1
-
 struct veicolo{
     char targa[NUM_CARATTERI_TARGA];
     char modello[MAX_LUNGHEZZA_MODELLO];

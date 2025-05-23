@@ -5,23 +5,21 @@
 
 #ifndef UTENTE_H
 #define UTENTE_H
+#include <stdint.h>
+#include "modelli/byte.h"
 
 #define DIMENSIONE_NOME (64 + 1)
 #define DIMENSIONE_COGNOME (64 + 1)
 #define DIMENSIONE_EMAIL (319 + 1)
 #define DIMENSIONE_PASSWORD 16
 
-#include <stdint.h>
-#include "modelli/byte.h"
-
-typedef struct prenotazione *Prenotazione;
-typedef struct nodo *ListaPre;
-typedef struct data *Data;
-
 #define ADMIN 0
 #define CLIENTE 1
 #define ERRORE_PERMESSO -1
 
+typedef struct prenotazione *Prenotazione;
+typedef struct nodo *ListaPre;
+typedef struct data *Data;
 typedef struct utente *Utente;
 
 /*

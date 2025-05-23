@@ -11,6 +11,11 @@
 #define DIMENSIONE_BUFFER 25
 #define DIMENSIONE_BUFFER_FINALE (2 * DIMENSIONE_BUFFER + 5)
 
+struct intervallo{
+    time_t inizio;
+    time_t fine;
+};
+
 /*
  * Funzione: converti_data_in_time_t
  * ---------------------------------
@@ -44,11 +49,6 @@ static time_t converti_data_in_time_t(const char *data){
 
     return mktime(&tm);
 }
-
-struct intervallo{
-    time_t inizio;
-    time_t fine;
-};
 
 /*
  * Funzione: crea_intervallo

@@ -6,8 +6,8 @@
 #ifndef PRENOTAZIONI_H
 #define PRENOTAZIONI_H
 
-#define OK 0
-#define OCCUPATO 1
+#define OK 1
+#define OCCUPATO 0
 
 #include "modelli/byte.h"
 
