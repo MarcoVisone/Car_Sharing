@@ -10,28 +10,6 @@
 typedef struct tabella_hash *TabellaVeicoli;
 typedef struct intervallo *Intervallo;
 
-/*
- * Funzione: genera_tabella_veicoli
- * --------------------------------
- * Crea e inizializza una tabella di veicoli con il numero specificato di veicoli.
- *
- * Parametri:
- *    numero_veicoli: numero intero che rappresenta la dimensione della tabella
- *
- * Pre-condizioni:
- *    numero_veicoli deve essere un valore positivo
- *
- * Post-condizione:
- *    ritorna una nuova tabella di veicoli allocata dinamicamente, oppure NULL in caso di errore
- *
- * Ritorna:
- *    una nuova tabella di veicoli allocata dinamicamente,
- *    NULL in caso di fallimento nell'allocazione
- *
- * Side effects:
- *    Allocazione dinamica di memoria per la tabella di veicoli
- */
-TabellaVeicoli genera_tabella_veicoli(unsigned int numero_veicoli);
 
 /*
  * Funzione: mia_strdup
