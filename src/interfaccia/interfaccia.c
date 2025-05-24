@@ -433,7 +433,7 @@ static time_t fine_giornata(time_t inizio) {
  * Autore: Marco Visone
  * Data: 24/05/2025
  */
- void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_riferimento) {
+void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_riferimento) {
     unsigned int dimensione;
     char comando;
 
@@ -510,4 +510,4 @@ static time_t fine_giornata(time_t inizio) {
         }
 
     }while (comando != 'E' && comando != 'e');
- }
+}
