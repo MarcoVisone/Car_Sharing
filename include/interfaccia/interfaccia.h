@@ -5,6 +5,7 @@
 #ifndef INTERFACCIA_H
 #define INTERFACCIA_H
 
+#include <time.h>
 #include "modelli/byte.h"
 
 typedef struct prenotazione *Prenotazione;
@@ -21,7 +22,7 @@ Intervallo richiedi_intervallo_prenotazione();
 
 Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo i);
 
-void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli);
+void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_riferimento);
 
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo);
 
