@@ -1,13 +1,16 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "interfaccia/interfaccia.h"
 #include "utils/utils.h"
 #include "utils/md5.h"
 #include "modelli/intervallo.h"
+#include "modelli/prenotazione.h"
 #include "modelli/utente.h"
 #include "strutture_dati/tabella_utenti.h"
 #include "modelli/veicolo.h"
 #include "strutture_dati/tabella_veicoli.h"
-#include <string.h>
-#include <stdio.h>
 
 #define stdin_fflush() while(getchar() != '\n')
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 2)

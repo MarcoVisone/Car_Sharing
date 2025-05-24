@@ -7,6 +7,7 @@
 
 #include "modelli/byte.h"
 
+typedef struct prenotazione *Prenotazione;
 typedef struct veicolo *Veicolo;
 typedef struct tabella_hash *TabellaUtenti;
 typedef struct tabella_hash *TabellaVeicoli;
