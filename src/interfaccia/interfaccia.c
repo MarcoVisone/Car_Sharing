@@ -332,7 +332,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
     stampa_riga_separatrice();
 
     while(1){
-        printf("Inserisci la targa del veicolo che vuoi prenotare (per uscire digita E): ");
+        printf("Inserisci la targa del veicolo che vuoi selezionare (per uscire digita E): ");
         inserisci_stringa(targa, NUM_CARATTERI_TARGA);
 
         if(strcmp(targa, "E") == 0) return NULL;
@@ -340,7 +340,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
         Veicolo trovato = cerca_veicolo_in_tabella(tabella_veicoli, targa);
 
         if(trovato != NULL){
-            printf("Sei sicuro di voler prenotare questo veicolo? (S/N): ");
+            printf("Sei sicuro di voler selezionare questo veicolo? (S/N): ");
             scelta = getchar();
 
             if(scelta == 's' || scelta == 'S'){
@@ -360,4 +360,31 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
 void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli){
     unsigned int dimensione;
     Intervallo i = crea_intervallo(time(NULL), time(NULL));
+}
+
+void prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo){
+	if (!v || !p || percentuale < 0.0 || percentuale > 1.0 || !motivo) {
+		printf("Errore di sistema\n");
+		return;
+	}
+
+    double costo_totale = ottieni_costo_prenotazione(p);
+    double costo_scontato = costo_totale * (1.0 - percentuale);
+    char *desc_v   = veicolo_in_stringa(v);
+    char *desc_pr  = prenotazione_in_stringa(p);
+
+	printf("========================================\n");
+    printf("         RICEVUTA DI NOLEGGIO          \n");
+    printf("========================================\n");
+    printf("%s\n", desc_v);
+    printf("%s\n", desc_pr);
+    printf("----------------------------------------\n");
+    printf("Costo totale       : %8.2f EUR\n", costo_totale);
+    printf("Sconto applicato   : %8.0f %%\n", percentuale * 100.0);
+    printf("Motivo sconto      : %s\n", motivo);
+    printf("Costo scontato     : %8.2f EUR\n", costo_scontato);
+    printf("========================================\n\n");
+
+    free(desc_v);
+    free(desc_pr);
 }
