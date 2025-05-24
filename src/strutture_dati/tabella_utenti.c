@@ -88,7 +88,6 @@ static void distruggi_utente_t(void *utente){
 void distruggi_tabella_utenti(TabellaUtenti tabella_utenti){
     if(tabella_utenti == NULL)
         return;
-
     distruggi_tabella(tabella_utenti, distruggi_utente_t);
 }
 
