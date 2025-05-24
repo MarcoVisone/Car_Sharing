@@ -10,10 +10,11 @@
 #include <stdio.h>
 
 #define stdin_fflush() while(getchar() != '\n')
-#define DIMENSIONE_STRINGA_PASSWORD (64 + 1)
+#define DIMENSIONE_STRINGA_PASSWORD (64 + 2)
 #define DIMENSIONE_INTERVALLO (16 + 2)
 
 static void inserisci_stringa(char *stringa, unsigned int lunghezza);
+static void ottieni_parola(char *stringa, int dimensione);
 static void stampa_veicolo(const Veicolo v, Intervallo i);
 
 static void inserisci_stringa(char *stringa, unsigned int lunghezza){
@@ -68,7 +69,6 @@ static Byte risposta_password(Byte lvl){
         break;
 
       default:
-        printf("PASSWORD VALIDA\n");
         return 1;
     }
 
@@ -76,7 +76,7 @@ static Byte risposta_password(Byte lvl){
 }
 
 /*
- * Funzione: ottieni_stringa
+ * Funzione: ottieni_parola
  * -------------------------
  *
  * Legge una stringa da input standard, rimuovendo newline e spazi finali.
@@ -101,14 +101,20 @@ static Byte risposta_password(Byte lvl){
  * Side-effect:
  *    Lettura da stdin
  */
-void ottieni_stringa(char *stringa, int dimensione){
+static void ottieni_parola(char *stringa, int dimensione){
     fgets(stringa, dimensione, stdin);
-    while(*stringa){
+    int i = 0;
+    while(i < (dimensione-1) && *stringa){
       if (*stringa == '\n'|| *stringa == ' '){
         *stringa = '\0';
         break;
       }
       stringa++;
+      i++;
+    }
+
+    if(i >= (dimensione-1)){
+        stdin_fflush();
     }
 }
 
@@ -123,7 +129,8 @@ void ottieni_stringa(char *stringa, int dimensione){
  *    Richiede all'utente l'inserimento di email e password.
  *    La password inserita viene cifrata con MD5 e confrontata con quella memorizzata.
  *    Se l'accesso fallisce, l'utente può ritentare fino a 3 volte o scegliere di uscire.
- *    Restituisce 1 se l'accesso ha successo, -1 se l'utente sceglie di uscire.
+ *    Restituisce 1 se l'accesso ha successo, -1 se l'utente sceglie di uscire e un numero
+ *    maggiore o uguale a 3 in caso di troppi tentativi.
  *
  * Parametri:
  *    tabella_utenti: struttura contenente la lista di utenti registrati
@@ -134,43 +141,48 @@ void ottieni_stringa(char *stringa, int dimensione){
  * Post-condizione:
  *    Se le credenziali sono corrette, restituisce 1
  *    Se l'utente sceglie di uscire, restituisce -1
+ *    Se l'utente supera il numero di tentativi, restituisce il numero dei tentativi fatti.
  *
  * Side-effect:
  *    Nessuno
  */
 Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
-    char email[DIMENSIONE_EMAIL];
-    char password[DIMENSIONE_STRINGA_PASSWORD];
-    uint8_t password_mod[DIMENSIONE_PASSWORD];
     Byte tentativi = 0;
     char scelta;
 
-    Utente utente;
+    Utente utente = NULL;
 
     do{
-      printf("Inserisci l'email: ");
-      ottieni_stringa(email, DIMENSIONE_EMAIL);
+        char email[DIMENSIONE_EMAIL] = {0};
+        char password[DIMENSIONE_STRINGA_PASSWORD] = {0};
+        uint8_t password_mod[DIMENSIONE_PASSWORD] = {0};
 
-      printf("Inserisci la password: ");
-      ottieni_stringa(password, DIMENSIONE_STRINGA_PASSWORD);
-      md5(password, strlen(password), password_mod);
+        printf("Inserisci l'email: ");
+        ottieni_parola(email, DIMENSIONE_EMAIL);
 
-      utente = cerca_utente_in_tabella(tabella_utenti, email);
-
-      if(utente && !hash_equals(ottieni_password(utente), password_mod, DIMENSIONE_PASSWORD)){
-        printf("Email o password errati\n");
-
-        printf("Vuoi uscire? (S/N): ");
-        scelta = getchar();
-        if(scelta == 's' || scelta == 'S'){
-          return -1;
+        printf("Inserisci la password: ");
+        ottieni_parola(password, DIMENSIONE_STRINGA_PASSWORD);
+        if(controllo_password(password) >= 0){
+            md5(password, strlen(password), password_mod);
+            utente = cerca_utente_in_tabella(tabella_utenti, email);
         }
-        tentativi += 1;
-      }
-      else break;
+        if((utente == NULL )|| !hash_equals(ottieni_password(utente), password_mod, DIMENSIONE_PASSWORD)){
+            printf("Email o password errati\n");
+
+            printf("Vuoi uscire? (S/N): ");
+            scelta = getchar();
+            stdin_fflush();
+            if(scelta == 's' || scelta == 'S'){
+                return -1;
+            }
+            distruggi_utente(utente);
+            utente = NULL;
+            tentativi++;
+        }
+        else break;
     }while(tentativi < 3);
 
-    return 1;
+    return tentativi;
 }
 
 /*
@@ -213,24 +225,24 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
     Byte lvl;
 
     printf("Inserisci il nome: ");
-    ottieni_stringa(nome, DIMENSIONE_NOME);
+    ottieni_parola(nome, DIMENSIONE_NOME);
 
     printf("Inserisci il cognome: ");
-    ottieni_stringa(cognome, DIMENSIONE_COGNOME);
+    ottieni_parola(cognome, DIMENSIONE_COGNOME);
 
     printf("Inserisci l'email: ");
-    ottieni_stringa(email, DIMENSIONE_EMAIL);
+    ottieni_parola(email, DIMENSIONE_EMAIL);
 
     do{
       do{
         printf("Inserisci la password: ");
-        ottieni_stringa(password, DIMENSIONE_STRINGA_PASSWORD);
+        ottieni_parola(password, DIMENSIONE_STRINGA_PASSWORD);
 
         lvl = controllo_password(password);
       }while(risposta_password(lvl) < 0);
 
-      printf("Conferma Password\n");
-      ottieni_stringa(password_2, DIMENSIONE_PASSWORD);
+      printf("Conferma Password: ");
+      ottieni_parola(password_2, DIMENSIONE_PASSWORD);
       conferma = strcmp(password, password_2) != 0;
       if(conferma){
         printf("Le password non corrispondono\n");
@@ -339,4 +351,13 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
             printf("Veicolo non trovato\n");
         }
     }
+}
+
+/*
+ * Autore: Marco Visone
+ * Data: 24/05/2025
+ */
+void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli){
+    unsigned int dimensione;
+    Intervallo i = crea_intervallo(time(NULL), time(NULL));
 }
