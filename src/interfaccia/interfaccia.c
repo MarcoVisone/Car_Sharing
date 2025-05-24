@@ -446,15 +446,13 @@ static time_t fine_giornata(time_t inizio) {
 
         Veicolo *vettore_veicoli = (Veicolo*) ottieni_vettore(tabella_veicoli, &dimensione);
 
-        // --- Header ---
         printf("\n+-------------------------------------------------------------+\n");
         printf("|              VEICOLI DISPONIBILI - TEMPO REALE              |\n");
         printf("+-------------------------------------------------------------+\n");
         printf("Ultimo Aggiornamento: %s\n", formatta_data(ora_corrente_aggiornata));
         printf("---------------------------------------------------------------\n\n");
 
-         // --- Table Header ---
-         printf("%-3s | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
+        printf("%-3s | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
                  "#", "Modello", "Targa", "Tipo", "Posizione", "Costo", "Disponibile fino", "Durata");
         printf("----+----------------------+----------+-------------+--------------------+----------+------------------+---------------\n");
 
