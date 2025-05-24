@@ -22,4 +22,6 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
 
 void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli);
 
+void prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo);
+
 #endif //INTERFACCIA_H
