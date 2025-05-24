@@ -448,15 +448,15 @@ static time_t fine_giornata(time_t inizio) {
 
         // --- Header ---
         printf("\n+-------------------------------------------------------------+\n");
-        printf("|              VEICOLI DISPONIBILI - LIVE                   |\n");
+        printf("|              VEICOLI DISPONIBILI - TEMPO REALE              |\n");
         printf("+-------------------------------------------------------------+\n");
         printf("Ultimo Aggiornamento: %s\n", formatta_data(ora_corrente_aggiornata));
         printf("---------------------------------------------------------------\n\n");
 
          // --- Table Header ---
-        printf("%-3s | %-20s | %-8s | %-11s | %-18s | %8s | %-16s | %-15s\n",
-                "#", "Modello", "Targa", "Tipo", "Posizione", "Costo", "Disponibile fino", "Durata");
-        printf("----+----------------------+----------+-------------+--------------------+----------+----------------+---------------\n");
+         printf("%-3s | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
+                 "#", "Modello", "Targa", "Tipo", "Posizione", "Costo", "Disponibile fino", "Durata");
+        printf("----+----------------------+----------+-------------+--------------------+----------+------------------+---------------\n");
 
         int j = 0;
         for (unsigned int i = 0; i < dimensione; i++) {
@@ -470,7 +470,7 @@ static time_t fine_giornata(time_t inizio) {
                 double prezzo_min = ottieni_tariffa(vettore_veicoli[i]);
 
                 char costo_str[16];
-                snprintf(costo_str, sizeof(costo_str), "EUR%.2f", calcola_costo(prezzo_min, disponibile)); // Changed to EUR for broad use
+                snprintf(costo_str, sizeof(costo_str), "%.2f EUR", calcola_costo(prezzo_min, disponibile)); // Changed to EUR for broad use
 
                 time_t fine_disp = fine_intervallo(disponibile);
                 char *disponibile_fino_str = ottieni_orario(fine_disp);
@@ -486,7 +486,7 @@ static time_t fine_giornata(time_t inizio) {
                     snprintf(durata_str, sizeof(durata_str), "%dh %02dm", hours, minutes);
                 }
 
-                printf("%-3d | %-20s | %-8s | %-11s | %-18s | %8s | %-16s | %-15s\n",
+                printf("%-3d | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
                         j++, modello, targa, tipo, posizione, costo_str, disponibile_fino_str, durata_str);
              }
             if (disponibile){
