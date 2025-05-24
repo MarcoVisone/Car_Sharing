@@ -716,7 +716,7 @@ Byte aggiungi_prenotazione(Prenotazioni albero, Prenotazione prenotazione) {
     } else if (nuova_radice == NULL && albero->radice == NULL) {
         // Questo caso si verifica se `nuovo_nodo` in `aggiungi_prenotazione_t` restituisce NULL
         // quando `albero->radice` è inizialmente NULL (primo inserimento fallito).
-        return 0; // Errore generico (es. allocazione fallita per il primo nodo)
+        return OCCUPATO; // Errore generico (es. allocazione fallita per il primo nodo)
     }
 
     albero->radice = nuova_radice;
