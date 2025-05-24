@@ -132,7 +132,7 @@ TabellaHash nuova_tabella_hash(unsigned int grandezza){
 void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
 	if(tabella_hash == NULL) return;
 
-	for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
+	for(unsigned int i = 0; i < tabella_hash->numero_buckets; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
 			struct item *item = (struct item *)ottieni_item(curr);
