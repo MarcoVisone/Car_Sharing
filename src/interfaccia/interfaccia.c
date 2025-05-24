@@ -271,6 +271,36 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
     return 0;
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 22/05/2025
+ *
+ * Funzione: richiedi_intervallo_prenotazione
+ * ------------------------------------------
+ *
+ * richiede all'utente di inserire un intervallo di tempo per una prenotazione
+ *
+ * Implementazione:
+ *    - Chiede in input le date e orari di inizio e fine in formato "gg/mm/aaaa HH:MM"
+ *    - Converte le stringhe in un oggetto `Intervallo`
+ *    - Verifica che l’intervallo sia valido (non NULL e con inizio maggiore all’orario corrente)
+ *    - Se l’intervallo è invalido, permette all’utente di riprovare o annullare l’operazione
+ *
+ * Parametri:
+ *    nessuno
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizioni:
+ *    - Restituisce un puntatore a Intervallo se l’input è corretto
+ *    - Restituisce NULL se l’utente decide di uscire o se non è stato possibile creare un intervallo valido
+ *
+ * Side-effect:
+ *    - Legge input da tastiera
+ *    - Stampa messaggi
+ *    - Alloca memoria dinamicamente per l’intervallo restituito (da liberare)
+ */
 Intervallo richiedi_intervallo_prenotazione(){
     char inizio[DIMENSIONE_INTERVALLO];
     char fine[DIMENSIONE_INTERVALLO];
@@ -303,10 +333,58 @@ Intervallo richiedi_intervallo_prenotazione(){
     return i;
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 22/05/2025
+ *
+ * Funzione: stampa_riga_separatrice
+ * ----------------------------------
+ *
+ * stampa una riga di separazione utilizzata per formattare tabelle testuali in output
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare una riga composta da caratteri '+' e '-' per delimitare visivamente le colonne
+ *
+ * Parametri:
+ *    nessuno
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    viene stampata una riga orizzontale sulla console per separare o delimitare sezioni di una tabella
+ */
 static void stampa_riga_separatrice() {
     printf("+------------+--------------------------------+--------------------------------+--------------+------------------------+\n");
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 22/05/2025
+ *
+ * Funzione: stampa_intestazione_tabella
+ * --------------------------------------
+ *
+ * stampa l'intestazione di una tabella formattata, con nomi di colonna per i dati dei veicoli
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare i titoli delle colonne allineati e formattati, seguiti da righe separatrici
+ *
+ * Parametri:
+ *    nessuno
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    viene stampata su console l'intestazione della tabella con i nomi delle colonne
+ */
 static void stampa_intestazione_tabella() {
     stampa_riga_separatrice();
     printf("| %-10s | %-30s | %-30s | %-12s | %-22s |\n",
@@ -314,6 +392,33 @@ static void stampa_intestazione_tabella() {
     stampa_riga_separatrice();
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 22/05/2025
+ *
+ * Funzione: stampa_veicolo
+ * ------------------------
+ *
+ * stampa su console le informazioni di un veicolo formattate come riga di una tabella
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare i dati del veicolo. Calcola il costo della prenotazione
+ *    in base all'intervallo fornito.
+ *
+ * Parametri:
+ *    v: puntatore ad un veicolo da stampare (non deve essere NULL)
+ *    i: puntatore ad un intervallo
+ *
+ * Pre-condizioni:
+ *    v: deve essere diverso da NULL
+ *    i: deve essere diverso da NULL
+ *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    i dati del veicolo vengono stampati in una riga formattata sullo standard output
+ */
 static void stampa_veicolo(const Veicolo v, Intervallo i) {
     printf("| %-10s | %-30s | %-30s | %-10.2f € | %-22s |\n",
            ottieni_targa(v),
@@ -323,6 +428,35 @@ static void stampa_veicolo(const Veicolo v, Intervallo i) {
            ottieni_tipo_veicolo(v));
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 22/05/2025
+ *
+ * Funzione: interfaccia_seleziona_veicolo
+ * ---------------------------------------
+ *
+ * permette all'utente di selezionare un veicolo mostrando quelli disponibili nell'intervallo specificato
+ *
+ * Implementazione:
+ *    Recupera i veicoli disponibili nell'intervallo, li stampa in una tabella
+ *    e chiede all'utente di selezionarne uno inserendo la targa.
+ *    Conferma la scelta prima di restituire il veicolo selezionato.
+ *
+ * Parametri:
+ *    tabella_veicoli: tabella contenente i veicoli
+ *    i: intervallo per cui si cerca un veicolo disponibile
+ *
+ * Pre-condizioni:
+ *    tabella_veicoli: deve essere diversa da NULL
+ *    i: deve essere diversa da NULL
+ *
+ * Post-condizioni:
+ *    se l’utente seleziona un veicolo disponibile, restituisce un puntatore al veicolo selezionato.
+ *    Se l’utente esce o non ci sono veicoli disponibili, restituisce NULL.
+ *
+ * Side-effect:
+ *    Stampa a video, acquisizione input utente
+ */
 Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo i){
     unsigned int dimensione;
     Veicolo *v = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
@@ -366,6 +500,38 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
     }
 }
 
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 24/05/2025
+ *
+ * Funzione: prenota_veicolo
+ * --------------------------
+ *
+ * gestisce la prenotazione di un veicolo, mostrando una ricevuta
+ * con il dettaglio del costo, lo sconto applicato e il motivo dello sconto
+ *
+ * Implementazione:
+ *    Calcola il costo scontato, stampa una ricevuta e chiede conferma all’utente.
+ *    Se l’utente conferma la prenotazione restituisce 1, altrimenti 0.
+ *
+ * Parametri:
+ *    v: veicolo da prenotare
+ *    p: prenotazione da associare al veicolo
+ *    percentuale: sconto da applicare (compreso tra 0.0 e 1.0)
+ *    motivo: stringa che rappresenta la motivazione dello sconto
+ *
+ * Pre-condizioni:
+ *    v: deve essere diverso da NULL
+ *    p: deve essere diverso da NULL
+ *    percentuale: deve essere compresa tra 0.0 e 1.0
+ *    motivo: deve essere diverso da NULL
+ *
+ * Post-condizione:
+ *    restituisce 1 se la prenotazione è confermata, altrimenti 0
+ *
+ * Side-effect:
+ *    stampa a video, acquisizione input utente, allocazione e deallocazione di memoria
+ */
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo){
 	if (!v || !p || percentuale < 0.0 || percentuale > 1.0 || !motivo) {
 		return 0;
@@ -393,12 +559,12 @@ Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *
 	scelta = getchar();
 	stdin_fflush();
 
+    free(desc_v);
+    free(intervallo);
+
 	if((scelta == 's') || (scelta == 'S')){
 		return 1;
 	}
-
-    free(desc_v);
-    free(intervallo);
 
     return 0;
 }
