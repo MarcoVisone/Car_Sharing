@@ -573,13 +573,20 @@ char* veicolo_in_stringa(Veicolo v){
                MAX_LUNGHEZZA_POSIZIONE + 100 + 1;
 
     char *buffer = malloc(sizeof(char) * size);
+    char tariffa[MAX_LUNGHEZZA_TARIFFA];
 
-    snprintf(buffer, size, "Tipo: %s\nModello: %s\nPosizione: %s\nTarga: %s\nTariffa: %0.3lf",
+    if((int)v->tariffa == v->tariffa){
+        snprintf(tariffa, MAX_LUNGHEZZA_TARIFFA, "%0.1lf", v->tariffa);
+    }else{
+        snprintf(tariffa, MAX_LUNGHEZZA_TARIFFA, "%0.3lf", v->tariffa);
+    }
+
+    snprintf(buffer, size, "Tipo: %s\nModello: %s\nPosizione: %s\nTarga: %s\nTariffa: %s EUR/MIN",
 			v->tipo_veicolo,
             v->modello,
             v->posizione,
             v->targa,
-            v->tariffa);
+            tariffa);
 
     return buffer;
 }
