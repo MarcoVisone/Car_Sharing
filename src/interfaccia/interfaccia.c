@@ -13,6 +13,8 @@
 #include "strutture_dati/tabella_utenti.h"
 #include "modelli/veicolo.h"
 #include "strutture_dati/tabella_veicoli.h"
+#include "strutture_dati/lista.h"
+#include "strutture_dati/lista_prenotazione.h"
 
 #define stdin_fflush() while(getchar() != '\n')
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 2)
@@ -676,4 +678,29 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
         }
 
     }while (comando != 'E' && comando != 'e');
+}
+
+void visualizza_storico(Utente utente){
+    ListaPre l = ottieni_storico_utente(utente);
+
+    printf("\n+----------------------------------------------------------------------------+\n");
+    printf("|                      STORICO PRENOTAZIONI UTENTE                           |\n");
+    printf("+----------------------------------------------------------------------------+\n\n");
+
+    while (l != NULL){
+        Prenotazione p = ottieni_prenotazione_lista(l);
+        char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
+        printf("%-15s | %-25s | %-15s\n",
+               "Veicolo (Targa)", "Periodo", "Costo Totale (€)");
+        printf("-----------------+---------------------------+-----------------\n");
+
+        printf("%-15s | %-25s | %-15.2f\n",
+        ottieni_veicolo_prenotazione(p), str, ottieni_costo_prenotazione(p));
+
+        free(str);
+        l = ottieni_prossimo(l);
+    }
+
+    printf("Digita un tasto per uscire...");
+    getchar();
 }

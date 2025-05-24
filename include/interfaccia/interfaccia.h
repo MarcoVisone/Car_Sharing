@@ -13,6 +13,7 @@ typedef struct veicolo *Veicolo;
 typedef struct tabella_hash *TabellaUtenti;
 typedef struct tabella_hash *TabellaVeicoli;
 typedef struct intervallo *Intervallo;
+typedef struct utente* Utente;
 
 Byte interfaccia_accesso(TabellaUtenti tabella_utenti);
 
@@ -77,5 +78,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  *    stampa a video, acquisizione input utente, allocazione e deallocazione di memoria
  */
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo);
+
+void visualizza_storico(Utente utente);
 
 #endif //INTERFACCIA_H
