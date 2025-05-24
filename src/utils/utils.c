@@ -45,7 +45,7 @@ char* mia_strdup(const char* s) {
 static Byte controllo_lvl_2(char *password) {
     int i=0;
     for(i=0;password[i];i++) {
-        if(isalnum(password[i])) {
+        if(!isalnum(password[i])) {
             return 1;
         }
     }
