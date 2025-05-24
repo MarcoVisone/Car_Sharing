@@ -105,18 +105,21 @@ static Byte risposta_password(Byte lvl){
  *    Lettura da stdin
  */
 static void ottieni_parola(char *stringa, int dimensione){
-    fgets(stringa, dimensione, stdin);
+    fgets(stringa, dimensione - 1, stdin);
     int i = 0;
-    while(i < (dimensione-1) && *stringa){
-      if (*stringa == '\n'|| *stringa == ' '){
-        *stringa = '\0';
-        break;
-      }
-      stringa++;
-      i++;
+
+    while(*stringa){
+        if(*stringa == ' '){
+            *stringa = 0;
+        }
+        if(*stringa == '\n'){
+            break;
+        }
+        i++;
+        stringa++;
     }
 
-    if(i >= (dimensione-1)){
+    if(i >= dimensione-2){
         stdin_fflush();
     }
 }
@@ -336,7 +339,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
 
     while(1){
         printf("Inserisci la targa del veicolo che vuoi selezionare (per uscire digita E): ");
-        inserisci_stringa(targa, NUM_CARATTERI_TARGA);
+        ottieni_parola(targa, NUM_CARATTERI_TARGA);
 
         if(strcmp(targa, "E") == 0) return NULL;
 
@@ -345,6 +348,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
         if(trovato != NULL){
             printf("Sei sicuro di voler selezionare questo veicolo? (S/N): ");
             scelta = getchar();
+            stdin_fflush();
 
             if(scelta == 's' || scelta == 'S'){
                 return trovato;
@@ -367,21 +371,20 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli){
 
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo){
 	if (!v || !p || percentuale < 0.0 || percentuale > 1.0 || !motivo) {
-		printf("Errore di sistema\n");
-		return;
+		return 0;
 	}
 
 	char scelta;
     double costo_totale = ottieni_costo_prenotazione(p);
     double costo_scontato = costo_totale * (1.0 - percentuale);
     char *desc_v   = veicolo_in_stringa(v);
-    char *desc_pr  = prenotazione_in_stringa(p);
+    char *intervallo  =  intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
 
 	printf("========================================\n");
     printf("         RICEVUTA DI NOLEGGIO          \n");
     printf("========================================\n");
     printf("%s\n", desc_v);
-    printf("%s\n", desc_pr);
+    printf("Periodo: %s\n", intervallo);
     printf("----------------------------------------\n");
     printf("Costo totale       : %8.2f EUR\n", costo_totale);
     printf("Sconto applicato   : %8.0f %%\n", percentuale * 100.0);
@@ -393,12 +396,12 @@ Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *
 	scelta = getchar();
 	stdin_fflush();
 
-	if(scelta == 's' || scelta == 'S'){
+	if((scelta == 's') || (scelta == 'S')){
 		return 1;
 	}
 
     free(desc_v);
-    free(desc_pr);
+    free(intervallo);
 
     return 0;
 }
