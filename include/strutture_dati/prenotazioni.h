@@ -187,4 +187,6 @@ Prenotazione *ottieni_vettore_prenotazioni_ordinate(Prenotazioni prenotazioni, u
  */
 Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, unsigned int *size);
 
+Intervallo ottieni_intervallo_disponibile(Prenotazioni prenotazioni, Intervallo i);
+
 #endif //PRENOTAZIONI_H

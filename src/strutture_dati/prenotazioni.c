@@ -943,3 +943,42 @@ Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, u
     distruggi_coda(q, NULL); // Libera la memoria della coda
     return result;
 }
+
+static Intervallo ottieni_intervallo_disponibile_t(struct nodo *radice, Intervallo i) {
+    if (!radice)
+        return duplica_intervallo(i);
+
+    Intervallo cur = ottieni_intervallo_prenotazione(radice->prenotazione);
+    time_t start_cerca = inizio_intervallo(i);
+
+    // 1) Se si sovrappone, viene restituito subito il gap prima o NULL
+    if (intervalli_si_sovrappongono(cur, i)) {
+        time_t s_cur = inizio_intervallo(cur);
+        if (s_cur > start_cerca)
+            return crea_intervallo(start_cerca, s_cur);
+        else
+            return NULL;
+    }
+
+    // 2) Provo a cercare nel sottoalbero sinistro, se ha potenziale
+    if (radice->sinistra && radice->sinistra->massimo >= start_cerca) {
+        Intervallo left = ottieni_intervallo_disponibile_t(radice->sinistra, i);
+        if (left)
+            return left;
+        else
+            return NULL;
+    }
+
+    // 3) Altrimenti cerco nel sottoalbero destro
+    return ottieni_intervallo_disponibile_t(radice->destra, i);
+}
+
+
+
+Intervallo ottieni_intervallo_disponibile(Prenotazioni prenotazioni, Intervallo i){
+    if(prenotazioni == NULL){
+        return NULL;
+    }
+
+    return ottieni_intervallo_disponibile_t(prenotazioni->radice, i);
+}
