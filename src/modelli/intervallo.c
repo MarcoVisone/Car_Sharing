@@ -36,19 +36,19 @@ struct intervallo{
  *    restituisce il timestamp corrispondente,
  *    oppure -1 in caso di formato non valido
  */
-static time_t converti_data_in_time_t(const char *data){
+ static time_t converti_data_in_time_t(const char *data){
     struct tm tm = {0};
 
-    if(sscanf(data, "%d/%d/%d %d:%d",
-              &tm.tm_mday, &tm.tm_mon, &tm.tm_year,
-              &tm.tm_hour, &tm.tm_min) != 5)
-        return -1;
+    // Parsing di giorno/mese/anno e ora:minuto
+    if (sscanf(data, "%d/%d/%d %d:%d", &tm.tm_mday, &tm.tm_mon, &tm.tm_year, &tm.tm_hour, &tm.tm_min) != 5) return (time_t)-1;
 
     tm.tm_year -= 1900;
-    tm.tm_mon -= 1;
+    tm.tm_mon  -= 1;
+    tm.tm_sec   = 0;
+    tm.tm_isdst = -1;
 
     return mktime(&tm);
-}
+ }
 
 /*
  * Funzione: crea_intervallo
