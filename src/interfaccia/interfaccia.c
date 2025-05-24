@@ -365,12 +365,13 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli){
     Intervallo i = crea_intervallo(time(NULL), time(NULL));
 }
 
-void prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo){
+Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo){
 	if (!v || !p || percentuale < 0.0 || percentuale > 1.0 || !motivo) {
 		printf("Errore di sistema\n");
 		return;
 	}
 
+	char scelta;
     double costo_totale = ottieni_costo_prenotazione(p);
     double costo_scontato = costo_totale * (1.0 - percentuale);
     char *desc_v   = veicolo_in_stringa(v);
@@ -388,6 +389,16 @@ void prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *
     printf("Costo scontato     : %8.2f EUR\n", costo_scontato);
     printf("========================================\n\n");
 
+	printf("Prenota (S/N): ");
+	scelta = getchar();
+	stdin_fflush();
+
+	if(scelta == 's' || scelta == 'S'){
+		return 1;
+	}
+
     free(desc_v);
     free(desc_pr);
+
+    return 0;
 }
