@@ -474,11 +474,7 @@ Byte confronta_tipo(Veicolo v, char *tipo){
 Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 	if(v == NULL || prenotazione == NULL) return 0;
 
-	Byte codice = aggiungi_prenotazione(v->prenotazioni, prenotazione);
-
-	if(!codice) return 0;
-
-	return 1;
+	return aggiungi_prenotazione(v->prenotazioni, prenotazione);
 }
 
 /*
