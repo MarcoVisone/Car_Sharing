@@ -93,7 +93,7 @@ void distruggi_lista_prenotazione(ListaPre l){
  *    Modifica la struttura della lista
  */
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
-    return aggiungi_nodo(p, l);
+    return aggiungi_nodo(duplica_prenotazione(p), l);
 }
 
 /*
@@ -120,24 +120,37 @@ ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
  *    Potrebbe deallocare memoria del nodo e della prenotazione
  *    Modifica la struttura della lista
  */
-ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p){
-    ListaPre curr = l;
-    ListaPre prev = NULL;
-    while(!lista_vuota(curr)){
-        Prenotazione pre = ottieni_item(curr);
-        if(compara_intervalli(ottieni_intervallo_prenotazione(pre), ottieni_intervallo_prenotazione(p)) == 0){
-            if(prev){
-                imposta_prossimo(prev, ottieni_prossimo(curr));
-            } else {
-                return ottieni_prossimo(curr);
-            }
-            distruggi_nodo(curr, distruggi_prenotazione_t);
+ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p) {
+     // Caso lista vuota
+     if(lista_vuota(l)) {
+         return l;
+     }
+
+     ListaPre curr = l;
+     ListaPre prev = NULL;
+
+     while(!lista_vuota(curr)) {
+         Prenotazione pre = ottieni_item(curr);
+         ListaPre next = ottieni_prossimo(curr);
+         if(compara_intervalli(ottieni_intervallo_prenotazione(pre), ottieni_intervallo_prenotazione(p)) == 0) {
+             if(prev == NULL) {
+                 ListaPre new_head = next;
+                 distruggi_nodo(curr, distruggi_prenotazione_t);
+                 return new_head;
+             }
+             else {
+                 imposta_prossimo(prev, next);
+                 distruggi_nodo(curr, distruggi_prenotazione_t);
+                 return l;
+             }
         }
+
         prev = curr;
-        curr = ottieni_prossimo(curr);
+        curr = next;
     }
+
     return l;
-}
+ }
 
 /*
  * Funzione: ottieni_prenotazione_lista
