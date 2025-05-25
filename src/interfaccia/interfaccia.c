@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "interfaccia/interfaccia.h"
+#include "modelli/data.h"
 #include "strutture_dati/prenotazioni.h"
 #include "strutture_dati/tabella_hash.h"
 #include "utils/utils.h"
@@ -680,27 +681,146 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
     }while (comando != 'E' && comando != 'e');
 }
 
-void visualizza_storico(Utente utente){
-    ListaPre l = ottieni_storico_utente(utente);
+void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
+    Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
+    if(u == NULL){
+        return;
+    }
+
+    ListaPre l = ottieni_storico_utente(u);
 
     printf("\n+----------------------------------------------------------------------------+\n");
     printf("|                      STORICO PRENOTAZIONI UTENTE                           |\n");
     printf("+----------------------------------------------------------------------------+\n\n");
-
+    printf("%-15s | %-30s | %-15s\n",
+           "Veicolo (Targa)", "Periodo", "Costo Totale (€)");
+    printf("-----------------+---------------------------+-----------------\n");
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
         char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
-        printf("%-15s | %-25s | %-15s\n",
-               "Veicolo (Targa)", "Periodo", "Costo Totale (€)");
-        printf("-----------------+---------------------------+-----------------\n");
 
-        printf("%-15s | %-25s | %-15.2f\n",
+        printf("%-15s | %-30s | %-15.2f\n",
         ottieni_veicolo_prenotazione(p), str, ottieni_costo_prenotazione(p));
 
         free(str);
         l = ottieni_prossimo(l);
     }
+    printf("-----------------+---------------------------+-----------------\n");
 
     printf("Digita un tasto per uscire...");
     getchar();
+}
+
+Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
+    Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
+    if(u == NULL) {
+        printf("Errore: utente non trovato\n");
+        return -1;
+    }
+
+    time_t ora = time(NULL);
+    unsigned int num_ele = ottieni_numero_prenotazioni(ottieni_data(u));
+    Prenotazione vettore_prenotazione[num_ele];
+
+    while(1) {
+        system("clear || cls");  // Pulisce lo schermo
+
+        // Intestazione tabella
+        printf("+-------------------------------------------------------------------------------+\n");
+        printf("|                             LE TUE PRENOTAZIONI                               |\n");
+        printf("+----+------------------+-------------+-----------------------------------+-------+\n");
+        printf("| ID |     Modello      |    Targa    |             Periodo               | Costo |\n");
+        printf("+----+------------------+-------------+-----------------------------------+-------+\n");
+
+        unsigned int id = 0;
+        for(ListaPre curr = ottieni_storico_utente(u); !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
+            Prenotazione p = ottieni_prenotazione_lista(curr);
+            Intervallo i = ottieni_intervallo_prenotazione(p);
+            if(fine_intervallo(i) > ora) {
+                char *targa = ottieni_veicolo_prenotazione(p);
+                Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, targa);
+                char *modello = ottieni_modello(v);
+                char *periodo = intervallo_in_stringa(i);
+                double costo = ottieni_costo_prenotazione(p);
+                vettore_prenotazione[id] = p;
+
+                // Formatta il periodo su due righe se troppo lungo
+                char periodo1[30] = {0};
+                char periodo2[30] = {0};
+                char *freccia = strstr(periodo, "->");
+                if(freccia) {
+                    strncpy(periodo1, periodo, freccia - periodo);
+                    strcpy(periodo2, freccia + 2);
+                } else {
+                    strcpy(periodo1, periodo);
+                }
+
+                // Stampa riga della tabella
+                printf("| %-2u | %-16s | %-11s | %-33s | %-5.2f |\n",
+                       id, modello, targa, periodo1, costo);
+                if(freccia) {
+                    printf("|    |                  |             | %-33s |       |\n", periodo2);
+                }
+                printf("+----+------------------+-------------+-----------------------------------+-------+\n");
+
+                id++;
+            }
+        }
+
+        if(id == 0) {
+            printf("|                       Nessuna prenotazione attiva trovata                     |\n");
+            printf("+-------------------------------------------------------------------------------+\n\n");
+            return 0;
+        }
+
+        // Menu opzioni
+        printf("\n  [%u] Esci", id);
+        printf("\n\nInserisci l'ID della prenotazione da cancellare: ");
+
+        unsigned int scelta;
+        if(scanf("%u", &scelta) != 1) {
+            printf("\nInput non valido. Premere INVIO per continuare...");
+            while(getchar() != '\n');
+            getchar();
+            continue;
+        }
+
+        if(scelta == id) {
+            return 1;
+        }
+
+        if(scelta >= id) {
+            printf("\nID non valido. Premere INVIO per continuare...");
+            while(getchar() != '\n');
+            getchar();
+            continue;
+        }
+
+        // Conferma cancellazione
+        printf("\nConfermi la cancellazione della prenotazione ID %u? (s/n): ", scelta);
+        char conferma;
+        scanf(" %c", &conferma);
+        if(conferma != 's' && conferma != 'S') {
+            continue;
+        }
+
+        // Processo cancellazione
+        Prenotazione p = vettore_prenotazione[scelta];
+        Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
+        ListaPre storico = ottieni_storico_utente(u);
+        Byte codice = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
+        storico = rimuovi_prenotazione_lista(storico, vettore_prenotazione[scelta]);
+
+        if((storico == NULL) || !codice) {
+            printf("\nErrore durante la cancellazione. Premere INVIO per continuare...");
+            while(getchar() != '\n');
+            getchar();
+            return 0;
+        }
+
+        imposta_storico_lista(ottieni_data(u), storico);
+        printf("\nPrenotazione cancellata con successo! Premere INVIO per continuare...");
+        while(getchar() != '\n');
+        getchar();
+    }
 }
