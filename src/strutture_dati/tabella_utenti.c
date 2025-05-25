@@ -7,6 +7,7 @@
 #include "strutture_dati/tabella_hash.h"
 #include "modelli/utente.h"
 #include <stddef.h>
+#include <stdio.h>
 
 /*
  * Funzione: crea_tabella_utenti

@@ -18,19 +18,16 @@
 #include "strutture_dati/lista.h"
 #include "strutture_dati/lista_prenotazione.h"
 
-#define stdin_fflush() while(getchar() != '\n')
 #define DIMENSIONE_STRINGA_PASSWORD (64 + 2)
 #define DIMENSIONE_INTERVALLO (16 + 2)
 
-static void inserisci_stringa(char *stringa, unsigned int lunghezza);
-static void ottieni_parola(char *stringa, int dimensione);
 static void stampa_veicolo(const Veicolo v, Intervallo i);
 static char *formatta_data(time_t timestamp);
 static char *ottieni_orario(time_t timestamp);
 static time_t fine_giornata(time_t inizio);
 
 
-static void inserisci_stringa(char *stringa, unsigned int lunghezza){
+void inserisci_stringa(char *stringa, unsigned int lunghezza){
     fgets(stringa, lunghezza, stdin);
 
     unsigned long indice = strcspn(stringa, "\n");
@@ -114,7 +111,7 @@ static Byte risposta_password(Byte lvl){
  * Side-effect:
  *    Lettura da stdin
  */
-static void ottieni_parola(char *stringa, int dimensione) {
+void ottieni_parola(char *stringa, int dimensione) {
     if (fgets(stringa, dimensione, stdin) == NULL) {
         // Errore in input
         stringa[0] = '\0';
@@ -684,10 +681,10 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
     }while (comando != 'E' && comando != 'e');
 }
 
-void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
+Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL){
-        return;
+        return -1;
     }
 
     ListaPre l = ottieni_storico_utente(u);
@@ -712,6 +709,7 @@ void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
 
     printf("Digita un tasto per uscire...");
     getchar();
+    return 1;
 }
 
 /*
@@ -744,7 +742,7 @@ void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
  *    Modifica lo storico prenotazioni se l'utente cancella una prenotazione
  *    Stampa a video l'interfaccia utente
  */
- Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
+Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL) {
         printf("Errore: utente non trovato\n");
@@ -756,7 +754,7 @@ void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
     Prenotazione vettore_prenotazione[num_ele];
 
     while(1) {
-        system("clear || cls");
+        //(system("clear || cls");
 
         printf("\n");
         printf("+-----------------------------------------------------------------------------------------+\n");
@@ -842,4 +840,4 @@ void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
         printf("\nPrenotazione cancellata con successo! Premere INVIO per continuare...");
         stdin_fflush();
     }
- }
+}

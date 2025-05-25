@@ -2,11 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "interfaccia_amministratore.h"
+#include "interfaccia/interfaccia_amministratore.h"
+#include "interfaccia/interfaccia.h"
+#include "modelli/byte.h"
+#include "modelli/utente.h"
+#include "strutture_dati/tabella_hash.h"
+#include "strutture_dati/tabella_utenti.h"
+#include "modelli/veicolo.h"
+#include "strutture_dati/tabella_veicoli.h"
+#include "utils/utils.h"
 
 
 Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
-    unsigned int dimensone = 0;
+    unsigned int dimensione = 0;
     char email[DIMENSIONE_EMAIL];
     char scelta;
 
@@ -33,7 +41,7 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
         ottieni_parola(email, DIMENSIONE_EMAIL);
         if(strcmp(email, "E") == 0) break;;
 
-        Byte codice = visualzza_storico(email, tabella_utenti);
+        Byte codice = visualizza_storico(email, tabella_utenti);
 
         if(codice < 0){
             printf("\nUtente non trovato\n");

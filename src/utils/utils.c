@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <string.h>
 #include "utils/utils.h"
@@ -41,6 +42,33 @@ char* mia_strdup(const char* s) {
     return dup;
 }
 
+
+/*
+ * Funzione: stdin_fflush
+ * ----------------------
+ *
+ * Pulisce il buffer di input standard scartando tutti i caratteri
+ * rimanenti fino al newline o EOF
+ *
+ * Implementazione:
+ *    Legge caratteri dal buffer stdin usando getchar() finché non
+ *    incontra '\n' o EOF, scartando tutti i caratteri letti
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizioni:
+ *    il buffer stdin è vuoto e pronto per la prossima operazione di input
+ *
+ * Side-effect:
+ *    modifica lo stato del buffer stdin
+ */
+void stdin_fflush(void) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+        // Scarta il carattere letto
+    }
+}
 
 static Byte controllo_lvl_2(char *password) {
     int i=0;

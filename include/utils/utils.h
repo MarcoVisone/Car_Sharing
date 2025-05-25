@@ -36,6 +36,24 @@ typedef struct intervallo *Intervallo;
 char* mia_strdup(const char* s);
 
 /*
+ * Funzione: stdin_fflush
+ * ----------------------
+ *
+ * Pulisce il buffer di input standard scartando tutti i caratteri
+ * rimanenti fino al newline o EOF
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizioni:
+ *    il buffer stdin è vuoto e pronto per la prossima operazione di input
+ *
+ * Side-effect:
+ *    modifica lo stato del buffer stdin
+ */
+void stdin_fflush(void);
+
+/*
  * Funzione: controllo_password
  * ----------------------------
  * Controlla se la password soddisfa i criteri di sicurezza definiti.

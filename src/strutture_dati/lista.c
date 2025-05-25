@@ -2,7 +2,6 @@
  * Autore: Antonio Sicignano
  * Data: 09/05/2025
  */
-
 #include <stdlib.h>
 #include "strutture_dati/lista.h"
 

@@ -663,10 +663,7 @@ Prenotazioni crea_prenotazioni() {
  */
 void distruggi_prenotazioni(Prenotazioni prenotazioni) {
     if (!prenotazioni) return;
-
-    _distruggi_prenotazioni(prenotazioni->radice);
-    prenotazioni->radice = NULL;
-    prenotazioni->num_nodi = 0;
+    if(prenotazioni->num_nodi) _distruggi_prenotazioni(prenotazioni->radice);
     free(prenotazioni);
 }
 

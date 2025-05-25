@@ -4,14 +4,16 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "modelli/data.h"
+#include "modelli/prenotazione.h"
 #include "strutture_dati/lista_prenotazione.h"
 #include <strutture_dati/lista.h>
 
 struct data{
   ListaPre storico;
-  int numero_prenotazioni;
+  unsigned int numero_prenotazioni;
   int frequenza;
 };
 
@@ -40,14 +42,10 @@ struct data{
  *    allocazione dinamica di memoria
  */
 Data crea_data() {
-    Data data = malloc(sizeof(struct data));
-    if (data == NULL) {
-        return NULL;
-    }
+    Data data = calloc(1, sizeof(struct data));
+    if (data == NULL) return NULL;
 
     data->storico = crea_lista();
-    data->frequenza = 0;
-    data->numero_prenotazioni = 0;
 
     return data;
 }
@@ -76,13 +74,10 @@ Data crea_data() {
  *    deallocazione dinamica di memoria
  */
 void distruggi_data(Data data) {
-    if (data == NULL) {
-        return;
-    }
-
+    if (data == NULL) return;
     distruggi_lista_prenotazione(data->storico);
     free(data);
-}
+ }
 
 /*
  * Funzione: ottieni_storico_lista
@@ -144,8 +139,11 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
     if (data == NULL) {
         return NULL;
     }
+
     data->storico = aggiungi_prenotazione_lista(data->storico, prenotazione);
-    data->numero_prenotazioni +=1;
+
+    if(data->storico) data->numero_prenotazioni +=1;
+
     return data->storico;
 }
 
@@ -271,23 +269,33 @@ void azzera_frequenza(Data data){
  * Side-effect:
  *    allocazione dinamica di memoria
  */
-Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione){
-    if (data == NULL) {
-      return NULL;
+ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
+    if (data == NULL || dimensione == NULL) {
+        return NULL;
     }
 
-    Prenotazione *vettore_prenotazione = (Prenotazione*) calloc(data->numero_prenotazioni, sizeof(Prenotazione));
+    *dimensione = 0;
+    if (data->numero_prenotazioni == 0) {
+        return NULL;
+    }
+
+    Prenotazione *vettore = malloc(data->numero_prenotazioni * sizeof(Prenotazione));
+    if (vettore == NULL) {
+        return NULL;
+    }
 
     ListaPre curr = data->storico;
     unsigned int i = 0;
-    while (curr != NULL) {
-        vettore_prenotazione[i] = (Prenotazione)ottieni_item(curr);
+    while (curr != NULL && i < data->numero_prenotazioni) {
+        vettore[i] = ottieni_item(curr);
+
         curr = ottieni_prossimo(curr);
         i++;
     }
     *dimensione = i;
-    return vettore_prenotazione;
-}
+
+    return vettore;
+ }
 
 /*
  * Funzione: ottieni_numero_prenotazioni

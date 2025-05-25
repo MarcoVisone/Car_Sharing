@@ -81,7 +81,7 @@ static unsigned long djb2_hash(const char *str) {
  *   alloca memoria dinamicamente per la tabella hash e i suoi bucket
  */
 TabellaHash nuova_tabella_hash(unsigned int grandezza){
-	if(grandezza <= 0) return NULL;
+	if(grandezza == 0) return NULL;
 
 	TabellaHash tabella_hash = malloc(sizeof(struct tabella_hash));
 	if(tabella_hash == NULL){
@@ -132,17 +132,20 @@ TabellaHash nuova_tabella_hash(unsigned int grandezza){
 void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
 	if(tabella_hash == NULL) return;
 
-	for(unsigned int i = 0; i < tabella_hash->numero_buckets; i++){
+	for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
+		    Nodo temp = ottieni_prossimo(curr);
 			struct item *item = (struct item *)ottieni_item(curr);
-			free(item->chiave);
+			if(!item) continue;
+			if(item->chiave) free(item->chiave);
+			if(item->valore) funzione_distruggi_valore(item->valore);
 			free(item);
+			free(curr);
+			curr = temp;
 		}
-		Nodo temp = ottieni_prossimo(curr);
-		distruggi_nodo(curr, funzione_distruggi_valore);
-        curr = temp;
 	}
+
 	free(tabella_hash->buckets);
 	free(tabella_hash);
 }
@@ -193,7 +196,7 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
             nuovi_buckets[nuovo_indice] = aggiungi_nodo(item, nuovi_buckets[nuovo_indice]);
 
             Nodo next = ottieni_prossimo(curr);
-            distruggi_nodo(curr, NULL);  //distruggi solo nodo, non item
+            free(curr);  //distruggi solo nodo, non item
             curr = next;
         }
     }
@@ -248,13 +251,15 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore){
 	Nodo lista = tabella_hash->buckets[indice];
 	Nodo i;
 
-	for(i = tabella_hash->buckets[indice]; !lista_vuota(i); i = ottieni_prossimo(i)){
+	for(i = lista; !lista_vuota(i); i = ottieni_prossimo(i)){
 		struct item *nuovo_item = (struct item *)ottieni_item(i);
 		if(strcmp(nuovo_item->chiave, chiave) == 0){
 			return 0;
 		}
 	}
+
 	struct item *nuovo_item = malloc(sizeof(struct item));
+
 	if(nuovo_item == NULL){
 		return 0;
 	}
@@ -318,8 +323,9 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
 				*head = ottieni_prossimo(curr);
 			}
 			free(item->chiave);
+			if(funzione_distruggi_valore != NULL) funzione_distruggi_valore(item->valore);
 			free(item);
-			distruggi_nodo(curr, funzione_distruggi_valore);
+			free(curr);
 			tabella_hash->numero_buckets--;
 			return 1;
 		}

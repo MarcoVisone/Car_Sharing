@@ -79,8 +79,12 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  */
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo);
 
-void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti);
+Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti);
 
 Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
+
+void inserisci_stringa(char *stringa, unsigned int lunghezza);
+
+void ottieni_parola(char *stringa, int dimensione);
 
 #endif //INTERFACCIA_H

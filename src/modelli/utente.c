@@ -120,12 +120,12 @@ void distruggi_utente(Utente utente){
  *    modifica interna dell'utente
  */
 void imposta_nome(Utente utente, char *nome) {
-    if(utente == NULL) {
+    if(utente == NULL || nome == NULL) {
         return;
     }
 
     snprintf(utente->nome, DIMENSIONE_NOME, "%s", nome);
-}
+ }
 
 /*
  * Funzione: imposta_cognome
