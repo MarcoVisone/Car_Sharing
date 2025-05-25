@@ -1,3 +1,4 @@
+#include <complex.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -113,23 +114,25 @@ static Byte risposta_password(Byte lvl){
  * Side-effect:
  *    Lettura da stdin
  */
-static void ottieni_parola(char *stringa, int dimensione){
-    fgets(stringa, dimensione - 1, stdin);
-    int i = 0;
-
-    while(*stringa){
-        if(*stringa == ' '){
-            *stringa = 0;
-        }
-        if(*stringa == '\n'){
-            break;
-        }
-        i++;
-        stringa++;
+static void ottieni_parola(char *stringa, int dimensione) {
+    if (fgets(stringa, dimensione, stdin) == NULL) {
+        // Errore in input
+        stringa[0] = '\0';
+        return;
     }
 
-    if(i >= dimensione-2){
+     // Rimuove il newline, se presente
+    char *newline = strchr(stringa, '\n');
+    if (newline) {
+        *newline = '\0';
+    } else {
         stdin_fflush();
+    }
+
+    // Tronca la stringa al primo spazio, se presente
+    char *spazio = strchr(stringa, ' ');
+    if (spazio) {
+        *spazio = '\0';
     }
 }
 
@@ -711,7 +714,37 @@ void visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
     getchar();
 }
 
-Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
+/*
+ * Autore: Marco Visone
+ * Data: 25/05/2025
+ *
+ * Funzione: gestisci_le_mie_prenotazioni
+ * --------------------------------------
+ * Gestisce l'interfaccia utente per visualizzare e cancellare le prenotazioni attive
+ * di un utente, mostrandole in una tabella formattata.
+ *
+ * Implementazione:
+ *    Recupera le prenotazioni attive dell'utente, le visualizza in una tabella formattata
+ *    e permette all'utente di selezionarne una per la cancellazione.
+ *    Gestisce tutti i casi edge (nessuna prenotazione, input non valido, conferma).
+ *
+ * Parametri:
+ *    email_utente: stringa con l'email dell'utente (non NULL)
+ *    tabella_utenti: tabella degli utenti (non NULL)
+ *    tabella_veicoli: tabella dei veicoli (non NULL)
+ *
+ * Pre-condizioni:
+ *    email_utente deve essere una stringa valida
+ *    tabella_utenti e tabella_veicoli devono essere inizializzate
+ *
+ * Post-condizioni:
+ *    Restituisce 1 se tutto ok, 0 se errore, -1 se utente non trovato
+ *
+ * Side-effect:
+ *    Modifica lo storico prenotazioni se l'utente cancella una prenotazione
+ *    Stampa a video l'interfaccia utente
+ */
+ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL) {
         printf("Errore: utente non trovato\n");
@@ -723,20 +756,20 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
     Prenotazione vettore_prenotazione[num_ele];
 
     while(1) {
-        system("clear || cls");  // Pulisce lo schermo
+        system("clear || cls");
 
-        // Intestazione tabella
-        printf("+-------------------------------------------------------------------------------+\n");
-        printf("|                             LE TUE PRENOTAZIONI                               |\n");
-        printf("+----+------------------+-------------+-----------------------------------+-------+\n");
-        printf("| ID |     Modello      |    Targa    |             Periodo               | Costo |\n");
-        printf("+----+------------------+-------------+-----------------------------------+-------+\n");
+        printf("\n");
+        printf("+-----------------------------------------------------------------------------------------+\n");
+        printf("|                          LE TUE PRENOTAZIONI ATTIVE                                      |\n");
+        printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
+        printf("| ID |     Modello      |    Targa    |               Periodo                 |   Costo   |\n");
+        printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
         unsigned int id = 0;
         for(ListaPre curr = ottieni_storico_utente(u); !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
-            Prenotazione p = ottieni_prenotazione_lista(curr);
-            Intervallo i = ottieni_intervallo_prenotazione(p);
-            if(fine_intervallo(i) > ora) {
+             Prenotazione p = ottieni_prenotazione_lista(curr);
+             Intervallo i = ottieni_intervallo_prenotazione(p);
+             if(fine_intervallo(i) > ora) {
                 char *targa = ottieni_veicolo_prenotazione(p);
                 Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, targa);
                 char *modello = ottieni_modello(v);
@@ -744,83 +777,69 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
                 double costo = ottieni_costo_prenotazione(p);
                 vettore_prenotazione[id] = p;
 
-                // Formatta il periodo su due righe se troppo lungo
-                char periodo1[30] = {0};
-                char periodo2[30] = {0};
-                char *freccia = strstr(periodo, "->");
-                if(freccia) {
-                    strncpy(periodo1, periodo, freccia - periodo);
-                    strcpy(periodo2, freccia + 2);
-                } else {
-                    strcpy(periodo1, periodo);
-                }
-
-                // Stampa riga della tabella
-                printf("| %-2u | %-16s | %-11s | %-33s | %-5.2f |\n",
-                       id, modello, targa, periodo1, costo);
-                if(freccia) {
-                    printf("|    |                  |             | %-33s |       |\n", periodo2);
-                }
-                printf("+----+------------------+-------------+-----------------------------------+-------+\n");
+                 /* STAMPA RIGA PRENOTAZIONE */
+                printf("| %2u | %-16s | %-11s | %-37s | %9.2f |\n",
+                        id, modello, targa, periodo, costo);
+                printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
                 id++;
             }
         }
 
         if(id == 0) {
-            printf("|                       Nessuna prenotazione attiva trovata                     |\n");
-            printf("+-------------------------------------------------------------------------------+\n\n");
+            printf("|                       Nessuna prenotazione attiva trovata                              |\n");
+            printf("+-----------------------------------------------------------------------------------------+\n");
+            printf("Premi un tasto per uscire...");
+            getchar();
             return 0;
         }
 
-        // Menu opzioni
-        printf("\n  [%u] Esci", id);
-        printf("\n\nInserisci l'ID della prenotazione da cancellare: ");
+        printf("\n[-1] Torna al menu principale\n\n");
+        printf("Inserisci l'ID della prenotazione da cancellare (0-%u): ", id-1);
 
-        unsigned int scelta;
-        if(scanf("%u", &scelta) != 1) {
-            printf("\nInput non valido. Premere INVIO per continuare...");
-            while(getchar() != '\n');
-            getchar();
-            continue;
-        }
+        int scelta;
+        if(scanf("%d", &scelta) != 1) {
+             printf("\nInput non valido. Premere INVIO per continuare...");
+             stdin_fflush();
+             continue;
+         }
 
-        if(scelta == id) {
+        if(scelta < 0) {
             return 1;
         }
 
-        if(scelta >= id) {
+        if((unsigned)scelta >= id) {
             printf("\nID non valido. Premere INVIO per continuare...");
-            while(getchar() != '\n');
-            getchar();
+            stdin_fflush();
             continue;
         }
 
-        // Conferma cancellazione
-        printf("\nConfermi la cancellazione della prenotazione ID %u? (s/n): ", scelta);
-        char conferma;
-        scanf(" %c", &conferma);
-        if(conferma != 's' && conferma != 'S') {
+        printf("\nSei sicuro di voler cancellare la prenotazione ID %u? (S/N): ", scelta);
+
+        stdin_fflush();
+        char conferma = getchar();
+        stdin_fflush();
+
+        if((conferma != 'S') && (conferma != 's')) {
+            printf("%d %c\n", conferma, conferma);
+            return 1;
             continue;
         }
 
-        // Processo cancellazione
         Prenotazione p = vettore_prenotazione[scelta];
         Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
         ListaPre storico = ottieni_storico_utente(u);
-        Byte codice = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
+        Byte code = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
         storico = rimuovi_prenotazione_lista(storico, vettore_prenotazione[scelta]);
 
-        if((storico == NULL) || !codice) {
+        if((storico == NULL) || !code) {
             printf("\nErrore durante la cancellazione. Premere INVIO per continuare...");
-            while(getchar() != '\n');
-            getchar();
+            stdin_fflush();
             return 0;
         }
 
         imposta_storico_lista(ottieni_data(u), storico);
         printf("\nPrenotazione cancellata con successo! Premere INVIO per continuare...");
-        while(getchar() != '\n');
-        getchar();
+        stdin_fflush();
     }
-}
+ }
