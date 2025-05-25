@@ -10,6 +10,7 @@
 #include "modelli/intervallo.h"
 #include "modelli/prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
+#include "utils/utils.h"
 
 struct veicolo{
     char targa[NUM_CARATTERI_TARGA];
@@ -585,4 +586,12 @@ char* veicolo_in_stringa(Veicolo v){
             tariffa);
 
     return buffer;
+}
+
+Veicolo duplica_veicolo(Veicolo v){
+    if(v == NULL){
+        return NULL;
+    }
+
+    return crea_veicolo(v->tipo_veicolo, v->targa, v->modello, v->posizione, v->tariffa, v->prenotazioni);
 }
