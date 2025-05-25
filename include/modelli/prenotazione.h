@@ -54,7 +54,7 @@ Prenotazione crea_prenotazione(char *cliente, char *targa, Intervallo i, double 
  * p: puntatore alla prenotazione da distruggere.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
  *
  * Post-condizioni:
  * - La memoria associata alla prenotazione 'p' (inclusi i campi interni 'cliente', 'targa' e 'intervallo')
@@ -78,7 +78,7 @@ void distruggi_prenotazione(Prenotazione p);
  * p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
  *
  * Post-condizioni:
  * - Restituisce una stringa contenente il nome del cliente se 'p' è valido.
@@ -101,7 +101,7 @@ char *ottieni_cliente_prenotazione(Prenotazione p);
  * p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
  *
  * Post-condizioni:
  * - Restituisce una stringa contenente la targa del veicolo se 'p' è valido.
@@ -124,7 +124,7 @@ char *ottieni_veicolo_prenotazione(Prenotazione p);
  * p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
  *
  * Post-condizioni:
  * - Restituisce un puntatore all'intervallo temporale se 'p' è valido.
@@ -147,7 +147,7 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
  * p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
  *
  * Post-condizioni:
  * - Restituisce il valore del costo della prenotazione se 'p' è valido.
@@ -171,7 +171,7 @@ double ottieni_costo_prenotazione(Prenotazione p);
  * cliente: la nuova stringa contenente il nome del cliente.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
  * - 'cliente' deve essere una stringa non nulla.
  *
  * Post-condizioni:
@@ -198,7 +198,7 @@ void imposta_cliente_prenotazione(Prenotazione p, const char *cliente);
  * targa: la nuova stringa contenente la targa del veicolo.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
  * - 'targa' deve essere una stringa non nulla.
  *
  * Post-condizioni:
@@ -225,8 +225,8 @@ void imposta_veicolo_prenotazione(Prenotazione p, const char *targa);
  * i: il nuovo intervallo temporale.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
- * - 'i' deve essere un puntatore valido ad una struttura 'Intervallo' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
+ * - 'i' deve essere un puntatore valido ad una struttura 'Intervallo'
  *
  * Post-condizioni:
  * - L'intervallo temporale nella prenotazione 'p' viene aggiornato con il nuovo intervallo 'i'.
@@ -251,7 +251,7 @@ void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
  * costo: il nuovo valore double del costo.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
  *
  * Post-condizioni:
  * - Il costo della prenotazione 'p' viene aggiornato con il nuovo valore 'costo'.
@@ -274,7 +274,7 @@ void imposta_costo_prenotazione(Prenotazione p, double costo);
  * p: puntatore alla prenotazione da duplicare.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
  *
  * Post-condizioni:
  * - Restituisce un puntatore ad una nuova struttura 'Prenotazione' che è una copia esatta di 'p' se 'p' è valido.
@@ -298,7 +298,7 @@ Prenotazione duplica_prenotazione(Prenotazione p);
  * p: puntatore alla prenotazione di cui si vuole ottenere la rappresentazione in stringa.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione' o NULL.
+ * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
  *
  * Post-condizioni:
  * - Restituisce una stringa allocata dinamicamente contenente i dettagli della prenotazione (cliente, veicolo, periodo, costo).
