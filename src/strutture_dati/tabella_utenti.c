@@ -223,6 +223,9 @@ Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email){
 void carica_utenti(TabellaUtenti tabella_utenti, Utente *utente, unsigned int dimensione){
     if(tabella_utenti == NULL || utente == NULL || !dimensione) return;
 
+    printf("ciao\n");
+    getchar();
+
     for(unsigned int i = 0; i < dimensione; i++){
         aggiungi_utente_in_tabella(tabella_utenti, utente[i]);
     }

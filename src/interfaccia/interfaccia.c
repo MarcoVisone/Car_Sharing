@@ -27,6 +27,22 @@ static char *ottieni_orario(time_t timestamp);
 static time_t fine_giornata(time_t inizio);
 
 
+void stampa_errore(const char *msg) {
+    printf("\n[!] ERRORE: %s\n", msg);
+}
+
+void stampa_successo(const char *msg) {
+    printf("\n[+] SUCCESSO: %s\n", msg);
+}
+
+void stampa_info(const char *msg){
+    printf("\n[?] Info: %s\n", msg);
+}
+
+Byte uscita(char *str){
+    return strcmp(str, "E") == 0 || strcmp(str, "e") == 0;
+}
+
 void inserisci_stringa(char *stringa, unsigned int lunghezza){
     fgets(stringa, lunghezza, stdin);
 
@@ -37,6 +53,21 @@ void inserisci_stringa(char *stringa, unsigned int lunghezza){
 
     stringa[indice] = '\0';
 
+}
+
+Byte benvenuto(){
+    Byte scelta;
+    system("clear || cls"); // Pulisce la console
+    printf("========================================\n");
+    printf("          BENVENUTO A CAR SHARING\n");
+    printf("========================================\n");
+    printf("1. Registrati\n");
+    printf("2. Accedi\n");
+    printf("3. Esci\n");
+    printf("Scegli un'opzione: ");
+    scelta = getchar();
+    stdin_fflush();
+    return scelta;
 }
 
 /*
@@ -173,7 +204,7 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
     char scelta;
 
     Utente utente = NULL;
-
+    printf("Digita <E> per uscire senza salvare.\n\n");
     do{
         char email[DIMENSIONE_EMAIL] = {0};
         char password[DIMENSIONE_STRINGA_PASSWORD] = {0};
@@ -181,9 +212,15 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
 
         printf("Inserisci l'email: ");
         ottieni_parola(email, DIMENSIONE_EMAIL);
+        if(uscita(email)){
+            return NULL;
+        }
 
         printf("Inserisci la password: ");
         ottieni_parola(password, DIMENSIONE_STRINGA_PASSWORD);
+        if(uscita(password)){
+            return NULL;
+        }
         if(controllo_password(password) >= 0){
             md5(password, strlen(password), password_mod);
             utente = cerca_utente_in_tabella(tabella_utenti, email);
@@ -246,19 +283,35 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
     Byte conferma;
     Byte lvl;
 
+    printf("Digita <E> per uscire senza salvare.\n\n");
+
     printf("Inserisci il nome: ");
     ottieni_parola(nome, DIMENSIONE_NOME);
+    if(uscita(nome)){
+        return 0;
+    }
 
     printf("Inserisci il cognome: ");
     ottieni_parola(cognome, DIMENSIONE_COGNOME);
+    if(uscita(cognome)){
+        return 0;
+    }
+
 
     printf("Inserisci l'email: ");
     ottieni_parola(email, DIMENSIONE_EMAIL);
+    if(uscita(email)){
+        return 0;
+    }
+
 
     do{
       do{
         printf("Inserisci la password: ");
         ottieni_parola(password, DIMENSIONE_STRINGA_PASSWORD);
+        if(uscita(password)){
+            return 0;
+        }
 
         lvl = controllo_password(password);
       }while(risposta_password(lvl) < 0);
@@ -278,7 +331,36 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
         return 1;
     }
 
-    return 0;
+    return -1;
+}
+
+void menu_registrazione(TabellaUtenti tabella_utenti){
+    stampa_header("REGISTRAZIONE");
+    Byte codice_reg = interfaccia_registrazione(tabella_utenti, CLIENTE);
+    if (codice_reg == 1) {
+        stampa_successo("Registrazione completata!");
+    } else if(codice_reg < 0){
+        stampa_errore("Registrazione fallita! L'email potrebbe essere già in uso o input non valido.");
+    }else {
+        stampa_info("Sei uscito senza salvare!");
+    }
+    printf("Premi INVIO per continuare...");
+    getchar();
+}
+
+Utente menu_accesso(TabellaUtenti tabella_utenti){
+    stampa_header("ACCESSO");
+
+    Utente utente_loggato = interfaccia_accesso(tabella_utenti);
+
+    if (utente_loggato) {
+        stampa_successo("Accesso riuscito. Benvenuto!");
+    } else stampa_errore("Accesso fallito o uscita dal login!\n");
+
+    printf("Premi INVIO per continuare...");
+    getchar();
+
+    return utente_loggato;
 }
 
 /*

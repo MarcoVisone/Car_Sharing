@@ -15,11 +15,6 @@
 #include "strutture_dati/tabella_veicoli.h"
 #include "utils/utils.h"
 
-
-Byte uscita(char *str){
-    return strcmp(str, "E") == 0 || strcmp(str, "e") == 0;
-}
-
 Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     unsigned int dimensione = 0;
     char email[DIMENSIONE_EMAIL];

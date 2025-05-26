@@ -15,11 +15,26 @@ typedef struct tabella_hash *TabellaVeicoli;
 typedef struct intervallo *Intervallo;
 typedef struct utente* Utente;
 
+
+void stampa_errore(const char *msg);
+
+void stampa_successo(const char *msg);
+
+void stampa_info(const char *msg);
+
+Byte uscita(char *str);
+
 void stampa_header(const char *titolo);
+
+Byte benvenuto();
 
 Utente interfaccia_accesso(TabellaUtenti tabella_utenti);
 
 Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
+
+void menu_registrazione(TabellaUtenti tabella_utenti);
+
+Utente menu_accesso(TabellaUtenti tabella_utenti);
 
 /*
  * Autore: Russo Nello Manuel
