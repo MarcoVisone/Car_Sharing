@@ -16,6 +16,10 @@
 #include "utils/utils.h"
 
 
+Byte uscita(char *str){
+    return strcmp(str, "E") == 0 || strcmp(str, "e") == 0;
+}
+
 Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     unsigned int dimensione = 0;
     char email[DIMENSIONE_EMAIL];
@@ -49,7 +53,7 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
     while(1){
         printf("\nEmail dell'utente da visualizzare (E per uscire): ");
         ottieni_parola(email, DIMENSIONE_EMAIL);
-        if(strcmp(email, "E") == 0) break;;
+        if(uscita(email)) break;
 
         Byte codice = visualizza_storico(email, tabella_utenti, tabella_veicoli);
 
@@ -101,11 +105,8 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
             intest_noleggi();
             for (unsigned int j = 0; j < np; j++) {
                 const char *cliente = ottieni_cliente_prenotazione(p[j]);
-                char *periodo       = intervallo_in_stringa(
-                                         ottieni_intervallo_prenotazione(p[j]));
-                double costo        = ottieni_costo_prenotazione(p[j]);
-
-                // Correzione: allineamento corretto delle colonne
+                char *periodo = intervallo_in_stringa(ottieni_intervallo_prenotazione(p[j]));
+                double costo = ottieni_costo_prenotazione(p[j]);
                 printf("| %-25s | %-37s | %10.2f |\n",
                        cliente, periodo, costo);
                 free(periodo);
@@ -122,39 +123,58 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
 }
 
 
-Veicolo interfaccia_aggiungi_veicolo(){
+Veicolo interfaccia_aggiungi_veicolo(TabellaVeicoli tabella_veicoli){
     Veicolo v = NULL;
 
     char targa[NUM_CARATTERI_TARGA] = {0};
     char tipo[MAX_LUNGHEZZA_TIPO] = {0};
     char modello[MAX_LUNGHEZZA_MODELLO] = {0};
     char posizione[MAX_LUNGHEZZA_POSIZIONE] = {0};
-    double tariffa;
-    size_t lun;
 
+    double tariffa;
+    Byte codice;
+    size_t lun;
+    printf("Digita <E> per uscire senza salvare\n\n");
     do{
         printf("Inserisci targa: ");
         ottieni_parola(targa, NUM_CARATTERI_TARGA);
-
+        if(uscita(targa)) return NULL;
         lun = strlen(targa);
 
         if(lun != (NUM_CARATTERI_TARGA-2)){
             printf("Targa non valida!\n");
         }
-
-    }while(lun != (NUM_CARATTERI_TARGA-2));
+        codice = cerca_veicolo_in_tabella(tabella_veicoli, targa) != NULL;
+        if(codice){
+            printf("Targa già in uso\n");
+        }
+    }while(codice || lun != (NUM_CARATTERI_TARGA-2));
 
     printf("Inserisci tipo: ");
     inserisci_stringa(tipo, MAX_LUNGHEZZA_TIPO);
+    if(uscita(tipo)) return NULL;
 
     printf("Inserisci modello: ");
     inserisci_stringa(modello, MAX_LUNGHEZZA_MODELLO);
+    if(uscita(modello)) return NULL;
 
     printf("Inserisci posizione: ");
     inserisci_stringa(posizione, MAX_LUNGHEZZA_POSIZIONE);
+    if(uscita(posizione)) return NULL;
 
     printf("Inserisci la tariffa al minuto: ");
     scanf("%lf", &tariffa);
+
+    printf("Vuoi salvare questo veicolo (S/N)? ");
+    char c = getchar();
+
+    while(c == '\n') c = getchar();
+
+    //stdin_fflush();
+
+    if((c != 's') && (c != 'S')){
+        return NULL;
+    }
 
     Prenotazioni pre = crea_prenotazioni();
     v = crea_veicolo(tipo, targa, modello, posizione, tariffa, pre);

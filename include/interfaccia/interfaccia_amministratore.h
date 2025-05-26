@@ -16,7 +16,7 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
 
 Byte gestione_noleggi(TabellaVeicoli tabella_veicoli);
 
-Veicolo interfaccia_aggiungi_veicolo();
+Veicolo interfaccia_aggiungi_veicolo(TabellaVeicoli tabella_veicoli);
 
 /*
  * Autore: Russo Nello Manuel
