@@ -12,28 +12,20 @@
 
 #define DIMENSIONE_BUFFER 1024
 
-static char buffer[DIMENSIONE_BUFFER];
-static uint8_t password[DIMENSIONE_PASSWORD];
-
+// Dichiarazioni statiche delle funzioni interne (con buffer passato come parametro dove serve)
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione);
-
-static Prenotazione carica_prenotazione(FILE *fp);
-
+static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str);
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
-
-static Prenotazioni carica_prenotazioni(FILE *fp);
-
+static Prenotazioni carica_prenotazioni(FILE *fp, char *buffer_str);
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
-
-static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni);
-
+static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, char *buffer_str);
 static void salva_data(FILE *file_data, Data d);
-
-static Data carica_data(FILE *file_data);
-
+static Data carica_data(FILE *file_data, char *buffer_str);
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
+static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str);
 
-static Utente carica_utente(FILE *file_utente, FILE *file_data);
+static uint8_t password_buffer[DIMENSIONE_PASSWORD];
+
 
 /*
  * Autore: Marco Visone
@@ -60,18 +52,16 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data);
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
     if(fp == NULL || prenotazione == NULL) return;
 
-    char *cliente = ottieni_cliente_prenotazione(prenotazione);
+    const char *cliente = ottieni_cliente_prenotazione(prenotazione);
     if(cliente == NULL) return;
     unsigned int len = (unsigned int)strlen(cliente) + 1;
     fwrite(&len, sizeof(len), 1, fp);
-
     fwrite(cliente, sizeof(char), len, fp);
 
-    char *targa = ottieni_veicolo_prenotazione(prenotazione);
+    const char *targa = ottieni_veicolo_prenotazione(prenotazione);
     if(targa == NULL) return;
     len = strlen(targa) + 1;
     fwrite(&len, sizeof(len), 1, fp);
-
     fwrite(targa, sizeof(char), len, fp);
 
     double costo = ottieni_costo_prenotazione(prenotazione);
@@ -101,56 +91,57 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
  *
  * Parametri:
  * fp: puntatore al file da cui caricare la prenotazione
+ * buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
- * fp non deve essere NULL.
+ * fp e buffer_str non devono essere NULL.
  *
  * Post-condizioni:
  * Restituisce un oggetto Prenotazione caricato dal file, o NULL in caso di errore.
  */
-static Prenotazione carica_prenotazione(FILE *fp){
-    if(fp == NULL) return NULL;
+static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
+    if(fp == NULL || buffer_str == NULL) return NULL;
 
     Prenotazione p = crea_prenotazione(NULL, NULL, NULL, 0);
+    if (p == NULL) return NULL; // Controllo allocazione
 
     unsigned int len;
-    if(fread(&len, sizeof(len), 1, fp) != 1) return NULL;
+    size_t n_read;
+    Intervallo i = NULL; // Inizializza per la goto
 
-    if (len >= DIMENSIONE_BUFFER) {
-        return NULL;
-    }
-    if (fread(buffer, sizeof(char), len, fp) != len) {
-        return NULL;
-    }
-    imposta_cliente_prenotazione(p, buffer);
+    // Leggi cliente
+    if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
+    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore; // Controllo dimensione
+    n_read = fread(buffer_str, sizeof(char), len, fp);
+    if (n_read != len) goto errore;
+    imposta_cliente_prenotazione(p, buffer_str);
 
-    if(fread(&len, sizeof(len), 1, fp) != 1) return NULL;
-    if(len >= DIMENSIONE_BUFFER){
-        return NULL;
-    }
-    if (fread(buffer, sizeof(char), len, fp) != len) {
-        return NULL;
-    }
-    imposta_veicolo_prenotazione(p, buffer);
+    // Leggi targa
+    if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
+    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore; // Controllo dimensione
+    n_read = fread(buffer_str, sizeof(char), len, fp);
+    if (n_read != len) goto errore;
+    imposta_veicolo_prenotazione(p, buffer_str);
 
+    // Leggi costo
     double costo;
-    if(fread(&costo, sizeof(costo), 1, fp) != 1){
-        return NULL;
-    }
+    if(fread(&costo, sizeof(costo), 1, fp) != 1) goto errore;
     imposta_costo_prenotazione(p, costo);
 
+    // Leggi intervallo
     time_t inizio, fine;
     if(fread(&inizio, sizeof(inizio), 1, fp) != 1 ||
-       fread(&fine, sizeof(fine), 1, fp) != 1){
-        return NULL;
-    }
+       fread(&fine, sizeof(fine), 1, fp) != 1) goto errore;
 
-    Intervallo i = crea_intervallo(inizio, fine);
-    if(i == NULL){
-        return NULL;
-    }
+    i = crea_intervallo(inizio, fine);
+    if(i == NULL) goto errore;
     imposta_intervallo_prenotazione(p, i);
+
     return p;
+
+errore:
+    distruggi_prenotazione(p); // La funzione distruggi_prenotazione dovrebbe anche distruggere l'intervallo e le stringhe interne.
+    return NULL;
 }
 
 /*
@@ -179,13 +170,20 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     if (fp == NULL || prenotazioni == NULL) return;
     unsigned int size = 0, i;
     Prenotazione *p = ottieni_vettore_prenotazioni_per_file(prenotazioni, &size);
-    if (p == NULL) return;
+    if (p == NULL) {
+        // Se non ci sono prenotazioni, scrivi 0 per mantenere la consistenza del formato
+        fwrite(&size, sizeof(size), 1, fp);
+        return;
+    }
 
     fwrite(&size, sizeof(size), 1, fp);
 
     for (i = 0; i < size; i++) {
         salva_prenotazione(fp, p[i]);
     }
+    // E' responsabilità di chi crea il vettore (ottieni_vettore_prenotazioni_per_file)
+    // garantire che sia liberato, ma se qui lo liberi è meglio, assumendo che sia una copia
+    free(p);
 }
 
 /*
@@ -202,23 +200,33 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
  *
  * Parametri:
  * fp: puntatore al file da cui caricare le prenotazioni
+ * buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
- * fp non deve essere NULL.
+ * fp e buffer_str non devono essere NULL.
  *
  * Post-condizioni:
  * Restituisce una nuova struttura Prenotazioni con i dati caricati, o NULL in caso di errore.
  */
-static Prenotazioni carica_prenotazioni(FILE *fp) {
-    if (fp == NULL) return NULL;
+static Prenotazioni carica_prenotazioni(FILE *fp, char *buffer_str) {
+    if (fp == NULL || buffer_str == NULL) return NULL;
     unsigned int size = 0, i;
     if (fread(&size, sizeof size, 1, fp) != 1) return NULL;
 
     Prenotazioni pren = crea_prenotazioni();
+    if (pren == NULL) return NULL; // Controllo allocazione
 
     for (i = 0; i < size; i++) {
-        if(!aggiungi_prenotazione(pren, carica_prenotazione(fp)))
-            continue;
+        Prenotazione p_caricata = carica_prenotazione(fp, buffer_str);
+        if (p_caricata == NULL) {
+            distruggi_prenotazioni(pren); // Libera le prenotazioni già aggiunte
+            return NULL;
+        }
+        if(!aggiungi_prenotazione(pren, p_caricata)) {
+            distruggi_prenotazione(p_caricata);
+            distruggi_prenotazioni(pren);
+            return NULL;
+        }
     }
     return pren;
 }
@@ -257,6 +265,7 @@ static Prenotazioni carica_prenotazioni(FILE *fp) {
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v){
 	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
 
+    // Utilizzo di const char* per i getter
 	unsigned int len = strlen(ottieni_tipo_veicolo(v))+1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
     fwrite(ottieni_tipo_veicolo(v), sizeof(char), len, file_veicolo);
@@ -297,51 +306,87 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
  * Parametri:
  * file_veicolo: file binario da cui leggere i dati del veicolo
  * file_prenotazioni: file binario da cui leggere le prenotazioni associate al veicolo
+ * buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
  * file_veicolo: deve essere diverso da NULL
- * file_prenotazioni: deve essere diverso da NULL e
- * deve avere il formato previsto (lunghezza stringa seguita dalla stringa)
+ * file_prenotazioni: deve essere diverso da NULL
+ * buffer_str: non deve essere NULL
  *
  * Post-condizioni:
- * restituisce NULL se uno dei file è NULL, altrimenti restituisce un nuovo oggetto Veicolo
+ * restituisce NULL se uno dei file è NULL o in caso di errore, altrimenti restituisce un nuovo oggetto Veicolo
  *
  * Side-effect:
  * Alloca memoria dinamicamente per le stringhe temporanee (poi liberate), e per un nuovo oggetto Veicolo
  */
-static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
-	if (file_veicolo == NULL || file_prenotazioni == NULL) return NULL;
+static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, char *buffer_str){
+	if (file_veicolo == NULL || file_prenotazioni == NULL || buffer_str == NULL) return NULL;
 
-	unsigned int len;
-    fread(&len, sizeof(unsigned int), 1, file_veicolo);
-	char *tipo_veicolo = malloc(sizeof(char) * len);
-    fread(tipo_veicolo, sizeof(char), len, file_veicolo);
+    char *tipo_veicolo = NULL;
+    char *targa_veicolo = NULL;
+    char *modello_veicolo = NULL;
+    char *posizione_veicolo = NULL;
+    Prenotazioni p_veicolo = NULL;
+    Veicolo v = NULL;
 
-    fread(&len, sizeof(unsigned int), 1, file_veicolo);
-	char *targa_veicolo = malloc(sizeof(char) * len);
-    fread(targa_veicolo, sizeof(char), len, file_veicolo);
+    unsigned int len;
+    size_t n_read;
 
-    fread(&len, sizeof(unsigned int), 1, file_veicolo);
-	char *modello_veicolo = malloc(sizeof(char) * len);
-    fread(modello_veicolo, sizeof(char), len, file_veicolo);
+    // Leggi tipo veicolo
+    if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
+    tipo_veicolo = malloc(sizeof(char) * len);
+    if (tipo_veicolo == NULL) goto errore;
+    n_read = fread(tipo_veicolo, sizeof(char), len, file_veicolo);
+    if (n_read != len) goto errore;
 
-    fread(&len, sizeof(unsigned int), 1, file_veicolo);
-	char *posizione_veicolo = malloc(sizeof(char) * len);
-    fread(posizione_veicolo, sizeof(char), len, file_veicolo);
+    // Leggi targa veicolo
+    if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
+    targa_veicolo = malloc(sizeof(char) * len);
+    if (targa_veicolo == NULL) goto errore;
+    n_read = fread(targa_veicolo, sizeof(char), len, file_veicolo);
+    if (n_read != len) goto errore;
 
+    // Leggi modello veicolo
+    if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
+    modello_veicolo = malloc(sizeof(char) * len);
+    if (modello_veicolo == NULL) goto errore;
+    n_read = fread(modello_veicolo, sizeof(char), len, file_veicolo);
+    if (n_read != len) goto errore;
+
+    // Leggi posizione veicolo
+    if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
+    posizione_veicolo = malloc(sizeof(char) * len);
+    if (posizione_veicolo == NULL) goto errore;
+    n_read = fread(posizione_veicolo, sizeof(char), len, file_veicolo);
+    if (n_read != len) goto errore;
+
+    // Leggi tariffa
 	double tariffa;
-	fread(&tariffa, sizeof(tariffa), 1, file_veicolo);
+	if (fread(&tariffa, sizeof(tariffa), 1, file_veicolo) != 1) goto errore;
 
-	Prenotazioni p = carica_prenotazioni(file_prenotazioni);
+    // Carica prenotazioni
+	p_veicolo = carica_prenotazioni(file_prenotazioni, buffer_str);
+    if (p_veicolo == NULL) goto errore;
 
-	Veicolo v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, posizione_veicolo, tariffa, p);
+    // Crea veicolo
+	v = crea_veicolo(tipo_veicolo, targa_veicolo, modello_veicolo, posizione_veicolo, tariffa, p_veicolo);
+    if (v == NULL) goto errore;
 
+    // Libera i buffer temporanei usati per le stringhe
 	free(tipo_veicolo);
 	free(targa_veicolo);
 	free(modello_veicolo);
 	free(posizione_veicolo);
 
 	return v;
+
+errore:
+    free(tipo_veicolo);
+    free(targa_veicolo);
+    free(modello_veicolo);
+    free(posizione_veicolo);
+    distruggi_veicolo(v);
+    return NULL;
 }
 
 /*
@@ -382,18 +427,21 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni){
  * nei file specificati in formato binario
  */
 void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int num_veicoli){
-	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || !num_veicoli) return;
+	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || num_veicoli == 0) return; // !num_veicoli è corretto, ma num_veicoli == 0 è più esplicito
 
 	FILE *file_veicolo = fopen(nome_file_veicolo, "wb");
     if (file_veicolo == NULL) return;
 
     FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "wb");
-    if (file_prenotazioni == NULL) return;
+    if (file_prenotazioni == NULL){
+        fclose(file_veicolo);
+        return;
+    }
 
     fwrite(&num_veicoli, sizeof(unsigned int), 1, file_veicolo);
 
     for (unsigned i = 0; i < num_veicoli; i++){
-      salva_veicolo(file_veicolo, file_prenotazioni, vettore[i]);
+        salva_veicolo(file_veicolo, file_prenotazioni, vettore[i]);
     }
 
     fclose(file_veicolo);
@@ -437,18 +485,54 @@ Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_
 	FILE *file_veicolo = fopen(nome_file_veicolo, "rb");
     if (file_veicolo == NULL) return NULL;
 
+    char *buffer_local = calloc(DIMENSIONE_BUFFER, sizeof(char)); // Buffer locale
+    if(buffer_local == NULL){
+        fclose(file_veicolo);
+        return NULL;
+    }
+
     FILE *file_prenotazioni = fopen(nome_file_prenotazioni, "rb");
-    if (file_prenotazioni == NULL) return NULL;
-    fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo);
+    if (file_prenotazioni == NULL){
+        fclose(file_veicolo);
+        free(buffer_local); // Libera il buffer locale in caso di fallimento
+        return NULL;
+    }
+
+    // Leggi il numero di veicoli
+    if (fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo) != 1) {
+        fclose(file_veicolo);
+        fclose(file_prenotazioni);
+        free(buffer_local);
+        return NULL;
+    }
 
     Veicolo *vettore = malloc(sizeof(Veicolo) * (*num_veicoli));
+    if(vettore == NULL) {
+        fclose(file_veicolo);
+        fclose(file_prenotazioni);
+        free(buffer_local);
+        return NULL;
+    }
 
     for (unsigned i = 0; i < *num_veicoli; i++){
-        vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni);
+        vettore[i] = carica_veicolo(file_veicolo, file_prenotazioni, buffer_local); // Passa il buffer
+        if (vettore[i] == NULL) {
+            // Se un caricamento fallisce, libera gli oggetti già caricati
+            for (unsigned j = 0; j < i; j++) {
+                distruggi_veicolo(vettore[j]);
+            }
+            free(vettore);
+            fclose(file_veicolo);
+            fclose(file_prenotazioni);
+            free(buffer_local);
+            *num_veicoli = 0;
+            return NULL;
+        }
     }
 
     fclose(file_veicolo);
     fclose(file_prenotazioni);
+    free(buffer_local); // Libera il buffer locale
 
     return vettore;
 }
@@ -484,18 +568,19 @@ static void salva_data(FILE *file_data, Data d){
         return;
     }
 
+    // Ottieni la lista e il numero di prenotazioni prima di scriverli
     ListaPre lista_prenotazioni = ottieni_storico_lista(d);
-    if(lista_prenotazioni == NULL) return;
+    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
 
     int frequenza = ottieni_frequenza_lista(d);
     fwrite(&frequenza, sizeof(int), 1, file_data);
-
-    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
     fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
 
-    for(int i = 0; i < numero_prenotazioni; i++){
-        salva_prenotazione(file_data, (Prenotazione)ottieni_item(lista_prenotazioni));
-        lista_prenotazioni = ottieni_prossimo(lista_prenotazioni);
+    // Iterare sulla lista originale senza modificarla
+    ListaPre curr = lista_prenotazioni;
+    for(int i = 0; curr && (i < numero_prenotazioni); i++){
+        salva_prenotazione(file_data, (Prenotazione)ottieni_item(curr));
+        curr = ottieni_prossimo(curr);
     }
 }
 
@@ -511,9 +596,10 @@ static void salva_data(FILE *file_data, Data d){
  *
  * Parametri:
  * file_data: puntatore al file da cui leggere i dati
+ * buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizione:
- * file_data deve essere un file aperto in lettura e valido
+ * file_data e buffer_str devono essere validi
  *
  * Post-condizione:
  * viene restituita una nuova struttura Data con i dati caricati
@@ -524,22 +610,40 @@ static void salva_data(FILE *file_data, Data d){
  * Side-effect:
  * lettura da file, allocazione dinamica
  */
-static Data carica_data(FILE *file_data){
-    if(file_data == NULL){
+static Data carica_data(FILE *file_data, char *buffer_str){
+    if(file_data == NULL || buffer_str == NULL){
         return NULL;
     }
     int numero_prenotazioni;
     int frequenza;
 
-    fread(&frequenza, sizeof(int), 1, file_data);
-    fread(&numero_prenotazioni, sizeof(int), 1, file_data);
-    Data d = crea_data();
+    Data d = NULL; // Inizializza per la goto
+
+    if (fread(&frequenza, sizeof(int), 1, file_data) != 1) goto errore;
+    if (fread(&numero_prenotazioni, sizeof(int), 1, file_data) != 1) goto errore;
+
+    d = crea_data();
+    if (d == NULL) goto errore;
+
     imposta_frequenza(d, frequenza);
+
     for(int i = 0; i < numero_prenotazioni; i++){
-        imposta_storico_lista(d, aggiungi_a_storico_lista(d, carica_prenotazione(file_data)));
+        Prenotazione p_caricata = carica_prenotazione(file_data, buffer_str); // Passa il buffer
+        if (p_caricata == NULL) {
+            goto errore; // Se una prenotazione fallisce, fallisce l'intera data
+        }
+
+        if (aggiungi_a_storico_lista(d, p_caricata) == NULL) {
+            distruggi_prenotazione(p_caricata); // Libera la prenotazione se non può essere aggiunta
+            goto errore;
+        }
     }
     imposta_numero_prenotazioni(d, numero_prenotazioni);
     return d;
+
+errore:
+    distruggi_data(d);
+    return NULL;
 }
 
 /*
@@ -573,6 +677,7 @@ static Data carica_data(FILE *file_data){
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     if (file_utente == NULL || u == NULL) return;
 
+    // Utilizzo di const char* per i getter
     unsigned int len = strlen(ottieni_nome(u))+1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
     fwrite(ottieni_nome(u), sizeof(char), len, file_utente);
@@ -590,7 +695,9 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     Byte permesso = ottieni_permesso(u);
     fwrite(&permesso, sizeof(Byte), 1, file_utente);
 
-    salva_data(file_data, ottieni_data(u));
+    if (permesso == CLIENTE) { // Salva lo storico e frequenza solo se l'utente è un CLIENTE
+        salva_data(file_data, ottieni_data(u));
+    }
 }
 
 /*
@@ -606,9 +713,10 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
  * Parametri:
  * file_utente: file da cui leggere i dati dell'utente
  * file_data: file da cui leggere i dati storici
+ * buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizione:
- * file_utente deve essere valido
+ * file_utente e buffer_str devono essere validi
  *
  * Post-condizione:
  * restituisce un utente ricostruito dai file
@@ -619,9 +727,10 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
  * Side-effect:
  * lettura da file, allocazione dinamica di memoria
  */
-static Utente carica_utente(FILE *file_utente, FILE *file_data) {
-    if (file_utente == NULL)
+static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str) {
+    if (file_utente == NULL || buffer_str == NULL)
         return NULL;
+
     Utente u = crea_utente(NULL, NULL, NULL, NULL, 0);
     if (u == NULL)
         return NULL;
@@ -631,61 +740,61 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data) {
     Data data = NULL;
     size_t n;
 
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_NOME) {
-        distruggi_utente(u);
-        return NULL;
+    // Leggi nome
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
+        goto errore;
     }
-    n = fread(buffer, sizeof(char), len, file_utente);
+    n = fread(buffer_str, sizeof(char), len, file_utente);
     if (n != len) {
-        distruggi_utente(u);
-        return NULL;
+        goto errore;
     }
-    imposta_nome(u, buffer);
+    imposta_nome(u, buffer_str);
 
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_COGNOME) {
-          distruggi_utente(u);
-          return NULL;
+    // Leggi cognome
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
+        goto errore;
     }
-    n = fread(buffer, sizeof(char), len, file_utente);
+    n = fread(buffer_str, sizeof(char), len, file_utente);
     if (n != len) {
-        distruggi_utente(u);
-        return NULL;
+        goto errore;
     }
-    imposta_cognome(u, buffer);
+    imposta_cognome(u, buffer_str);
 
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_EMAIL) {
-        distruggi_utente(u);
-        return NULL;
+    // Leggi email
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
+        goto errore;
     }
-    n = fread(buffer, sizeof(char), len, file_utente);
+    n = fread(buffer_str, sizeof(char), len, file_utente);
     if (n != len) {
-        distruggi_utente(u);
-        return NULL;
+        goto errore;
     }
-    imposta_email(u, buffer);
+    imposta_email(u, buffer_str);
 
-    if (fread(password, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) {
-        distruggi_utente(u);
-        return NULL;
+    // Leggi password
+    if (fread(password_buffer, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) {
+        goto errore;
     }
-    imposta_password(u, password);
+    imposta_password(u, password_buffer); // Usa il buffer locale statico per la password
 
+    // Leggi permesso
     if (fread(&permesso, sizeof(permesso), 1, file_utente) != 1) {
-        distruggi_utente(u);
-        return NULL;
+        goto errore;
     }
     imposta_permesso(u, permesso);
 
     if (permesso == CLIENTE) {
-        data = carica_data(file_data);
+        data = carica_data(file_data, buffer_str); // Passa il buffer
         if (data == NULL) {
-            distruggi_utente(u);
-            return NULL;
+            goto errore;
         }
     }
     imposta_data(u, data);
 
     return u;
+
+errore:
+    distruggi_utente(u); //Libera la memoria dell'utente (con anche Data)
+    return NULL;
 }
 
 /*
@@ -716,16 +825,21 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data) {
  * apertura e scrittura su file
  */
 void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int num_utenti){
+    if(nome_file_utente == NULL || nome_file_data == NULL || vettore == NULL || num_utenti == 0) return;
+
     FILE *file_utente = fopen(nome_file_utente, "wb");
     if (file_utente == NULL) return;
 
     FILE *file_data = fopen(nome_file_data, "wb");
-    if (file_data == NULL) return;
+    if (file_data == NULL){
+        fclose(file_utente);
+        return;
+    }
 
     fwrite(&num_utenti, sizeof(unsigned int), 1, file_utente);
 
     for (unsigned int i = 0; i < num_utenti; i++){
-      salva_utente(file_utente, file_data, vettore[i]);
+        salva_utente(file_utente, file_data, vettore[i]);
     }
 
     fclose(file_utente);
@@ -744,39 +858,74 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
  * Parametri:
  * nome_file_utente: nome del file contenente i dati anagrafici
  * nome_file_data: nome del file contenente i dati storici
- * vettore: array di puntatori a Utente da riempire
  * num_utenti: puntatore a intero dove memorizzare il numero di utenti caricati
  *
  * Pre-condizione:
- * nomi file devono essere validi; vettore e num_utenti devono essere allocati
+ * nomi file devono essere validi; num_utenti deve essere allocato
  *
  * Post-condizione:
  * il vettore contiene gli utenti caricati dai file
  *
  * Ritorna:
- * 1 se il caricamento ha successo, 0 altrimenti
+ * un array di Utente, o NULL in caso di errore
  *
  * Side-effect:
  * lettura da file, allocazione dinamica di memoria
  */
 Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, unsigned int *num_utenti){
+    if(nome_file_utente == NULL || nome_file_data == NULL || num_utenti == NULL) return NULL;
+
     FILE *file_utente = fopen(nome_file_utente, "rb");
     if (file_utente == NULL) return NULL;
 
+    char *buffer_local = calloc(DIMENSIONE_BUFFER, sizeof(char)); // Buffer locale
+    if(buffer_local == NULL){
+        fclose(file_utente);
+        return NULL;
+    }
+
     FILE *file_data = fopen(nome_file_data, "rb");
-    if (file_data == NULL) return NULL;
+    if (file_data == NULL){
+        fclose(file_utente);
+        free(buffer_local); // Libera il buffer locale
+        return NULL;
+    }
 
-    fread(num_utenti, sizeof(unsigned int), 1, file_utente);
+    // Leggi il numero di utenti
+    if (fread(num_utenti, sizeof(unsigned int), 1, file_utente) != 1) {
+        fclose(file_utente);
+        fclose(file_data);
+        free(buffer_local);
+        return NULL;
+    }
+
     Utente *vettore = malloc(sizeof(Utente) * (*num_utenti));
-
-    if(vettore == NULL) return NULL;
+    if(vettore == NULL) {
+        fclose(file_utente);
+        fclose(file_data);
+        free(buffer_local);
+        return NULL;
+    }
 
     for (unsigned int i = 0; i < *num_utenti; i++){
-        vettore[i] = carica_utente(file_utente, file_data);
+        vettore[i] = carica_utente(file_utente, file_data, buffer_local); // Passa il buffer
+        if (vettore[i] == NULL) {
+            // Se un caricamento fallisce, libera gli oggetti già caricati
+            for (unsigned int j = 0; j < i; j++) {
+                distruggi_utente(vettore[j]);
+            }
+            free(vettore);
+            fclose(file_utente);
+            fclose(file_data);
+            free(buffer_local);
+            *num_utenti = 0;
+            return NULL;
+        }
     }
 
     fclose(file_utente);
     fclose(file_data);
+    free(buffer_local);
 
     return vettore;
 }
