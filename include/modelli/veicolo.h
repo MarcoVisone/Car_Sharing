@@ -396,6 +396,4 @@ Byte confronta_targhe(Veicolo v, char *targa);
  */
 char* veicolo_in_stringa(Veicolo v);
 
-Veicolo duplica_veicolo(Veicolo v);
-
 #endif //VEICOLO_H
