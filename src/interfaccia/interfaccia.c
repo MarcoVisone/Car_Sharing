@@ -699,12 +699,12 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
     char *modello;
 
     if(l == NULL) return -1;
-	//test
-    printf("\n+-------------------------------------------------------------------------------------------------------+\n");
+	//test 2
+    printf("\n+------------------------------------------------------------------------------------------------------+\n");
     printf("|                               STORICO PRENOTAZIONI UTENTE                                            |\n");
     printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
-    printf("| %-17s | %-18s | %-32s        | %-21s\n", "Veicolo (Targa)", "Modello", "Periodo", "Costo Totale (€)|");
-    printf("+-------------------+--------------------+---------------------------------------+------------------+\n");
+    printf("| %-17s | %-18s | %-32s       | %-21s\n", "Veicolo (Targa)", "Modello", "Periodo", "Costo Totale (€)|");
+    printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
 
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
@@ -718,7 +718,7 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
         }
         modello = ottieni_modello(v);
 
-        printf("| %-17s | %-18s | %-32s  | %-20.2f       |\n",
+        printf("| %-17s | %-18s | %-32s  | %-20.2f|\n",
         ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
 
         prossimo:
