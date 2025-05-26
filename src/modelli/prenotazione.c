@@ -64,19 +64,8 @@ Prenotazione crea_prenotazione(char *cliente, char *targa, Intervallo i, double 
     if (p == NULL) return NULL;
 
     p->cliente = mia_strdup(cliente);
-    if (p->cliente == NULL) {
-        free(p);
-        return NULL;
-    }
-
     p->targa = mia_strdup(targa);
-    if (p->targa == NULL) {
-        free(p->cliente); // Libera il cliente già allocato
-        free(p);
-        return NULL;
-    }
-
-    p->date = i; // Si assume che la proprietà di 'i' venga trasferita o gestita esternamente
+    p->date = i;
     p->costo = costo;
 
     return p;

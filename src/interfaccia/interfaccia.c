@@ -133,6 +133,13 @@ void ottieni_parola(char *stringa, int dimensione) {
     }
 }
 
+void stampa_header(const char *titolo) {
+    printf("\n");
+    printf("========================================\n");
+    printf("           %s\n", titolo);
+    printf("========================================\n");
+}
+
 /*
  * Funzione: interfaccia_accesso
  * -----------------------------
@@ -703,18 +710,21 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
         if(p == NULL) {
-            l = ottieni_prossimo(l);
-            continue;
+            goto prossimo;
         }
         char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
         v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
+        if(v == NULL){
+            goto prossimo;
+        }
         modello = ottieni_modello(v);
 
         printf("%-15s | %-15s | %-30s | %-15.2f\n",
         ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
 
-        free(str);
-        l = ottieni_prossimo(l);
+        prossimo:
+            free(str);
+            l = ottieni_prossimo(l);
     }
     printf("-----------------+----------------------------------------------------------\n");
 

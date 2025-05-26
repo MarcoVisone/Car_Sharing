@@ -49,7 +49,7 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
         ottieni_parola(email, DIMENSIONE_EMAIL);
         if(strcmp(email, "E") == 0) break;;
 
-        Byte codice = visualizza_storico(email, tabella_utenti);
+        Byte codice = visualizza_storico(email, tabella_utenti, tabella_veicoli);
 
         if(codice < 0){
             printf("\nUtente non trovato\n");
@@ -90,7 +90,7 @@ Veicolo interfaccia_aggiungi_veicolo(){
             printf("Targa non valida!\n");
         }
 
-    }while(lun != NUM_CARATTERI_TARGA);
+    }while(lun != (NUM_CARATTERI_TARGA-2));
 
     printf("Inserisci tipo: ");
     inserisci_stringa(tipo, MAX_LUNGHEZZA_TIPO);

@@ -973,7 +973,7 @@ static Intervallo ottieni_intervallo_disponibile_t(struct nodo *radice, Interval
 
 
 Intervallo ottieni_intervallo_disponibile(Prenotazioni prenotazioni, Intervallo i){
-    if(prenotazioni == NULL){
+    if(prenotazioni == NULL || i == NULL){
         return NULL;
     }
 

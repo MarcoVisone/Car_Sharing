@@ -103,32 +103,32 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
     if(fp == NULL || buffer_str == NULL) return NULL;
 
     Prenotazione p = crea_prenotazione(NULL, NULL, NULL, 0);
-    if (p == NULL) return NULL; // Controllo allocazione
+    if (p == NULL) return NULL;
 
     unsigned int len;
     size_t n_read;
-    Intervallo i = NULL; // Inizializza per la goto
+    Intervallo i = NULL;
 
-    // Leggi cliente
+    // Legge cliente
     if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
-    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore; // Controllo dimensione
+    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n_read = fread(buffer_str, sizeof(char), len, fp);
     if (n_read != len) goto errore;
     imposta_cliente_prenotazione(p, buffer_str);
 
-    // Leggi targa
+    // Legge targa
     if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
-    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore; // Controllo dimensione
+    if (len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n_read = fread(buffer_str, sizeof(char), len, fp);
     if (n_read != len) goto errore;
     imposta_veicolo_prenotazione(p, buffer_str);
 
-    // Leggi costo
+    // Legge costo
     double costo;
     if(fread(&costo, sizeof(costo), 1, fp) != 1) goto errore;
     imposta_costo_prenotazione(p, costo);
 
-    // Leggi intervallo
+    // Legge intervallo
     time_t inizio, fine;
     if(fread(&inizio, sizeof(inizio), 1, fp) != 1 ||
        fread(&fine, sizeof(fine), 1, fp) != 1) goto errore;
@@ -140,7 +140,7 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
     return p;
 
 errore:
-    distruggi_prenotazione(p); // La funzione distruggi_prenotazione dovrebbe anche distruggere l'intervallo e le stringhe interne.
+    distruggi_prenotazione(p);
     return NULL;
 }
 
@@ -171,7 +171,7 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     unsigned int size = 0, i;
     Prenotazione *p = ottieni_vettore_prenotazioni_per_file(prenotazioni, &size);
     if (p == NULL) {
-        // Se non ci sono prenotazioni, scrivi 0 per mantenere la consistenza del formato
+        // Se non ci sono prenotazioni, scrive 0
         fwrite(&size, sizeof(size), 1, fp);
         return;
     }
@@ -181,8 +181,7 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     for (i = 0; i < size; i++) {
         salva_prenotazione(fp, p[i]);
     }
-    // E' responsabilità di chi crea il vettore (ottieni_vettore_prenotazioni_per_file)
-    // garantire che sia liberato, ma se qui lo liberi è meglio, assumendo che sia una copia
+
     free(p);
 }
 
@@ -332,35 +331,35 @@ static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, char 
     unsigned int len;
     size_t n_read;
 
-    // Leggi tipo veicolo
+    // Legge tipo veicolo
     if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     tipo_veicolo = malloc(sizeof(char) * len);
     if (tipo_veicolo == NULL) goto errore;
     n_read = fread(tipo_veicolo, sizeof(char), len, file_veicolo);
     if (n_read != len) goto errore;
 
-    // Leggi targa veicolo
+    // Legge targa veicolo
     if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     targa_veicolo = malloc(sizeof(char) * len);
     if (targa_veicolo == NULL) goto errore;
     n_read = fread(targa_veicolo, sizeof(char), len, file_veicolo);
     if (n_read != len) goto errore;
 
-    // Leggi modello veicolo
+    // Legge modello veicolo
     if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     modello_veicolo = malloc(sizeof(char) * len);
     if (modello_veicolo == NULL) goto errore;
     n_read = fread(modello_veicolo, sizeof(char), len, file_veicolo);
     if (n_read != len) goto errore;
 
-    // Leggi posizione veicolo
+    // Legge posizione veicolo
     if (fread(&len, sizeof(unsigned int), 1, file_veicolo) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     posizione_veicolo = malloc(sizeof(char) * len);
     if (posizione_veicolo == NULL) goto errore;
     n_read = fread(posizione_veicolo, sizeof(char), len, file_veicolo);
     if (n_read != len) goto errore;
 
-    // Leggi tariffa
+    // Legge tariffa
 	double tariffa;
 	if (fread(&tariffa, sizeof(tariffa), 1, file_veicolo) != 1) goto errore;
 
@@ -498,7 +497,7 @@ Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_
         return NULL;
     }
 
-    // Leggi il numero di veicoli
+    // Legge il numero di veicoli
     if (fread(num_veicoli, sizeof(unsigned int), 1, file_veicolo) != 1) {
         fclose(file_veicolo);
         fclose(file_prenotazioni);
@@ -617,7 +616,7 @@ static Data carica_data(FILE *file_data, char *buffer_str){
     int numero_prenotazioni;
     int frequenza;
 
-    Data d = NULL; // Inizializza per la goto
+    Data d = NULL;
 
     if (fread(&frequenza, sizeof(int), 1, file_data) != 1) goto errore;
     if (fread(&numero_prenotazioni, sizeof(int), 1, file_data) != 1) goto errore;
@@ -731,7 +730,7 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
     if (file_utente == NULL || buffer_str == NULL)
         return NULL;
 
-    Utente u = crea_utente(NULL, NULL, NULL, NULL, 0);
+    Utente u = crea_utente(NULL, NULL, NULL, NULL, ADMIN);
     if (u == NULL)
         return NULL;
 
@@ -740,7 +739,7 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
     Data data = NULL;
     size_t n;
 
-    // Leggi nome
+    // Legge nome
     if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
         goto errore;
     }
@@ -750,7 +749,7 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
     }
     imposta_nome(u, buffer_str);
 
-    // Leggi cognome
+    // Legge cognome
     if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
         goto errore;
     }
@@ -760,7 +759,7 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
     }
     imposta_cognome(u, buffer_str);
 
-    // Leggi email
+    // Legge email
     if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
         goto errore;
     }
@@ -770,26 +769,29 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
     }
     imposta_email(u, buffer_str);
 
-    // Leggi password
+    // Legge password
     if (fread(password_buffer, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) {
         goto errore;
     }
-    imposta_password(u, password_buffer); // Usa il buffer locale statico per la password
+    /*
+     * Qui si usa il password_buffer locale statico per evitare rallentamenti di codice
+     * che può essere causato da allocazioni continue
+     */
+    imposta_password(u, password_buffer);
 
-    // Leggi permesso
+    // Legge permesso
     if (fread(&permesso, sizeof(permesso), 1, file_utente) != 1) {
         goto errore;
     }
     imposta_permesso(u, permesso);
 
     if (permesso == CLIENTE) {
-        data = carica_data(file_data, buffer_str); // Passa il buffer
+        data = carica_data(file_data, buffer_str);
         if (data == NULL) {
             goto errore;
         }
     }
     imposta_data(u, data);
-
     return u;
 
 errore:
@@ -887,11 +889,11 @@ Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_fil
     FILE *file_data = fopen(nome_file_data, "rb");
     if (file_data == NULL){
         fclose(file_utente);
-        free(buffer_local); // Libera il buffer locale
+        free(buffer_local);
         return NULL;
     }
 
-    // Leggi il numero di utenti
+    // Legge il numero di utenti
     if (fread(num_utenti, sizeof(unsigned int), 1, file_utente) != 1) {
         fclose(file_utente);
         fclose(file_data);
@@ -908,7 +910,7 @@ Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_fil
     }
 
     for (unsigned int i = 0; i < *num_utenti; i++){
-        vettore[i] = carica_utente(file_utente, file_data, buffer_local); // Passa il buffer
+        vettore[i] = carica_utente(file_utente, file_data, buffer_local);
         if (vettore[i] == NULL) {
             // Se un caricamento fallisce, libera gli oggetti già caricati
             for (unsigned int j = 0; j < i; j++) {
