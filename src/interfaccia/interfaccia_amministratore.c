@@ -167,3 +167,86 @@ Veicolo interfaccia_aggiungi_veicolo(){
 
     return v;
 }
+
+/*
+ * Autore: Russo Nello Manuel
+ * Data: 26/05/2025
+ *
+ * Funzione: interfaccia_rimuovi_veicolo
+ * -------------------------------------
+ * Interfaccia testuale che consente all’utente di rimuovere un veicolo dalla tabella
+ *
+ * Implementazione:
+ *   La funzione mostra a schermo l’elenco dei veicoli presenti nella tabella.
+ *   L’utente può inserire la targa del veicolo da rimuovere oppure digitare 'E' per uscire.
+ *   Dopo aver ricevuto la targa, la funzione richiede una conferma ('S') prima di procedere alla rimozione.
+ *   Se confermata, rimuove il veicolo tramite la funzione rimuovi_veicolo_in_tabella.
+ *   Il ciclo si ripete finché l’utente non decide di uscire.
+ *
+ * Parametri:
+ *    - tabella_veicoli: la tabella veicoli
+ *
+ * Pre-condizioni:
+ *    tabella_veicoli: non deve essere NULL
+ *
+ * Post-condizioni:
+ * 	  restituisce 0 in caso di uscita o fallimento nella rimozione.
+ *
+ * Side-effects:
+ *    - Input/output su console
+ *    - Allocazione e deallocazione dinamica della memoria
+ *    - Il veicolo selezionato, se presente e confermato, viene rimosso dalla tabella.
+ */
+Byte interfaccia_rimuovi_veicolo(TabellaVeicoli tabella_veicoli){
+	unsigned int dimensione;
+    char targa[NUM_CARATTERI_TARGA];
+	char scelta;
+
+	do{
+	    Veicolo *vettore_veicoli = (Veicolo*) ottieni_vettore(tabella_veicoli, &dimensione);
+		if(vettore_veicoli == NULL){
+			printf("Nessun veicolo presente\n");
+			return 0;
+		}
+
+		system("clear || cls");
+
+		printf("\n========================================\n");
+        printf("         TABELLA VEICOLI DISPONIBILI    \n");
+        printf("========================================\n");
+
+		for(unsigned int i = 0; i < dimensione; i++){
+			char *str = veicolo_in_stringa(vettore_veicoli[i]);
+			if (str) {
+                printf("%s\n", str);
+                free(str);
+                printf("----------------------------------------\n");
+            }
+		}
+
+		printf("Inserisci la targa del veicolo che vuoi eliminare (per uscire digita E): ");
+        ottieni_parola(targa, NUM_CARATTERI_TARGA);
+
+		 if (strcmp(targa, "E") == 0 || strcmp(targa, "e") == 0) {
+            free(vettore_veicoli);
+            return 0;
+        }
+
+        printf("Sei sicuro di voler eliminare questo veicolo? (S/N): ");
+        scelta = getchar();
+        stdin_fflush();
+
+        if(scelta == 's' || scelta == 'S'){
+            Byte rim = rimuovi_veicolo_in_tabella(tabella_veicoli, targa);
+
+			if(rim == 0) printf("\nErrore durante la rimozione del veicolo\n");
+
+			else printf("\nVeicolo eliminato correttamente\n");
+
+			printf("Premi INVIO per continuare...");
+            getchar();
+		}
+
+		free(vettore_veicoli);
+	}while(1);
+}
