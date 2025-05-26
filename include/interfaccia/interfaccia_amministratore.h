@@ -14,6 +14,8 @@ typedef struct tabella_hash *TabellaUtenti;
 
 Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
+Byte gestione_noleggi(TabellaVeicoli tabella_veicoli);
+
 Veicolo interfaccia_aggiungi_veicolo();
 
 Byte interfaccia_rimuovi_veicolo(TabellaVeicoli tabella_veicoli);

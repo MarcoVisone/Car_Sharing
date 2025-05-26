@@ -5,6 +5,8 @@
 #include "interfaccia/interfaccia_amministratore.h"
 #include "interfaccia/interfaccia.h"
 #include "modelli/byte.h"
+#include "modelli/intervallo.h"
+#include "modelli/prenotazione.h"
 #include "modelli/utente.h"
 #include "strutture_dati/prenotazioni.h"
 #include "strutture_dati/tabella_hash.h"
@@ -69,6 +71,56 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
     printf("\nUscita dal visualizzatore storico completata.\n");
     return 0;
 }
+
+void intest_noleggi() {
+    printf("+---------------------------+---------------------------------------+------------+\n");
+    printf("| Cliente                   | Periodo                               | Costo (€)  |\n");
+    printf("+---------------------------+---------------------------------------+------------+\n");
+}
+
+void sep_noleggi() {
+    printf("+---------------------------+---------------------------------------+------------+\n");
+}
+
+Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
+    if (!tabella_veicoli) return -1;
+    unsigned int nv = 0;
+    Veicolo *vettore = (Veicolo*) ottieni_vettore(tabella_veicoli, &nv);
+    if (!vettore) return -1;
+
+    for (unsigned int i = 0; i < nv; i++) {
+        const char *targa   = ottieni_targa(vettore[i]);
+        const char *modello = ottieni_modello(vettore[i]);
+        printf("\nVeicolo: %s  —  %s\n", targa, modello);
+
+        Prenotazioni pre = ottieni_prenotazioni(vettore[i]);
+        unsigned int np = 0;
+        Prenotazione *p = pre? ottieni_vettore_prenotazioni_ordinate(pre, &np): NULL;
+
+        if (p && np > 0) {
+            intest_noleggi();
+            for (unsigned int j = 0; j < np; j++) {
+                const char *cliente = ottieni_cliente_prenotazione(p[j]);
+                char *periodo       = intervallo_in_stringa(
+                                         ottieni_intervallo_prenotazione(p[j]));
+                double costo        = ottieni_costo_prenotazione(p[j]);
+
+                // Correzione: allineamento corretto delle colonne
+                printf("| %-25s | %-37s | %10.2f |\n",
+                       cliente, periodo, costo);
+                free(periodo);
+            }
+            sep_noleggi();
+        }
+        else {
+            printf("  (Nessuna prenotazione per questo veicolo)\n");
+        }
+        if (p) free(p);
+    }
+    free(vettore);
+    return 1;
+}
+
 
 Veicolo interfaccia_aggiungi_veicolo(){
     Veicolo v = NULL;
