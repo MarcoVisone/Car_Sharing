@@ -699,7 +699,7 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
     char *modello;
 
     if(l == NULL) return -1;
-	//
+	//test
     printf("\n+-------------------------------------------------------------------------------------------------------+\n");
     printf("|                               STORICO PRENOTAZIONI UTENTE                                            |\n");
     printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
