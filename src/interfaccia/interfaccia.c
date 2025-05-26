@@ -858,6 +858,7 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
     }
 
     Prenotazione vettore_prenotazione[num_ele];
+    unsigned int id;
 
     while(1) {
         system("clear || cls");
@@ -869,11 +870,16 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
         printf("| ID |     Modello      |    Targa    |               Periodo                 |   Costo   |\n");
         printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
-        unsigned int id = 0;
+        id = 0;
+        printf("%p\n%p\n", ottieni_storico_utente(u), ottieni_prenotazione_lista(ottieni_storico_utente(u)));
         for(ListaPre curr = ottieni_storico_utente(u); !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
-             Prenotazione p = ottieni_prenotazione_lista(curr);
-             Intervallo i = ottieni_intervallo_prenotazione(p);
-             if(fine_intervallo(i) > ora) {
+            Prenotazione p = ottieni_prenotazione_lista(curr);
+            if(p == NULL){
+                curr = ottieni_prossimo(curr);
+                continue;
+            }
+            Intervallo i = ottieni_intervallo_prenotazione(p);
+            if(fine_intervallo(i) > ora) {
                 char *targa = ottieni_veicolo_prenotazione(p);
                 Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, targa);
                 char *modello = ottieni_modello(v);
@@ -888,6 +894,7 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
 
                 id++;
             }
+            printf("Qui Bene! 1\n");
         }
 
         if(id == 0) {

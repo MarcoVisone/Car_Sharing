@@ -46,6 +46,7 @@ Data crea_data() {
     if (data == NULL) return NULL;
 
     data->storico = crea_lista();
+    data->frequenza = 1;
 
     return data;
 }
@@ -217,10 +218,10 @@ int ottieni_frequenza_lista(Data data){
  * Funzione: azzera_frequenza
  * --------------------------
  *
- * Resetta la frequenza della struttura Data a zero.
+ * Resetta la frequenza della struttura Data a 1.
  *
  * Implementazione:
- *    Se Data non è NULL, imposta la frequenza a 0.
+ *    Se Data non è NULL, imposta la frequenza a 1.
  *
  * Parametri:
  *    data: puntatore alla struttura Data
@@ -238,7 +239,7 @@ void azzera_frequenza(Data data){
     if (data == NULL) {
         return;
     }
-    data->frequenza = 0;
+    data->frequenza = 1;
 }
 
 
