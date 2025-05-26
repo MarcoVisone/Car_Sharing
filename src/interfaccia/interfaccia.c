@@ -702,10 +702,9 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
 
     printf("\n+-----------------------------------------------------------------------------------------------+\n");
     printf("|                               STORICO PRENOTAZIONI UTENTE                                     |\n");
-    printf("+-----------------------------------------------------------------------------------------------+\n\n");
-    printf("+-------------------+--------------------+-----------------------------------+------------------+\n");
+    printf("+-----------------------------------------------------------------------------------------------+\n");
     printf("| %-17s | %-18s | %-32s  | %-22s\n", "Veicolo (Targa)", "Modello", "Periodo", "Costo Totale (€) |");
-    printf("+-------------------+--------------------+-----------------------------------+------------------+\n");
+    printf("+-------------------+--------------------+--------------------------------------+------------------+\n");
 
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
@@ -719,14 +718,14 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
         }
         modello = ottieni_modello(v);
 
-        printf("| %-17s | %-18s | %-32s  | %-17.2f|\n",
+        printf("| %-17s | %-18s | %-32s  | %-10.2f\n",
         ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
 
         prossimo:
             free(str);
             l = ottieni_prossimo(l);
     }
-    printf("+-------------------+--------------------+-----------------------------------+------------------+\n");
+    printf("+-------------------+--------------------+--------------------------------------+------------------+\n");
 
     printf("Digita un tasto per uscire...");
     getchar();
