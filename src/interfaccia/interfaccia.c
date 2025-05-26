@@ -681,22 +681,24 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
     }while (comando != 'E' && comando != 'e');
 }
 
-Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
+Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL){
         return -1;
     }
 
     ListaPre l = ottieni_storico_utente(u);
+    Veicolo v;
+    char *modello;
 
     if(l == NULL) return -1;
 
     printf("\n+----------------------------------------------------------------------------+\n");
     printf("|                      STORICO PRENOTAZIONI UTENTE                           |\n");
     printf("+----------------------------------------------------------------------------+\n\n");
-    printf("%-15s | %-30s | %-15s\n",
-           "Veicolo (Targa)", "Periodo", "Costo Totale (€)");
-    printf("-----------------+---------------------------+-----------------\n");
+    printf("%-15s | %-15s | %-30s | %-21s\n",
+           "Veicolo (Targa)","Modello" ,"Periodo", "Costo Totale (€)");
+    printf("-----------------+---------------------------------------------------------\n");
 
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
@@ -705,14 +707,16 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
             continue;
         }
         char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
+        v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
+        modello = ottieni_modello(v);
 
-        printf("%-15s | %-30s | %-15.2f\n",
-        ottieni_veicolo_prenotazione(p), str, ottieni_costo_prenotazione(p));
+        printf("%-15s | %-15s | %-30s | %-15.2f\n",
+        ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
 
         free(str);
         l = ottieni_prossimo(l);
     }
-    printf("-----------------+---------------------------+-----------------\n");
+    printf("-----------------+----------------------------------------------------------\n");
 
     printf("Digita un tasto per uscire...");
     getchar();

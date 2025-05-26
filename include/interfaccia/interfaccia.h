@@ -79,7 +79,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  */
 Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *motivo);
 
-Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti);
+Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
 Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
