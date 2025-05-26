@@ -161,7 +161,7 @@ void ottieni_parola(char *stringa, int dimensione) {
  * Side-effect:
  *    Nessuno
  */
-Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
+Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
     Byte tentativi = 0;
     char scelta;
 
@@ -188,7 +188,7 @@ Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
             scelta = getchar();
             stdin_fflush();
             if(scelta == 's' || scelta == 'S'){
-                return -1;
+                return NULL;
             }
             distruggi_utente(utente);
             utente = NULL;
@@ -197,7 +197,7 @@ Byte interfaccia_accesso(TabellaUtenti tabella_utenti){
         else break;
     }while(tentativi < 3);
 
-    return tentativi;
+    return utente;
 }
 
 /*
@@ -689,14 +689,21 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti){
 
     ListaPre l = ottieni_storico_utente(u);
 
+    if(l == NULL) return -1;
+
     printf("\n+----------------------------------------------------------------------------+\n");
     printf("|                      STORICO PRENOTAZIONI UTENTE                           |\n");
     printf("+----------------------------------------------------------------------------+\n\n");
     printf("%-15s | %-30s | %-15s\n",
            "Veicolo (Targa)", "Periodo", "Costo Totale (€)");
     printf("-----------------+---------------------------+-----------------\n");
+
     while (l != NULL){
         Prenotazione p = ottieni_prenotazione_lista(l);
+        if(p == NULL) {
+            l = ottieni_prossimo(l);
+            continue;
+        }
         char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
 
         printf("%-15s | %-30s | %-15.2f\n",

@@ -15,7 +15,7 @@ typedef struct tabella_hash *TabellaVeicoli;
 typedef struct intervallo *Intervallo;
 typedef struct utente* Utente;
 
-Byte interfaccia_accesso(TabellaUtenti tabella_utenti);
+Utente interfaccia_accesso(TabellaUtenti tabella_utenti);
 
 Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
 
