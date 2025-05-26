@@ -765,16 +765,20 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
 Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL) {
-        printf("Errore: utente non trovato\n");
         return -1;
     }
 
     time_t ora = time(NULL);
     unsigned int num_ele = ottieni_numero_prenotazioni(ottieni_data(u));
+
+    if(num_ele == 0){
+        return -1;
+    }
+
     Prenotazione vettore_prenotazione[num_ele];
 
     while(1) {
-        //(system("clear || cls");
+        system("clear || cls");
 
         printf("\n");
         printf("+-----------------------------------------------------------------------------------------+\n");

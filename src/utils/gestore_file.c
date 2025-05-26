@@ -727,77 +727,57 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
  * lettura da file, allocazione dinamica di memoria
  */
 static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str) {
-    if (file_utente == NULL || buffer_str == NULL)
-        return NULL;
-
+    if (!file_utente || !buffer_str) return NULL;
     Utente u = crea_utente(NULL, NULL, NULL, NULL, ADMIN);
-    if (u == NULL)
-        return NULL;
+    if (!u) return NULL;
 
     unsigned int len;
     Byte permesso;
-    Data data = NULL;
     size_t n;
 
-    // Legge nome
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
-        goto errore;
-    }
+    // ---- NOME ----
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n = fread(buffer_str, sizeof(char), len, file_utente);
-    if (n != len) {
-        goto errore;
-    }
+    if (n != len) goto errore;
+    buffer_str[len-1] = '\0';
     imposta_nome(u, buffer_str);
 
-    // Legge cognome
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
-        goto errore;
-    }
+    // ---- COGNOME ----
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n = fread(buffer_str, sizeof(char), len, file_utente);
-    if (n != len) {
-        goto errore;
-    }
+    if (n != len) goto errore;
+    buffer_str[len-1] = '\0';
     imposta_cognome(u, buffer_str);
 
-    // Legge email
-    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) { // Controllo DIMENSIONE_BUFFER
-        goto errore;
-    }
+    // ---- EMAIL ----
+    if (fread(&len, sizeof(len), 1, file_utente) != 1 || len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n = fread(buffer_str, sizeof(char), len, file_utente);
-    if (n != len) {
-        goto errore;
-    }
+    if (n != len) goto errore;
+    buffer_str[len-1] = '\0';
     imposta_email(u, buffer_str);
 
-    // Legge password
-    if (fread(password_buffer, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) {
-        goto errore;
-    }
-    /*
-     * Qui si usa il password_buffer locale statico per evitare rallentamenti di codice
-     * che può essere causato da allocazioni continue
-     */
+    // ---- PASSWORD ----
+    if (fread(password_buffer, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente) != DIMENSIONE_PASSWORD) goto errore;
     imposta_password(u, password_buffer);
 
-    // Legge permesso
-    if (fread(&permesso, sizeof(permesso), 1, file_utente) != 1) {
-        goto errore;
-    }
+    // ---- PERMESSO ----
+    if (fread(&permesso, sizeof(permesso), 1, file_utente) != 1) goto errore;
     imposta_permesso(u, permesso);
 
+    // ---- DATA (solo se cliente) ----
     if (permesso == CLIENTE) {
-        data = carica_data(file_data, buffer_str);
-        if (data == NULL) {
-            goto errore;
-        }
+        Data d = carica_data(file_data, buffer_str);
+        if (!d) goto errore;
+        imposta_data(u, d);
     }
-    imposta_data(u, data);
+
     return u;
 
-errore:
-    distruggi_utente(u); //Libera la memoria dell'utente (con anche Data)
-    return NULL;
+    errore:
+        distruggi_utente(u);
+        return NULL;
 }
+
 
 /*
  * Funzione: salva_vettore_utenti
