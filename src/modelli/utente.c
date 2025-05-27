@@ -546,7 +546,14 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
         return 0;
     }
 
-    return rimuovi_da_storico_lista(utente->data, prenotazione) != NULL;
+    ListaPre storico = rimuovi_da_storico_lista(utente->data, prenotazione);
+
+    if(!ottieni_numero_prenotazioni(utente->data) && storico == NULL){
+        imposta_storico_lista(utente->data, storico);
+        return 1;
+    }
+
+    return storico != NULL;
 }
 
 /*

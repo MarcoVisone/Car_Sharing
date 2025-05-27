@@ -411,7 +411,15 @@ Intervallo richiedi_intervallo_prenotazione(){
         if(i == NULL || inizio_intervallo(i) < time(NULL)){
             distruggi_intervallo(i);
             i = NULL;
-            printf("Intervallo non valido\n");
+
+            stampa_errore(
+                "Intervallo non valido:\n"
+                "- La data deve essere una data valida con formato gg/mm/aaaa HH:MM\n"
+                "- La data di inizio non può essere nel passato\n"
+                "- La data di inizio non può essere più grande della data di fine\n"
+                "Riprova."
+            );
+
             printf("Vuoi uscire? (S/N): ");
             scelta = getchar();
             stdin_fflush();
@@ -735,7 +743,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
                 char durata_str[20];
 
                 if (durata_secondi <= 0) {
-                    strcpy(durata_str, "N/A"); // Not available now
+                    strcpy(durata_str, "N/A"); // Non disponibile ora
                 } else {
                     int hours = (int)(durata_secondi / 3600);
                     int minutes = (int)((durata_secondi - (hours * 3600)) / 60);
@@ -853,10 +861,6 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
     time_t ora = time(NULL);
     unsigned int num_ele = ottieni_numero_prenotazioni(ottieni_data(u));
 
-    if(num_ele == 0){
-        return -1;
-    }
-
     Prenotazione vettore_prenotazione[num_ele];
     unsigned int id;
 
@@ -871,7 +875,6 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
         printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
         id = 0;
-        printf("%p\n%p\n", ottieni_storico_utente(u), ottieni_prenotazione_lista(ottieni_storico_utente(u)));
         for(ListaPre curr = ottieni_storico_utente(u); !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
             Prenotazione p = ottieni_prenotazione_lista(curr);
             if(p == NULL){
@@ -894,7 +897,6 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
 
                 id++;
             }
-            printf("Qui Bene! 1\n");
         }
 
         if(id == 0) {
@@ -932,24 +934,20 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
         stdin_fflush();
 
         if((conferma != 'S') && (conferma != 's')) {
-            printf("%d %c\n", conferma, conferma);
-            return 1;
             continue;
         }
 
         Prenotazione p = vettore_prenotazione[scelta];
         Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
-        ListaPre storico = ottieni_storico_utente(u);
-        Byte code = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
-        storico = rimuovi_prenotazione_lista(storico, vettore_prenotazione[scelta]);
+        Byte codice = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
+        codice &= rimuovi_da_storico_utente(u, p);
 
-        if((storico == NULL) || !code) {
+        if(!codice) {
             printf("\nErrore durante la cancellazione. Premere INVIO per continuare...");
             stdin_fflush();
             return 0;
         }
 
-        imposta_storico_lista(ottieni_data(u), storico);
         printf("\nPrenotazione cancellata con successo! Premere INVIO per continuare...");
         stdin_fflush();
     }

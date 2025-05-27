@@ -141,11 +141,15 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
         return NULL;
     }
 
-    data->storico = aggiungi_prenotazione_lista(data->storico, prenotazione);
+    ListaPre temp = aggiungi_prenotazione_lista(data->storico, prenotazione);
 
-    if(data->storico) data->numero_prenotazioni +=1;
+    if(temp == NULL) return NULL;
 
-    return data->storico;
+    data->storico = temp;
+    data->numero_prenotazioni +=1;
+    data->frequenza += 1;
+
+    return temp;
 }
 
 /*
@@ -180,7 +184,10 @@ ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
     }
 
     data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
+
+    data->frequenza -= 1;
     data->numero_prenotazioni -=1;
+
     return data->storico;
 }
 
