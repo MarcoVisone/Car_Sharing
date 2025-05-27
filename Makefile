@@ -1,5 +1,5 @@
-main: main.o interfaccia.o interfaccia_amministratore.o data.o intervallo.o prenotazione.o utente.o veicolo.o coda.o lista.o lista_prenotazione.o prenotazioni.o tabella_hash.o tabella_utenti.o tabella_veicoli.o gestore_file.o md5.o utils.o
-	gcc main.o interfaccia.o interfaccia_amministratore.o data.o intervallo.o prenotazione.o utente.o veicolo.o coda.o lista.o lista_prenotazione.o prenotazioni.o tabella_hash.o tabella_utenti.o tabella_veicoli.o gestore_file.o md5.o utils.o -o main
+car_sharing: main.o interfaccia.o interfaccia_amministratore.o data.o intervallo.o prenotazione.o utente.o veicolo.o coda.o lista.o lista_prenotazione.o prenotazioni.o tabella_hash.o tabella_utenti.o tabella_veicoli.o gestore_file.o md5.o utils.o
+	gcc main.o interfaccia.o interfaccia_amministratore.o data.o intervallo.o prenotazione.o utente.o veicolo.o coda.o lista.o lista_prenotazione.o prenotazioni.o tabella_hash.o tabella_utenti.o tabella_veicoli.o gestore_file.o md5.o utils.o -o car_sharing
 
 main.o: src/main.c
 	gcc -Wall -Wextra -std=c99 -Iinclude -c src/main.c -o main.o
