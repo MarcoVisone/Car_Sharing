@@ -1,7 +1,3 @@
-//
-// Created by sicig on 21/05/2025.
-//
-
 #ifndef INTERFACCIA_H
 #define INTERFACCIA_H
 

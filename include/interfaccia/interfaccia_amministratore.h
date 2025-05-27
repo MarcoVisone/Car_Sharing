@@ -1,8 +1,3 @@
-/*
- * Autore: Russo Nello Manuel
- * Data: 25/05/2025
- */
-
 #ifndef INTERFACCIA_AMMINISTRATORE_H
 #define INTERFACCIA_AMMINISTRATORE_H
 
