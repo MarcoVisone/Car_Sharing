@@ -15,6 +15,39 @@
 #include "strutture_dati/tabella_veicoli.h"
 #include "utils/utils.h"
 
+static void intest_noleggi();
+static void sep_noleggi();
+
+/*
+ * Autore: Marco Visone
+ * Data: 26/05/2025
+ *
+ * Funzione: storico_noleggi
+ * -------------------------
+ * Interfaccia che permette all'amministratore di visualizzare lo storico dei noleggi
+ * per un utente specifico selezionato dalla lista degli utenti registrati
+ *
+ * Implementazione:
+ *   La funzione recupera tutti gli utenti dalla tabella e mostra solo quelli non amministratori.
+ *   L'utente può inserire l'email di un utente per visualizzarne lo storico oppure 'E' per uscire.
+ *   Se l'utente non viene trovato, viene chiesta conferma per continuare o uscire.
+ *   Il ciclo continua finché l'utente non decide di uscire.
+ *
+ * Parametri:
+ *    - tabella_utenti: tabella contenente tutti gli utenti registrati
+ *    - tabella_veicoli: tabella contenente tutti i veicoli per recuperare le informazioni complete
+ *
+ * Pre-condizioni:
+ *    - tabella_utenti: non deve essere NULL
+ *    - tabella_veicoli: non deve essere NULL
+ *
+ * Post-condizioni:
+ *    Restituisce 0 in caso di successo, -1 se non ci sono utenti o in caso di errore
+ *
+ * Side-effects:
+ *    - Input/output su console
+ *    - Allocazione e deallocazione dinamica della memoria
+ */
 Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     unsigned int dimensione = 0;
     char email[DIMENSIONE_EMAIL];
@@ -71,16 +104,82 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
     return 0;
 }
 
-void intest_noleggi() {
+/*
+ * Autore: Marco Visone
+ * Data: 26/05/2025
+ *
+ * Funzione: intest_noleggi
+ * ------------------------
+ * Funzione di utilità che stampa l'intestazione della tabella per la visualizzazione dei noleggi
+ *
+ * Implementazione:
+ *   Stampa una tabella formattata con tre colonne: Cliente, Periodo e Costo
+ *
+ * Parametri: nessuno
+ *
+ * Pre-condizioni: nessuna
+ *
+ * Post-condizioni: nessuna
+ *
+ * Side-effects:
+ *    - Output formattato su console
+ */
+static void intest_noleggi() {
     printf("+---------------------------+---------------------------------------+------------+\n");
     printf("| Cliente                   | Periodo                               | Costo (€)  |\n");
     printf("+---------------------------+---------------------------------------+------------+\n");
 }
 
-void sep_noleggi() {
+/*
+ * Autore: Marco Visone
+ * Data: 26/05/2025
+ *
+ * Funzione: sep_noleggi
+ * ---------------------
+ * Funzione di utilità che stampa il separatore finale della tabella dei noleggi
+ *
+ * Implementazione:
+ *   Stampa una linea di separazione per chiudere la tabella formattata
+ *
+ * Parametri: nessuno
+ *
+ * Pre-condizioni: nessuna
+ *
+ * Post-condizioni: nessuna
+ *
+ * Side-effects:
+ *    - Output formattato su console
+ */
+static void sep_noleggi() {
     printf("+---------------------------+---------------------------------------+------------+\n");
 }
 
+/*
+ * Autore: Marco Visone
+ * Data: 26/05/2025
+ *
+ * Funzione: gestione_noleggi
+ * --------------------------
+ * Visualizza tutti i veicoli e le relative prenotazioni in formato tabellare
+ *
+ * Implementazione:
+ *   Per ogni veicolo nella tabella, mostra targa e modello.
+ *   Se il veicolo ha prenotazioni, le visualizza in una tabella formattata
+ *   con cliente, periodo e costo. Se non ha prenotazioni, mostra un messaggio appropriato.
+ *
+ * Parametri:
+ *    - tabella_veicoli: tabella contenente tutti i veicoli
+ *
+ * Pre-condizioni:
+ *    - tabella_veicoli: non deve essere NULL
+ *
+ * Post-condizioni:
+ *    Restituisce 1 in caso di successo, -1 in caso di errore
+ *
+ * Side-effects:
+ *    - Output formattato su console
+ *    - Allocazione e deallocazione dinamica della memoria
+ */
 Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
     if (!tabella_veicoli) return -1;
     unsigned int nv = 0;
@@ -117,7 +216,35 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
     return 1;
 }
 
-
+/*
+ * Autore: Marco Visone
+ * Data: 26/05/2025
+ *
+ * Funzione: interfaccia_aggiungi_veicolo
+ * --------------------------------------
+ * Interfaccia interattiva per l'aggiunta di un nuovo veicolo alla tabella
+ *
+ * Implementazione:
+ *   La funzione richiede all'utente di inserire tutti i dati necessari per creare un veicolo:
+ *   targa (con validazione lunghezza e unicità), tipo, modello, posizione e tariffa.
+ *   L'utente può digitare 'E' in qualsiasi momento per uscire senza salvare.
+ *   Prima del salvataggio definitivo viene richiesta una conferma.
+ *   Se confermato, crea il veicolo con una struttura prenotazioni vuota.
+ *
+ * Parametri:
+ *    - tabella_veicoli: tabella in cui verificare l'unicità della targa
+ *
+ * Pre-condizioni:
+ *    - tabella_veicoli: non deve essere NULL
+ *
+ * Post-condizioni:
+ *    Restituisce il nuovo veicolo creato se l'operazione ha successo, NULL altrimenti
+ *
+ * Side-effects:
+ *    - Input/output su console
+ *    - Allocazione dinamica della memoria per il nuovo veicolo
+ *    - Creazione di una nuova struttura prenotazioni
+ */
 Veicolo interfaccia_aggiungi_veicolo(TabellaVeicoli tabella_veicoli){
     Veicolo v = NULL;
 

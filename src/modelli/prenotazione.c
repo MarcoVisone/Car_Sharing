@@ -11,11 +11,6 @@
 
 #define DIMENSIONE_BUFFER 1024
 
-/**
- * @brief Struttura interna che rappresenta una prenotazione.
- * Contiene i dettagli del cliente, del veicolo, l'intervallo temporale
- * e il costo della prenotazione.
- */
 struct prenotazione {
     char *cliente;
     char *targa;

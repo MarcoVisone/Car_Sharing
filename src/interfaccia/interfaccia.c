@@ -27,22 +27,135 @@ static char *ottieni_orario(time_t timestamp);
 static time_t fine_giornata(time_t inizio);
 
 
+/*
+ * Funzione: stampa_errore
+ * -----------------------
+ *
+ * Stampa un messaggio di errore formattato con prefisso identificativo.
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare il messaggio preceduto dal prefisso "[!] ERRORE:"
+ *    per distinguerlo visivamente da altri tipi di messaggi.
+ *
+ * Parametri:
+ *    msg: stringa contenente il messaggio di errore da visualizzare
+ *
+ * Pre-condizione:
+ *    msg deve essere un puntatore a stringa valido (non NULL)
+ *
+ * Post-condizione:
+ *    Il messaggio viene stampato su stdout con formattazione di errore
+ *
+ * Side-effect:
+ *    Output su console
+ */
 void stampa_errore(const char *msg) {
     printf("\n[!] ERRORE: %s\n", msg);
 }
 
+/*
+ * Funzione: stampa_successo
+ * -------------------------
+ *
+ * Stampa un messaggio di successo formattato con prefisso identificativo.
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare il messaggio preceduto dal prefisso "[+] SUCCESSO:"
+ *    per indicare il completamento positivo di un'operazione.
+ *
+ * Parametri:
+ *    msg: stringa contenente il messaggio di successo da visualizzare
+ *
+ * Pre-condizione:
+ *    msg deve essere un puntatore a stringa valido (non NULL)
+ *
+ * Post-condizione:
+ *    Il messaggio viene stampato su stdout con formattazione di successo
+ *
+ * Side-effect:
+ *    Output su console
+ */
 void stampa_successo(const char *msg) {
     printf("\n[+] SUCCESSO: %s\n", msg);
 }
 
+/*
+ * Funzione: stampa_info
+ * ---------------------
+ *
+ * Stampa un messaggio informativo formattato con prefisso identificativo.
+ *
+ * Implementazione:
+ *    Utilizza printf per stampare il messaggio preceduto dal prefisso "[?] Info:"
+ *    per fornire informazioni generali all'utente.
+ *
+ * Parametri:
+ *    msg: stringa contenente il messaggio informativo da visualizzare
+ *
+ * Pre-condizione:
+ *    msg deve essere un puntatore a stringa valido (non NULL)
+ *
+ * Post-condizione:
+ *    Il messaggio viene stampato su stdout con formattazione informativa
+ *
+ * Side-effect:
+ *    Output su console
+ */
 void stampa_info(const char *msg){
     printf("\n[?] Info: %s\n", msg);
 }
 
+/*
+ * Funzione: uscita
+ * ----------------
+ *
+ * Verifica se una stringa rappresenta un comando di uscita.
+ *
+ * Implementazione:
+ *    Confronta la stringa con "E" e "e" utilizzando strcmp per determinare
+ *    se l'utente vuole uscire dall'operazione corrente.
+ *
+ * Parametri:
+ *    str: stringa da verificare
+ *
+ * Pre-condizione:
+ *    str deve essere un puntatore a stringa valido (non NULL)
+ *
+ * Post-condizione:
+ *    Restituisce 1 se la stringa è "E" o "e", 0 altrimenti
+ *
+ * Side-effect:
+ *    Nessuno
+ */
 Byte uscita(char *str){
     return strcmp(str, "E") == 0 || strcmp(str, "e") == 0;
 }
 
+/*
+ * Funzione: inserisci_stringa
+ * ---------------------------
+ *
+ * Legge una stringa da input standard gestendo l'overflow del buffer.
+ *
+ * Implementazione:
+ *    Utilizza fgets per leggere l'input, rimuove il carattere newline se presente
+ *    e gestisce l'overflow del buffer pulendo stdin quando necessario.
+ *
+ * Parametri:
+ *    stringa: buffer in cui memorizzare la stringa letta
+ *    lunghezza: dimensione massima del buffer
+ *
+ * Pre-condizione:
+ *    stringa deve essere un puntatore a buffer valido
+ *    lunghezza deve essere maggiore di 0
+ *
+ * Post-condizione:
+ *    La stringa letta è memorizzata nel buffer senza carattere newline
+ *    Il buffer stdin è pulito in caso di overflow
+ *
+ * Side-effect:
+ *    Lettura da stdin, possibile pulizia del buffer di input
+ */
 void inserisci_stringa(char *stringa, unsigned int lunghezza){
     fgets(stringa, lunghezza, stdin);
 
@@ -55,6 +168,28 @@ void inserisci_stringa(char *stringa, unsigned int lunghezza){
 
 }
 
+/*
+ * Funzione: benvenuto
+ * -------------------
+ *
+ * Mostra il menu principale dell'applicazione e acquisisce la scelta dell'utente.
+ *
+ * Implementazione:
+ *    Pulisce la console, visualizza un menu formattato con le opzioni disponibili
+ *    (registrazione, accesso, uscita) e legge la scelta dell'utente.
+ *
+ * Parametri:
+ *    nessuno
+ *
+ * Pre-condizione:
+ *    nessuna
+ *
+ * Post-condizione:
+ *    Restituisce il carattere corrispondente alla scelta dell'utente
+ *
+ * Side-effect:
+ *    Pulizia console, stampa del menu, lettura da stdin, pulizia buffer
+ */
 Byte benvenuto(){
     Byte scelta;
     system("clear || cls"); // Pulisce la console
@@ -97,7 +232,7 @@ Byte benvenuto(){
 static Byte risposta_password(Byte lvl){
     switch (lvl){
       case -1:
-        printf("La password deve avere:\n Almeno 8 caratteri\n Almeno una lettera minuscola ed una minuscola\n");
+        printf("La password deve avere:\n Almeno 8 caratteri\n Almeno una lettera minuscola ed una maiuscola\n");
         printf(" Almeno un numero\n Almeno un carattere speciale\n");
         break;
 
@@ -164,6 +299,28 @@ void ottieni_parola(char *stringa, int dimensione) {
     }
 }
 
+/*
+ * Funzione: stampa_header
+ * -----------------------
+ *
+ * Stampa un'intestazione formattata per sezioni dell'interfaccia utente.
+ *
+ * Implementazione:
+ *    Stampa il titolo centrato tra linee di separazione per creare
+ *    un'intestazione visivamente distinta.
+ *
+ * Parametri:
+ *    titolo: stringa contenente il titolo da visualizzare
+ *
+ * Pre-condizione:
+ *    titolo deve essere un puntatore a stringa valido (non NULL)
+ *
+ * Post-condizione:
+ *    Il titolo viene stampato con formattazione di intestazione
+ *
+ * Side-effect:
+ *    Output su console
+ */
 void stampa_header(const char *titolo) {
     printf("\n");
     printf("========================================\n");
@@ -192,12 +349,11 @@ void stampa_header(const char *titolo) {
  *    tabella_utenti deve essere inizializzata e non nullo
  *
  * Post-condizione:
- *    Se le credenziali sono corrette, restituisce 1
- *    Se l'utente sceglie di uscire, restituisce -1
- *    Se l'utente supera il numero di tentativi, restituisce il numero dei tentativi fatti.
+ *    Se le credenziali sono corrette, restituisce il puntatore all'utente
+ *    Se l'utente sceglie di uscire o supera i tentativi, restituisce NULL
  *
  * Side-effect:
- *    Nessuno
+ *    Lettura da stdin, possibili deallocazioni di memoria
  */
 Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
     Byte tentativi = 0;
@@ -267,7 +423,7 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
  *
  * Post-condizione:
  *    Se la registrazione va a buon fine, l'utente è inserito in tabella
- *    Ritorna 1 in caso di successo, 0 in caso di fallimento
+ *    Ritorna 1 in caso di successo, 0 se l'utente esce, -1 in caso di fallimento
  *
  * Side-effect:
  *    Aggiunta di un nuovo utente alla tabella utenti
@@ -334,6 +490,28 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
     return -1;
 }
 
+/*
+ * Funzione: menu_registrazione
+ * ----------------------------
+ *
+ * Gestisce il menu di registrazione completo con feedback utente.
+ *
+ * Implementazione:
+ *    Mostra l'intestazione, chiama l'interfaccia di registrazione e fornisce
+ *    feedback appropriato in base al risultato dell'operazione.
+ *
+ * Parametri:
+ *    tabella_utenti: tabella contenente gli utenti registrati
+ *
+ * Pre-condizione:
+ *    tabella_utenti deve essere inizializzata e non NULL
+ *
+ * Post-condizione:
+ *    L'utente è stato registrato (se operazione riuscita) e informato del risultato
+ *
+ * Side-effect:
+ *    Output su console, attesa input utente, possibile modifica tabella utenti
+ */
 void menu_registrazione(TabellaUtenti tabella_utenti){
     stampa_header("REGISTRAZIONE");
     Byte codice_reg = interfaccia_registrazione(tabella_utenti, CLIENTE);
@@ -348,6 +526,28 @@ void menu_registrazione(TabellaUtenti tabella_utenti){
     getchar();
 }
 
+/*
+ * Funzione: menu_accesso
+ * ----------------------
+ *
+ * Gestisce il menu di accesso completo con feedback utente.
+ *
+ * Implementazione:
+ *    Mostra l'intestazione, chiama l'interfaccia di accesso e fornisce
+ *    feedback appropriato in base al risultato dell'operazione.
+ *
+ * Parametri:
+ *    tabella_utenti: tabella contenente gli utenti registrati
+ *
+ * Pre-condizione:
+ *    tabella_utenti deve essere inizializzata e non NULL
+ *
+ * Post-condizione:
+ *    Restituisce il puntatore all'utente se l'accesso è riuscito, NULL altrimenti
+ *
+ * Side-effect:
+ *    Output su console, attesa input utente
+ */
 Utente menu_accesso(TabellaUtenti tabella_utenti){
     stampa_header("ACCESSO");
 
@@ -669,7 +869,31 @@ Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *
     return 0;
 }
 
-
+/*
+ * Autore: Marco Visone
+ * Data: 24/05/2025
+ *
+ * Funzione: formatta_data
+ * -----------------------
+ *
+ * Converte un timestamp in una stringa formattata leggibile nel formato "dd/mm/yyyy HH:MM"
+ *
+ * Implementazione:
+ *    Alloca memoria per un buffer, converte il timestamp in una struttura tm locale,
+ *    e usa strftime per formattare la data
+ *
+ * Parametri:
+ *    timestamp: il timestamp Unix da convertire
+ *
+ * Pre-condizioni:
+ *    timestamp: deve essere un valore time_t valido
+ *
+ * Post-condizione:
+ *    restituisce un puntatore a stringa allocata dinamicamente contenente la data formattata
+ *
+ * Side-effect:
+ *    allocazione di memoria che deve essere liberata dal chiamante
+ */
 static char *formatta_data(time_t timestamp) {
     char *buffer = malloc(DIMENSIONE_INTERVALLO);
     struct tm *tm_info = localtime(&timestamp);
@@ -677,6 +901,31 @@ static char *formatta_data(time_t timestamp) {
     return buffer;
 }
 
+/*
+ * Autore: Marco Visone
+ * Data: 24/05/2025
+ *
+ * Funzione: ottieni_orario
+ * -------------------------
+ *
+ * Estrae solo l'orario (ore e minuti) da un timestamp nel formato "HH:MM"
+ *
+ * Implementazione:
+ *    Alloca memoria per un buffer, converte il timestamp in una struttura tm locale,
+ *    e usa strftime per formattare solo l'orario
+ *
+ * Parametri:
+ *    timestamp: il timestamp Unix da cui estrarre l'orario
+ *
+ * Pre-condizioni:
+ *    timestamp: deve essere un valore time_t valido
+ *
+ * Post-condizione:
+ *    restituisce un puntatore a stringa allocata dinamicamente contenente l'orario formattato
+ *
+ * Side-effect:
+ *    allocazione di memoria che deve essere liberata dal chiamante
+ */
 static char *ottieni_orario(time_t timestamp){
     char *buffer = malloc(DIMENSIONE_INTERVALLO);
     struct tm *tm_info = localtime(&timestamp);
@@ -684,6 +933,31 @@ static char *ottieni_orario(time_t timestamp){
     return buffer;
 }
 
+/*
+ * Autore: Marco Visone
+ * Data: 24/05/2025
+ *
+ * Funzione: fine_giornata
+ * -----------------------
+ *
+ * Calcola il timestamp della mezzanotte del giorno successivo a quello dato
+ *
+ * Implementazione:
+ *    Converte il timestamp di inizio in una struttura tm, azzera ore/minuti/secondi,
+ *    incrementa il giorno di 1 e riconverte in timestamp
+ *
+ * Parametri:
+ *    inizio: timestamp del momento di riferimento
+ *
+ * Pre-condizioni:
+ *    inizio: deve essere un valore time_t valido
+ *
+ * Post-condizione:
+ *    restituisce il timestamp della mezzanotte del giorno successivo
+ *
+ * Side-effect:
+ *    nessuno
+ */
 static time_t fine_giornata(time_t inizio) {
     struct tm tm_info = *localtime(&inizio);
 
@@ -698,6 +972,32 @@ static time_t fine_giornata(time_t inizio) {
 /*
  * Autore: Marco Visone
  * Data: 24/05/2025
+ *
+ * Funzione: visualizza_veicoli_disponibili
+ * -----------------------------------------
+ *
+ * Mostra in tempo reale una tabella formattata dei veicoli disponibili per il noleggio
+ * con informazioni dettagliate su modello, targa, tipo, posizione, costo e disponibilità
+ *
+ * Implementazione:
+ *    Crea un ciclo interattivo che aggiorna periodicamente la visualizzazione dei veicoli
+ *    disponibili, calcolando per ciascuno la disponibilità rimanente nella giornata corrente
+ *    e mostrando costo e durata. Permette aggiornamento manuale e uscita dal menu
+ *
+ * Parametri:
+ *    tabella_veicoli: tabella contenente tutti i veicoli del sistema
+ *    data_riferimento: timestamp di riferimento per il calcolo della disponibilità
+ *
+ * Pre-condizioni:
+ *    tabella_veicoli: deve essere una tabella valida e inizializzata
+ *    data_riferimento: deve essere un timestamp valido
+ *
+ * Post-condizione:
+ *    visualizza l'interfaccia utente e termina quando l'utente sceglie di uscire
+ *
+ * Side-effect:
+ *    stampa a video, pulizia schermo, acquisizione input utente,
+ *    allocazione e deallocazione di memoria per le stringhe temporanee
  */
 void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_riferimento) {
     unsigned int dimensione;
@@ -778,6 +1078,38 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
     }while (comando != 'E' && comando != 'e');
 }
 
+/*
+ * Autore: Antonio Sicignano
+ * Data: 24/05/2025
+ *
+ * Funzione: visualizza_storico
+ * -----------------------------
+ *
+ * Visualizza lo storico completo delle prenotazioni di un utente in formato tabellare
+ * con dettagli su veicolo, modello, periodo di noleggio e costo totale
+ *
+ * Implementazione:
+ *    Cerca l'utente nella tabella tramite email, ottiene il suo storico prenotazioni,
+ *    e per ogni prenotazione recupera i dettagli del veicolo associato per mostrare
+ *    una tabella formattata con tutte le informazioni rilevanti
+ *
+ * Parametri:
+ *    email_utente: stringa contenente l'email dell'utente di cui visualizzare lo storico
+ *    tabella_utenti: tabella contenente tutti gli utenti registrati
+ *    tabella_veicoli: tabella contenente tutti i veicoli del sistema
+ *
+ * Pre-condizioni:
+ *    email_utente: deve essere diverso da NULL e contenere un'email valida
+ *    tabella_utenti: deve essere una tabella valida e inizializzata
+ *    tabella_veicoli: deve essere una tabella valida e inizializzata
+ *
+ * Post-condizione:
+ *    restituisce 1 se l'operazione ha successo, -1 in caso di errore (utente non trovato o storico vuoto)
+ *
+ * Side-effect:
+ *    stampa a video, acquisizione input utente per conferma uscita,
+ *    allocazione e deallocazione di memoria per le stringhe temporanee
+ */
 Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL){
