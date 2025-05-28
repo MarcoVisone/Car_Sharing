@@ -214,7 +214,7 @@ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione);
  * Side-effect:
  *    nessuno
  */
-int ottieni_numero_prenotazioni(Data data);
+unsigned int ottieni_numero_prenotazioni(Data data);
 
 /*
  * Funzione: imposta_numero_prenotazioni

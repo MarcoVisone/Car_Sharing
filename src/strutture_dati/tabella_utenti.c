@@ -152,7 +152,7 @@ Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente){
  * Side-effect:
  *    nessuno
  */
-Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, char *email){
+Utente cerca_utente_in_tabella(const TabellaUtenti tabella_utenti, const char *email){
     if(tabella_utenti == NULL){
         return NULL;
     }

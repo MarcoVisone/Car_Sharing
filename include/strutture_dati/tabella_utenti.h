@@ -97,7 +97,7 @@ Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente);
  * Side-effect:
  *    nessuno
  */
-Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, char *email);
+Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, const char *email);
 
 /*
  * Funzione: rimuovi_utente_in_tabella

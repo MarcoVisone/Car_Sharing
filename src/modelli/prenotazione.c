@@ -54,7 +54,7 @@ struct prenotazione {
  * Ritorna:
  * Un puntatore di tipo 'Prenotazione' alla prenotazione creata,  in caso di fallimento.
  */
-Prenotazione crea_prenotazione(char *cliente, char *targa, Intervallo i, double costo) {
+Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervallo i, double costo) {
     Prenotazione p = malloc(sizeof(struct prenotazione));
     if (p == NULL) return NULL;
 
@@ -130,10 +130,10 @@ void distruggi_prenotazione(Prenotazione p) {
  * Ritorna:
  * Una stringa (puntatore a char) con il nome del cliente. La stringa non deve essere modificata o liberata dal chiamante.
  */
-char *ottieni_cliente_prenotazione(Prenotazione p) {
+const char *ottieni_cliente_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
 
-    return mia_strdup(p->cliente);
+    return p->cliente;
 }
 
 /*
@@ -162,10 +162,10 @@ char *ottieni_cliente_prenotazione(Prenotazione p) {
  * Ritorna:
  * Una stringa (puntatore a char) con la targa del veicolo. La stringa non deve essere modificata o liberata dal chiamante.
  */
-char *ottieni_veicolo_prenotazione(Prenotazione p){
+const char *ottieni_veicolo_prenotazione(Prenotazione p){
     if(p == NULL) return NULL;
 
-    return mia_strdup(p->targa);
+    return p->targa;
 }
 
 /*

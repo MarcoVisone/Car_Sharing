@@ -5,6 +5,7 @@
 #include "modelli/intervallo.h"
 #include "modelli/prenotazione.h"
 #include "strutture_dati/lista.h"
+#include "strutture_dati/lista_prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
 #include "modelli/veicolo.h"
 #include "modelli/data.h"
@@ -19,8 +20,8 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni);
 static Prenotazioni carica_prenotazioni(FILE *fp, char *buffer_str);
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v);
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, char *buffer_str);
-static void salva_data(FILE *file_data, Data d);
-static Data carica_data(FILE *file_data, char *buffer_str);
+static void salva_data(FILE *file_data, Utente u);
+static void carica_data(Utente u, FILE *file_data, char *buffer_str);
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u);
 static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str);
 
@@ -265,21 +266,25 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
 	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
 
     // Utilizzo di const char* per i getter
-	unsigned int len = strlen(ottieni_tipo_veicolo(v))+1;
+    const char *tipo_veicolo = ottieni_tipo_veicolo(v);
+	unsigned int len = strlen(tipo_veicolo)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
-    fwrite(ottieni_tipo_veicolo(v), sizeof(char), len, file_veicolo);
+    fwrite(tipo_veicolo, sizeof(char), len, file_veicolo);
 
-    len = strlen(ottieni_targa(v))+1;
+    const char *targa = ottieni_targa(v);
+    len = strlen(targa)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
-    fwrite(ottieni_targa(v), sizeof(char), len, file_veicolo);
+    fwrite(targa, sizeof(char), len, file_veicolo);
 
-    len = strlen(ottieni_modello(v))+1;
+    const char *modello = ottieni_modello(v);
+    len = strlen(modello)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
-    fwrite(ottieni_modello(v), sizeof(char), len, file_veicolo);
+    fwrite(modello, sizeof(char), len, file_veicolo);
 
-    len = strlen(ottieni_posizione(v)) + 1;
+    const char *posizione = ottieni_posizione(v);
+    len = strlen(posizione) + 1;
     fwrite(&len, sizeof(unsigned int), 1, file_veicolo);
-    fwrite(ottieni_posizione(v), sizeof(char), len, file_veicolo);
+    fwrite(posizione, sizeof(char), len, file_veicolo);
 
 	double tariffa = ottieni_tariffa(v);
 	fwrite(&tariffa, sizeof(tariffa), 1, file_veicolo);
@@ -562,25 +567,26 @@ Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_
  * Side-effect:
  * scrittura su file
  */
-static void salva_data(FILE *file_data, Data d){
-    if(file_data == NULL || d == NULL){
+static void salva_data(FILE *file_data, Utente u){
+    if(file_data == NULL || u == NULL){
         return;
     }
 
     // Ottieni la lista e il numero di prenotazioni prima di scriverli
-    ListaPre lista_prenotazioni = ottieni_storico_lista(d);
-    int numero_prenotazioni = ottieni_numero_prenotazioni(d);
+    ListaPre lista_prenotazioni = ottieni_storico_utente(u);
+    unsigned int numero_prenotazioni = ottieni_numero_prenotazioni_utente(u);
 
-    int frequenza = ottieni_frequenza_lista(d);
-    fwrite(&frequenza, sizeof(int), 1, file_data);
-    fwrite(&numero_prenotazioni, sizeof(int), 1, file_data);
+    fwrite(&numero_prenotazioni, sizeof(numero_prenotazioni), 1, file_data);
 
     // Iterare sulla lista originale senza modificarla
     ListaPre curr = lista_prenotazioni;
-    for(int i = 0; curr && (i < numero_prenotazioni); i++){
+    for(unsigned int i = 0; curr && (i < numero_prenotazioni); i++){
         salva_prenotazione(file_data, (Prenotazione)ottieni_item(curr));
         curr = ottieni_prossimo(curr);
     }
+
+    distruggi_lista_prenotazione(lista_prenotazioni);
+
 }
 
 /*
@@ -609,40 +615,25 @@ static void salva_data(FILE *file_data, Data d){
  * Side-effect:
  * lettura da file, allocazione dinamica
  */
-static Data carica_data(FILE *file_data, char *buffer_str){
-    if(file_data == NULL || buffer_str == NULL){
-        return NULL;
+static void carica_data(Utente u, FILE *file_data, char *buffer_str){
+    if(file_data == NULL || buffer_str == NULL || u == NULL){
+        return;
     }
+
     int numero_prenotazioni;
-    int frequenza;
-
-    Data d = NULL;
-
-    if (fread(&frequenza, sizeof(int), 1, file_data) != 1) goto errore;
-    if (fread(&numero_prenotazioni, sizeof(int), 1, file_data) != 1) goto errore;
-
-    d = crea_data();
-    if (d == NULL) goto errore;
-
-    imposta_frequenza(d, frequenza);
+    if (fread(&numero_prenotazioni, sizeof(int), 1, file_data) != 1) return;
 
     for(int i = 0; i < numero_prenotazioni; i++){
         Prenotazione p_caricata = carica_prenotazione(file_data, buffer_str); // Passa il buffer
         if (p_caricata == NULL) {
-            goto errore; // Se una prenotazione fallisce, fallisce l'intera data
+            return;
         }
 
-        if (!aggiungi_a_storico_lista(d, p_caricata)) {
-            distruggi_prenotazione(p_caricata); // Libera la prenotazione se non può essere aggiunta
-            goto errore;
+        if (!aggiungi_a_storico_utente(u, p_caricata)) {
+            distruggi_prenotazione(p_caricata);
+            return;// Libera la prenotazione se non può essere aggiunta
         }
     }
-    imposta_numero_prenotazioni(d, numero_prenotazioni);
-    return d;
-
-errore:
-    distruggi_data(d);
-    return NULL;
 }
 
 /*
@@ -677,26 +668,29 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     if (file_utente == NULL || u == NULL) return;
 
     // Utilizzo di const char* per i getter
-    char *nome = ottieni_nome(u);
+    const char *nome = ottieni_nome(u);
     unsigned int len = strlen(nome)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
     fwrite(nome, sizeof(char), len, file_utente);
 
-    len = strlen(ottieni_cognome(u))+1;
+    const char *cognome = ottieni_cognome(u);
+    len = strlen(cognome)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_cognome(u), sizeof(char), len, file_utente);
+    fwrite(cognome, sizeof(char), len, file_utente);
 
-    len = strlen(ottieni_email(u)) + 1;
+    const char *email = ottieni_email(u);
+    len = strlen(email) + 1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_email(u), sizeof(char), len, file_utente);
+    fwrite(email, sizeof(char), len, file_utente);
 
-    fwrite(ottieni_password(u), sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
+    const uint8_t *password = ottieni_password(u);
+    fwrite(password, sizeof(uint8_t), DIMENSIONE_PASSWORD, file_utente);
 
     Byte permesso = ottieni_permesso(u);
     fwrite(&permesso, sizeof(Byte), 1, file_utente);
 
     if (permesso == CLIENTE) { // Salva lo storico e frequenza solo se l'utente è un CLIENTE
-        salva_data(file_data, ottieni_data(u));
+        salva_data(file_data, u);
     }
 }
 
@@ -767,9 +761,7 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
 
     // ---- DATA (solo se cliente) ----
     if (permesso == CLIENTE) {
-        Data d = carica_data(file_data, buffer_str);
-        if (!d) goto errore;
-        imposta_data(u, d);
+        carica_data(u, file_data, buffer_str);
     }
 
     return u;

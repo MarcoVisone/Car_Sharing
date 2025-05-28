@@ -291,7 +291,6 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
                 if(molto_frequente){
                     sconto_totale += 0.20; // 20% di sconto
                     strcpy(motivo_sconto, "Premio fedeltà (20%)");
-                    azzera_frequenza(ottieni_data(utente)); //Lo azzero solo per evitare che raggiunga numeri enormi
                 }
 
                 if (fascia_oraria != FASCIA_NORMALE) {

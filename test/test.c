@@ -249,11 +249,11 @@ int main(int argc, char **argv){
             printf("Errore apertura file oracle o output\n");
             return -1;
         }
-
         int risultato = compara_file(oracle_file, output_file);
         fprintf(file_result, "%s: %sHA SUPERATO IL TEST\n", tc, risultato ? "NON " : "");
     }
 
+    fclose(file_result);
     return 0;
 }
 

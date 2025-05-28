@@ -107,7 +107,7 @@ ListaPre ottieni_storico_lista(Data data){
         return NULL;
     }
 
-    return data->storico;
+    return duplica_lista_prenotazioni(data->storico);
 }
 
 /*
@@ -138,12 +138,12 @@ ListaPre ottieni_storico_lista(Data data){
  */
 Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
     if (data == NULL) {
-        return NULL;
+        return 0;
     }
 
     ListaPre temp = aggiungi_prenotazione_lista(data->storico, prenotazione);
 
-    if(temp == NULL) return NULL;
+    if(temp == NULL) return 0;
 
     data->storico = temp;
     data->numero_prenotazioni +=1;
@@ -180,7 +180,7 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
  */
 Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
     if (data == NULL) {
-        return NULL;
+        return 0;
     }
 
     data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
@@ -329,7 +329,7 @@ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
  * Side-effect:
  *    nessuno
  */
-int ottieni_numero_prenotazioni(Data data){
+unsigned int ottieni_numero_prenotazioni(Data data){
     if (data == NULL) {
         return -1;
     }

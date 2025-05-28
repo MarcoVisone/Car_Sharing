@@ -43,7 +43,7 @@ typedef struct prenotazione *Prenotazione;
  * Ritorna:
  * Un puntatore di tipo 'Prenotazione' alla prenotazione creata, o NULL in caso di fallimento.
  */
-Prenotazione crea_prenotazione(char *cliente, char *targa, Intervallo i, double costo);
+Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervallo i, double costo);
 
 /*
  * Funzione: distruggi_prenotazione
@@ -90,7 +90,7 @@ void distruggi_prenotazione(Prenotazione p);
  * Ritorna:
  * Una stringa (puntatore a char) con il nome del cliente. La stringa non deve essere modificata o liberata dal chiamante.
  */
-char *ottieni_cliente_prenotazione(Prenotazione p);
+const char *ottieni_cliente_prenotazione(Prenotazione p);
 
 /*
  * Funzione: ottieni_veicolo_prenotazione
@@ -113,7 +113,7 @@ char *ottieni_cliente_prenotazione(Prenotazione p);
  * Ritorna:
  * Una stringa (puntatore a char) con la targa del veicolo. La stringa non deve essere modificata o liberata dal chiamante.
  */
-char *ottieni_veicolo_prenotazione(Prenotazione p);
+const char *ottieni_veicolo_prenotazione(Prenotazione p);
 
 /*
  * Funzione: ottieni_intervallo_prenotazione

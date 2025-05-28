@@ -45,7 +45,7 @@ typedef struct veicolo *Veicolo;
  * Side-effect:
  *    alloca memoria dinamicamente per il veicolo
  */
-Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, double tariffa, Prenotazioni prenotazioni);
+Veicolo crea_veicolo(const char *tipo, const char *targa, const char *modello, const char *posizione, double tariffa, Prenotazioni prenotazioni);
 
 /*
  * Funzione: distruggi_veicolo
@@ -64,7 +64,7 @@ Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, do
  * Side-effect:
  *	libera la memoria occupata dalla struttura Veicolo e dalle sue prenotazioni
  */
-void distruggi_veicolo(Veicolo v);
+void distruggi_veicolo(const Veicolo v);
 
 /*
  * Funzione: ottieni_targa
@@ -81,7 +81,7 @@ void distruggi_veicolo(Veicolo v);
  * Post-condizione:
  *	restituisce una stringa contenente la targa del veicolo
  */
-char *ottieni_targa(Veicolo v);
+const char *ottieni_targa(const Veicolo v);
 
 /*
  * Funzione: imposta_targa
@@ -103,7 +103,7 @@ char *ottieni_targa(Veicolo v);
  * Side-effect:
  * 	aggiorna il campo targa del veicolo v con il valore fornito
  */
-void imposta_targa(Veicolo v, char *targa);
+void imposta_targa(Veicolo v, const char *targa);
 
 /*
  * Funzione: ottieni_modello
@@ -123,7 +123,7 @@ void imposta_targa(Veicolo v, char *targa);
  * Ritorna:
  *	il modello del veicolo puntato da v
  */
-char* ottieni_modello(Veicolo v);
+const char* ottieni_modello(const Veicolo v);
 
 /*
  * Funzione: imposta_modello
@@ -145,7 +145,7 @@ char* ottieni_modello(Veicolo v);
  * Side-effect:
  * 	aggiorna il campo modello del veicolo v con il valore fornito
  */
-void imposta_modello(Veicolo v, char *modello);
+void imposta_modello(Veicolo v, const char *modello);
 
 /*
  * Funzione: ottieni_posizione
@@ -162,7 +162,7 @@ void imposta_modello(Veicolo v, char *modello);
  * Post-condizione:
  *	restituisce una stringa contenente la posizione del veicolo
  */
-char* ottieni_posizione(Veicolo v);
+const char* ottieni_posizione(const Veicolo v);
 
 /*
  * Funzione: imposta_posizione
@@ -184,7 +184,7 @@ char* ottieni_posizione(Veicolo v);
  * Side-effect:
  * 	aggiorna il campo posizione del veicolo con il valore fornito
  */
-void imposta_posizione(Veicolo v, char *posizione);
+void imposta_posizione(Veicolo v, const char *posizione);
 
 /*
  * Funzione: ottieni_tariffa
@@ -201,7 +201,7 @@ void imposta_posizione(Veicolo v, char *posizione);
  * Post-condizione:
  *	restituisce un double che è la tariffa al minuto del veicolo puntato da v
  */
-double ottieni_tariffa(Veicolo v);
+double ottieni_tariffa(const Veicolo v);
 
 /*
  * Funzione: imposta_tariffa
@@ -223,7 +223,7 @@ double ottieni_tariffa(Veicolo v);
  * Side-effect:
  * 	aggiorna il campo tariffa del veicolo con il valore fornito
  */
-void imposta_tariffa(Veicolo v, double tariffa);
+void imposta_tariffa(const Veicolo v, double tariffa);
 
 /*
  * Funzione: ottieni_prenotazioni
@@ -240,7 +240,7 @@ void imposta_tariffa(Veicolo v, double tariffa);
  * Post-condizione:
  *	restituisce l'albero contenente le prenotazioni del veicolo
  */
-Prenotazioni ottieni_prenotazioni(Veicolo v);
+Prenotazioni ottieni_prenotazioni(const Veicolo v);
 
 /*
  * Funzione: imposta_prenotazioni
@@ -261,7 +261,7 @@ Prenotazioni ottieni_prenotazioni(Veicolo v);
  * Side-effect:
  * 	aggiorna il campo prenotazioni del veicolo con il puntatore fornito
  */
-void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni);
+void imposta_prenotazioni(const Veicolo v, Prenotazioni prenotazioni);
 
 /*
  * Funzione: ottieni_tipo_veicolo
@@ -279,7 +279,7 @@ void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni);
  *	restituisce una stringa contenente il tipo del veicolo
  *
  */
-char* ottieni_tipo_veicolo(Veicolo v);
+const char* ottieni_tipo_veicolo(const Veicolo v);
 
 /*
  * Funzione: imposta_tipo_veicolo
@@ -301,7 +301,7 @@ char* ottieni_tipo_veicolo(Veicolo v);
  * Side-effect:
  * 	modifica il campo tipo_veicolo nella struttura veicolo
  */
-void imposta_tipo_veicolo(Veicolo v, char *tipo);
+void imposta_tipo_veicolo(Veicolo v, const char *tipo);
 
 /*
  * Funzione: confronta_tipo
@@ -320,7 +320,7 @@ void imposta_tipo_veicolo(Veicolo v, char *tipo);
  * Post-condizione:
  *	restituisce 1 se il tipo del veicolo è uguale a "tipo", altrimenti 0
  */
-Byte confronta_tipo(Veicolo v, char *tipo);
+Byte confronta_tipo(const Veicolo v, const char *tipo);
 
 /*
 * Funzione: aggiungi_prenotazione_veicolo
@@ -339,7 +339,7 @@ Byte confronta_tipo(Veicolo v, char *tipo);
 * Post-condizione:
 *	restituisce 1 se la prenotazione è stata aggiunta, altrimenti 0
  */
-Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
+Byte aggiungi_prenotazione_veicolo(const Veicolo v, const Prenotazione prenotazione);
 
 /*
 * Funzione: rimuovi_prenotazione_veicolo
@@ -358,7 +358,7 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione);
 * Post-condizione:
 *	restituisce 1 se la prenotazione è stata rimossa, altrimenti 0
  */
-Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo);
+Byte rimuovi_prenotazione_veicolo(const Veicolo v, const Intervallo intervallo);
 
 /*
  * Funzione: confronta_targhe
@@ -377,7 +377,7 @@ Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo);
  * Post-condizione:
  *	restituisce 1 se le targhe sono uguali e 0 se sono diverse
  */
-Byte confronta_targhe(Veicolo v, char *targa);
+Byte confronta_targhe(const Veicolo v, const char *targa);
 
 /*
  * Funzione: veicolo_in_stringa
@@ -394,6 +394,6 @@ Byte confronta_targhe(Veicolo v, char *targa);
  * Post-condizione:
  * 	restituisce una stringa che contiene tutte le informazioni di un veicolo
  */
-char* veicolo_in_stringa(Veicolo v);
+char* veicolo_in_stringa(const Veicolo v);
 
 #endif //VEICOLO_H

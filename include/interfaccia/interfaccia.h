@@ -398,7 +398,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  *    stampa a video, acquisizione input utente per conferma uscita,
  *    allocazione e deallocazione di memoria per le stringhe temporanee
  */
-Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
+Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
 /*
  * Autore: Marco Visone
@@ -425,6 +425,6 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
  *    Modifica lo storico prenotazioni se l'utente cancella una prenotazione
  *    Stampa a video l'interfaccia utente
  */
-Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
+Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli);
 
 #endif //INTERFACCIA_H

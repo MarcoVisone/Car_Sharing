@@ -1027,10 +1027,10 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
             Intervallo disponibile = ottieni_intervallo_disponibile(ottieni_prenotazioni(vettore_veicoli[i]), resto_giornata);
 
             if (disponibile != NULL) {
-                char *modello = ottieni_modello(vettore_veicoli[i]);
-                char *targa = ottieni_targa(vettore_veicoli[i]);
-                char *tipo = ottieni_tipo_veicolo(vettore_veicoli[i]);
-                char *posizione = ottieni_posizione(vettore_veicoli[i]);
+                const char *modello = ottieni_modello(vettore_veicoli[i]);
+                const char *targa = ottieni_targa(vettore_veicoli[i]);
+                const char *tipo = ottieni_tipo_veicolo(vettore_veicoli[i]);
+                const char *posizione = ottieni_posizione(vettore_veicoli[i]);
                 double prezzo_min = ottieni_tariffa(vettore_veicoli[i]);
 
                 char costo_str[16];
@@ -1110,7 +1110,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  *    stampa a video, acquisizione input utente per conferma uscita,
  *    allocazione e deallocazione di memoria per le stringhe temporanee
  */
-Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
+Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL){
         return -1;
@@ -1118,7 +1118,7 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
 
     ListaPre l = ottieni_storico_utente(u);
     Veicolo v;
-    char *modello;
+    const char *modello;
 
     if(l == NULL) return -1;
 
@@ -1184,14 +1184,14 @@ Byte visualizza_storico(char *email_utente, TabellaUtenti tabella_utenti, Tabell
  *    Modifica lo storico prenotazioni se l'utente cancella una prenotazione
  *    Stampa a video l'interfaccia utente
  */
-Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
+Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli) {
     Utente u = cerca_utente_in_tabella(tabella_utenti, email_utente);
     if(u == NULL) {
         return -1;
     }
 
     time_t ora = time(NULL);
-    unsigned int num_ele = ottieni_numero_prenotazioni(ottieni_data(u));
+    unsigned int num_ele = ottieni_numero_prenotazioni_utente(u);
 
     Prenotazione vettore_prenotazione[num_ele];
     unsigned int id;
@@ -1215,9 +1215,9 @@ Byte gestisci_le_mie_prenotazioni(char *email_utente, TabellaUtenti tabella_uten
             }
             Intervallo i = ottieni_intervallo_prenotazione(p);
             if(fine_intervallo(i) > ora) {
-                char *targa = ottieni_veicolo_prenotazione(p);
+                const char *targa = ottieni_veicolo_prenotazione(p);
                 Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, targa);
-                char *modello = ottieni_modello(v);
+                const char *modello = ottieni_modello(v);
                 char *periodo = intervallo_in_stringa(i);
                 double costo = ottieni_costo_prenotazione(p);
                 vettore_prenotazione[id] = p;

@@ -95,7 +95,7 @@ Byte aggiungi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, Veicolo veicolo
  *    restituisce un puntatore al veicolo se presente nella tabella,
  *    altrimenti restituisce NULL
  */
-Veicolo cerca_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa);
+Veicolo cerca_veicolo_in_tabella(const TabellaVeicoli tabella_veicoli, const char *targa);
 
 /*
  * Funzione: rimuovi_veicolo_in_tabella

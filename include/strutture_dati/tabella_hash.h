@@ -30,7 +30,7 @@ typedef struct nodo* Nodo;
  * Side-effect:
  *   alloca memoria dinamicamente per la tabella hash e i suoi bucket
  */
-TabellaHash nuova_tabella_hash(unsigned int grandezza);
+TabellaHash nuova_tabella_hash(const unsigned int grandezza);
 
 /*
  * Funzione: distruggi_tabella
@@ -75,7 +75,7 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
  * Side-effect:
  *    modifica la tabella hash aggiungendo un nuovo elemento e ridimensiona la tabella se necessario
  */
-Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
+Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *valore);
 
 /*
  * Funzione: cancella_dalla_tabella
@@ -100,7 +100,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, char *chiave, void *valore);
  *    - modifica la tabella hash rimuovendo l'elemento associato alla chiave
  *    - libera memoria dinamicamente associata al nodo e al valore
  */
-Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzione_distruggi_valore)(void *));
+Byte cancella_dalla_tabella(const TabellaHash tabella_hash, const char *chiave, void (*funzione_distruggi_valore)(void *));
 
 /*
  * Funzione: cerca_in_tabella
@@ -120,7 +120,7 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, char *chiave, void (*funzi
  *    Se la chiave è presente, restituisce il puntatore al valore associato;
  *    altrimenti restituisce NULL
  */
-void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
+const void *cerca_in_tabella(TabellaHash tabella_hash, const char *chiave);
 
 /*
  * Funzione: ottieni_vettore
@@ -143,6 +143,6 @@ void *cerca_in_tabella(TabellaHash tabella_hash, char *chiave);
  * Side-effect:
  *    alloca dinamicamente memoria per il vettore risultante
  */
-void **ottieni_vettore(TabellaHash tabella_hash, unsigned int *dimensione);
+void **ottieni_vettore(const TabellaHash tabella_hash, unsigned int *dimensione);
 
 #endif //TABELLA_HASH_H

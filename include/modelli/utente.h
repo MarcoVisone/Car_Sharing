@@ -19,7 +19,6 @@
 
 typedef struct prenotazione *Prenotazione;
 typedef struct nodo *ListaPre;
-typedef struct data *Data;
 typedef struct utente *Utente;
 
 /*
@@ -46,7 +45,7 @@ typedef struct utente *Utente;
  * Side-effect:
  *    allocazione dinamica di memoria
  */
-Utente crea_utente(char *email, uint8_t *password, char *nome, char *cognome, Byte permesso);
+Utente crea_utente(const char *email, const uint8_t *password, const char *nome, const char *cognome, Byte permesso);
 
 /*
  * Funzione: distruggi_utente
@@ -87,7 +86,7 @@ void distruggi_utente(Utente utente);
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_nome(Utente utente, char *nome);
+void imposta_nome(Utente utente, const char *nome);
 
 /*
  * Funzione: imposta_cognome
@@ -108,7 +107,7 @@ void imposta_nome(Utente utente, char *nome);
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_cognome(Utente utente, char *cognome);
+void imposta_cognome(Utente utente, const char *cognome);
 
 /*
  * Funzione: imposta_email
@@ -129,7 +128,7 @@ void imposta_cognome(Utente utente, char *cognome);
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_email(Utente utente, char *email);
+void imposta_email(Utente utente, const char *email);
 
 /*
  * Funzione: imposta_password
@@ -150,7 +149,7 @@ void imposta_email(Utente utente, char *email);
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_password(Utente utente, uint8_t *password);
+void imposta_password(Utente utente, const uint8_t *password);
 
 /*
  * Funzione: imposta_permesso
@@ -175,27 +174,6 @@ void imposta_password(Utente utente, uint8_t *password);
 void imposta_permesso(Utente utente, Byte permesso);
 
 /*
- * Funzione: imposta_data
- * ----------------------
- *
- * Imposta la data associata all'utente (es. data di registrazione).
- *
- * Parametri:
- *    utente: puntatore all'utente
- *    data: puntatore a una struttura Data
- *
- * Pre-condizione:
- *    utente e data non devono essere NULL
- *
- * Post-condizione:
- *    la data dell'utente è aggiornata
- *
- * Side-effect:
- *    modifica interna dell'utente
- */
-void imposta_data(Utente utente, Data data);
-
-/*
  * Funzione: ottieni_cognome
  * -------------------------
  *
@@ -213,7 +191,7 @@ void imposta_data(Utente utente, Data data);
  * Side-effect:
  *    nessuno
  */
-char *ottieni_cognome(Utente utente);
+const char *ottieni_cognome(const Utente utente);
 
 /*
  * Funzione: ottieni_nome
@@ -233,7 +211,7 @@ char *ottieni_cognome(Utente utente);
  * Side-effect:
  *    nessuno
  */
-char *ottieni_nome(Utente utente);
+const char *ottieni_nome(const Utente utente);
 
 /*
  * Funzione: ottieni_email
@@ -253,7 +231,7 @@ char *ottieni_nome(Utente utente);
  * Side-effect:
  *    nessuno
  */
-char *ottieni_email(Utente utente);
+const char *ottieni_email(const Utente utente);
 
 /*
  * Funzione: ottieni_password
@@ -273,7 +251,7 @@ char *ottieni_email(Utente utente);
  * Side-effect:
  *    nessuno
  */
-uint8_t *ottieni_password(Utente utente);
+const uint8_t *ottieni_password(const Utente utente);
 
 /*
  * Funzione: ottieni_frequenza_cliente
@@ -294,7 +272,7 @@ uint8_t *ottieni_password(Utente utente);
  * Side-effect:
  *    nessuno
  */
-int ottieni_frequenza_cliente(Utente utente);
+int ottieni_frequenza_cliente(const Utente utente);
 
 /*
  * Funzione: ottieni_permesso
@@ -382,8 +360,8 @@ Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
  */
 Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
-Data ottieni_data(Utente utente);
+unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
 
-char *utente_in_stringa(Utente utente);
+char *utente_in_stringa(const Utente utente);
 
 #endif // UTENTE_H

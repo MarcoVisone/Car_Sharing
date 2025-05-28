@@ -194,7 +194,7 @@ Nodo inverti_lista(Nodo nodo){
         curr = prossimo;
     }
 
-    return curr;
+    return prev;
 }
 
 /*

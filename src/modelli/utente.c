@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "modelli/utente.h"
 #include "modelli/data.h"
+#include "modelli/veicolo.h"
 #include "utils/utils.h"
 #include <string.h>
 #include <sys/types.h>
@@ -48,7 +49,7 @@ struct utente {
  * Side-effect:
  *    allocazione dinamica di memoria
  */
-Utente crea_utente(char *email, uint8_t *password,  char *nome, char *cognome, Byte permesso){
+Utente crea_utente(const char *email, const uint8_t *password,  const char *nome, const char *cognome, Byte permesso){
     Utente u = malloc(sizeof(struct utente));
 
     if(u == NULL){
@@ -120,7 +121,7 @@ void distruggi_utente(Utente utente){
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_nome(Utente utente, char *nome) {
+void imposta_nome(Utente utente, const char *nome) {
     if(utente == NULL || nome == NULL) {
         return;
     }
@@ -150,7 +151,7 @@ void imposta_nome(Utente utente, char *nome) {
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_cognome(Utente utente, char *cognome) {
+void imposta_cognome(Utente utente, const char *cognome) {
     if(utente == NULL) {
         return;
     }
@@ -180,7 +181,7 @@ void imposta_cognome(Utente utente, char *cognome) {
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_email(Utente utente, char *email) {
+void imposta_email(Utente utente, const char *email) {
     if(utente == NULL) {
         return;
     }
@@ -210,7 +211,7 @@ void imposta_email(Utente utente, char *email) {
  * Side-effect:
  *    modifica interna dell'utente
  */
-void imposta_password(Utente utente, uint8_t *password) {
+void imposta_password(Utente utente, const uint8_t *password) {
     if(utente == NULL) {
         return;
     }
@@ -309,7 +310,7 @@ void imposta_data(Utente utente, Data data) {
  * Side-effect:
  *    nessuno
  */
-char *ottieni_cognome(Utente utente){
+const char *ottieni_cognome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
@@ -337,7 +338,7 @@ char *ottieni_cognome(Utente utente){
  * Side-effect:
  *    nessuno
  */
-char *ottieni_nome(Utente utente){
+const char *ottieni_nome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
@@ -365,7 +366,7 @@ char *ottieni_nome(Utente utente){
  * Side-effect:
  *    nessuno
  */
-char *ottieni_email(Utente utente){
+const char *ottieni_email(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
@@ -393,7 +394,7 @@ char *ottieni_email(Utente utente){
  * Side-effect:
  *    nessuno
  */
-uint8_t *ottieni_password(Utente utente){
+const uint8_t *ottieni_password(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
@@ -564,49 +565,22 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
     return codice;
 }
 
-/*
- * Funzione: ottieni_data
- * ----------------------
- *
- * Restituisce la struttura Data associata a un utente.
- *
- * Implementazione:
- *    Verifica che il puntatore utente sia valido e restituisce il campo data.
- *
- * Parametri:
- *    utente: puntatore alla struttura Utente da cui ottenere i dati
- *
- * Pre-condizione:
- *    utente deve essere una struttura valida
- *
- * Post-condizione:
- *    viene restituito il campo data dell'utente,
- *    oppure NULL se l'utente non è valido
- *
- * Ritorna:
- *    puntatore alla struttura Data, o NULL in caso di errore
- *
- * Side-effect:
- *    nessuno
- */
-Data ottieni_data(Utente utente){
-  if (utente == NULL) {
-    return NULL;
-  }
+unsigned int ottieni_numero_prenotazioni_utente(Utente u){
+    if(u == NULL) return 0;
 
-  return utente->data;
+    return ottieni_numero_prenotazioni(u->data);
 }
 
-char *utente_in_stringa(Utente utente){
+char *utente_in_stringa(const Utente utente){
     if(utente == NULL) return NULL;
-    char *tipo_utente = NULL;
+    const char *tipo_utente = NULL;
     if(ottieni_permesso(utente) == ADMIN){
         tipo_utente = mia_strdup("Admin");
     }
     else tipo_utente = mia_strdup("Cliente");
 
     size_t lunghezza = (strlen(utente->cognome) + strlen(utente->nome) + strlen(utente->email) + strlen(tipo_utente)) + 100 + 1;
-    char *buffer = malloc(sizeof(char) * lunghezza);
+    char *buffer = malloc(sizeof(const char) * lunghezza);
 
     snprintf(buffer, lunghezza, "- Nome: %s\n- Cognome: %s\n- Email: %s\n- Utente e' %s",
         utente->nome,

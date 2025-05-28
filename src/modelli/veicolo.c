@@ -52,7 +52,7 @@ struct veicolo{
  * Side-effect:
  *    alloca memoria dinamicamente per il veicolo
  */
-Veicolo crea_veicolo(char *tipo, char *targa, char *modello, char *posizione, double tariffa, Prenotazioni prenotazioni){
+Veicolo crea_veicolo(const char *tipo, const char *targa, const char *modello, const char *posizione, double tariffa, Prenotazioni prenotazioni){
     Veicolo v = malloc(sizeof(struct veicolo));
     if(v == NULL || tipo == NULL || modello == NULL || posizione == NULL ||
 	   tariffa <= 0 || strlen(targa) != NUM_CARATTERI_TARGA - 2) return NULL;
@@ -118,9 +118,9 @@ void distruggi_veicolo(Veicolo v){
  * Post-condizione:
  *	restituisce una stringa contenente la targa del veicolo
  */
-char *ottieni_targa(Veicolo v){
+const char *ottieni_targa(const Veicolo v){
 	if(v == NULL) return NULL;
-    return mia_strdup(v->targa);
+    return v->targa;
 }
 
 /*
@@ -147,7 +147,7 @@ char *ottieni_targa(Veicolo v){
  * Side-effect:
  * 	aggiorna il campo targa del veicolo v con il valore fornito
  */
-void imposta_targa(Veicolo v, char *targa){
+void imposta_targa(Veicolo v, const char *targa){
 	if(v == NULL || targa == NULL || strlen(targa) != NUM_CARATTERI_TARGA - 1) return;
     snprintf(v->targa, NUM_CARATTERI_TARGA, "%s", targa);
 }
@@ -174,7 +174,7 @@ void imposta_targa(Veicolo v, char *targa){
  * Ritorna:
  *	il modello del veicolo puntato da v
  */
-char* ottieni_modello(Veicolo v){
+const char* ottieni_modello(const Veicolo v){
 	if(v == NULL) return NULL;
     return mia_strdup(v->modello);
 }
@@ -203,7 +203,7 @@ char* ottieni_modello(Veicolo v){
  * Side-effect:
  * 	aggiorna il campo modello del veicolo v con il valore fornito
  */
-void imposta_modello(Veicolo v, char *modello){
+void imposta_modello(Veicolo v, const char *modello){
     if(v == NULL || modello == NULL || strlen(modello) > MAX_LUNGHEZZA_MODELLO - 1) return;
     snprintf(v->modello, MAX_LUNGHEZZA_MODELLO, "%s", modello);
 }
@@ -227,7 +227,7 @@ void imposta_modello(Veicolo v, char *modello){
  * Post-condizione:
  *	restituisce una stringa contenente la posizione del veicolo
  */
-char* ottieni_posizione(Veicolo v){
+const char* ottieni_posizione(const Veicolo v){
 	if(v == NULL) return NULL;
     return mia_strdup(v->posizione);
 }
@@ -256,7 +256,7 @@ char* ottieni_posizione(Veicolo v){
  * Side-effect:
  * 	aggiorna il campo posizione del veicolo con il valore fornito
  */
-void imposta_posizione(Veicolo v, char *posizione){
+void imposta_posizione(Veicolo v, const char *posizione){
     if(v == NULL || strlen(posizione) > MAX_LUNGHEZZA_POSIZIONE - 1) return;
     snprintf(v->posizione, MAX_LUNGHEZZA_POSIZIONE, "%s", posizione);
 }
@@ -280,7 +280,7 @@ void imposta_posizione(Veicolo v, char *posizione){
  * Post-condizione:
  *	restituisce un double che è la tariffa al minuto del veicolo puntato da v
  */
-double ottieni_tariffa(Veicolo v){
+double ottieni_tariffa(const Veicolo v){
     if(v == NULL) return -1;
     return v->tariffa;
 }
@@ -333,7 +333,7 @@ void imposta_tariffa(Veicolo v, double tariffa){
  * Post-condizione:
  *	restituisce l'albero contenente le prenotazioni del veicolo
  */
-Prenotazioni ottieni_prenotazioni(Veicolo v){
+Prenotazioni ottieni_prenotazioni(const Veicolo v){
     if(v == NULL) return NULL;
     return v->prenotazioni;
 }
@@ -389,7 +389,7 @@ void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
  *	restituisce una stringa contenente il tipo del veicolo
  *
  */
-char* ottieni_tipo_veicolo(Veicolo v){
+const char* ottieni_tipo_veicolo(const Veicolo v){
 	if(v == NULL) return NULL;
 	return mia_strdup(v->tipo_veicolo);
 }
@@ -418,7 +418,7 @@ char* ottieni_tipo_veicolo(Veicolo v){
  * Side-effect:
  * 	modifica il campo tipo_veicolo nella struttura veicolo
  */
-void imposta_tipo_veicolo(Veicolo v, char *tipo){
+void imposta_tipo_veicolo(Veicolo v, const char *tipo){
 	if(v == NULL || tipo == NULL || strlen(tipo) > MAX_LUNGHEZZA_TIPO - 1) return;
 	snprintf(v->tipo_veicolo, MAX_LUNGHEZZA_TIPO, "%s", tipo);
 }
@@ -444,7 +444,7 @@ void imposta_tipo_veicolo(Veicolo v, char *tipo){
  * Post-condizione:
  *	restituisce 1 se il tipo del veicolo è uguale a "tipo", altrimenti 0
  */
-Byte confronta_tipo(Veicolo v, char *tipo){
+Byte confronta_tipo(const Veicolo v, const char *tipo){
 	if(v == NULL || tipo == NULL) return -1;
 	return (strcmp(tipo, v->tipo_veicolo) == 0);
 }
@@ -533,7 +533,7 @@ Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo){
  * Post-condizione:
  *	restituisce 1 se le targhe sono uguali e 0 se sono diverse
  */
-Byte confronta_targhe(Veicolo v, char *targa){
+Byte confronta_targhe(const Veicolo v, const char *targa){
     if(v == NULL || targa == NULL || strlen(targa) != NUM_CARATTERI_TARGA - 1) return -1;
     return (strcmp(targa,v->targa) == 0);
 }
@@ -560,7 +560,7 @@ Byte confronta_targhe(Veicolo v, char *targa){
  * Post-condizione:
  * 	restituisce una stringa che contiene tutte le informazioni di un veicolo
  */
-char* veicolo_in_stringa(Veicolo v){
+char* veicolo_in_stringa(const Veicolo v){
     if(v == NULL) return NULL;
 
     int size = MAX_LUNGHEZZA_TIPO +

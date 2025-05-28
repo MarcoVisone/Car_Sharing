@@ -594,7 +594,7 @@ static void prenotazioni_in_vettore_t(struct nodo *radice, Prenotazione *result,
     if (!radice) return;
 
     prenotazioni_in_vettore_t(radice->sinistra, result, index);
-    result[*index] = radice->prenotazione;
+    result[*index] = duplica_prenotazione(radice->prenotazione);
     (*index)++;
     prenotazioni_in_vettore_t(radice->destra, result, index);
 }
@@ -916,7 +916,7 @@ Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, u
         struct nodo *temp = (struct nodo *)rimuovi_dalla_coda(q);
         if (!temp) continue; // Dovrebbe accadere solo se la coda è stata corrotta
 
-        result[i++] = temp->prenotazione; // Aggiungi la prenotazione all'array
+        result[i++] = duplica_prenotazione(temp->prenotazione); // Aggiungi la prenotazione all'array
 
         // Aggiungi i figli alla coda (se esistono)
         if (temp->sinistra) {
