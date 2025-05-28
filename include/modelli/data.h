@@ -6,8 +6,6 @@
 #ifndef DATA_H
 #define DATA_H
 
-#define ERRORE_FREQUENZA -2
-
 #include "modelli/byte.h"
 
 typedef struct prenotazione *Prenotazione;
@@ -125,49 +123,6 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
 Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
- * Funzione: ottieni_frequenza_lista
- * ---------------------------------
- *
- * Restituisce la frequenza (ad esempio il numero di prenotazioni)
- * contenuta nella struttura Data.
- *
- * Parametri:
- *    data: puntatore alla struttura Data
- *
- * Pre-condizione:
- *    data non deve essere NULL
- *
- * Ritorna:
- *    un intero che rappresenta la frequenza,
- *    oppure ERRORE_FREQUENZA in caso di errore
- *
- * Side-effect:
- *    nessuno
- */
-int ottieni_frequenza_lista(Data data);
-
-/*
- * Funzione: azzera_frequenza
- * --------------------------
- *
- * Resetta la frequenza della struttura Data a zero.
- *
- * Parametri:
- *    data: puntatore alla struttura Data
- *
- * Pre-condizione:
- *    data non deve essere NULL
- *
- * Post-condizione:
- *    la frequenza è resettata a zero
- *
- * Side-effect:
- *    modifica la struttura Data
- */
-void azzera_frequenza(Data data);
-
-
-/*
  * Funzione: ottieni_vettore_storico
  * ---------------------------------
  *
@@ -263,7 +218,5 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni);
  *    modifica della struttura Data
  */
 void imposta_storico_lista(Data data, ListaPre lista_prenotazione);
-
-void imposta_frequenza(Data data, int frequenza);
 
 #endif // DATA_H

@@ -241,7 +241,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
 	if(tabella_hash == NULL || chiave == NULL || valore == NULL) return 0;
 
 	// Limita la percentuale di collisioni ad una percentuale minore del 100%
-	double percentuale = (double)tabella_hash->numero_buckets / (double)tabella_hash->grandezza;;
+	double percentuale = (double)tabella_hash->numero_buckets / (double)tabella_hash->grandezza;
 	if(percentuale > PERCENTUALE_DI_RIEMPIMENTO){
 		ridimensiona_tabella_hash(tabella_hash);
 	}

@@ -14,7 +14,6 @@
 struct data{
   ListaPre storico;
   unsigned int numero_prenotazioni;
-  int frequenza;
 };
 
 /*
@@ -46,7 +45,6 @@ Data crea_data() {
     if (data == NULL) return NULL;
 
     data->storico = crea_lista();
-    data->frequenza = 1;
 
     return data;
 }
@@ -147,7 +145,6 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
 
     data->storico = temp;
     data->numero_prenotazioni +=1;
-    data->frequenza += 1;
 
     return temp != NULL;
 }
@@ -185,70 +182,10 @@ Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
 
     data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
 
-    data->frequenza -= 1;
     data->numero_prenotazioni -=1;
 
     return data->storico != NULL;
 }
-
-/*
- * Funzione: ottieni_frequenza_lista
- * ---------------------------------
- *
- * Restituisce la frequenza (ad esempio il numero di prenotazioni)
- * contenuta nella struttura Data.
- *
- * Implementazione:
- *    Restituisce il valore della frequenza, oppure un codice di errore se Data è NULL.
- *
- * Parametri:
- *    data: puntatore alla struttura Data
- *
- * Pre-condizione:
- *    data non deve essere NULL
- *
- * Ritorna:
- *    un intero che rappresenta la frequenza,
- *    oppure ERRORE_FREQUENZA in caso di errore
- *
- * Side-effect:
- *    nessuno
- */
-int ottieni_frequenza_lista(Data data){
-    if (data == NULL) {
-        return ERRORE_FREQUENZA;
-    }
-    return data->frequenza;
-}
-
-/*
- * Funzione: azzera_frequenza
- * --------------------------
- *
- * Resetta la frequenza della struttura Data a 1.
- *
- * Implementazione:
- *    Se Data non è NULL, imposta la frequenza a 1.
- *
- * Parametri:
- *    data: puntatore alla struttura Data
- *
- * Pre-condizione:
- *    data non deve essere NULL
- *
- * Post-condizione:
- *    la frequenza è resettata a zero
- *
- * Side-effect:
- *    modifica la struttura Data
- */
-void azzera_frequenza(Data data){
-    if (data == NULL) {
-        return;
-    }
-    data->frequenza = 1;
-}
-
 
 /*
  * Funzione: ottieni_vettore_storico
@@ -399,12 +336,4 @@ void imposta_storico_lista(Data data, ListaPre lista_prenotazione){
     }
 
     data->storico = lista_prenotazione;
-}
-
-void imposta_frequenza(Data data, int frequenza){
-    if(data == NULL){
-        return;
-    }
-
-    data->frequenza = frequenza;
 }

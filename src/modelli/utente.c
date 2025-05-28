@@ -409,32 +409,6 @@ const uint8_t *ottieni_password(const Utente utente){
 }
 
 /*
- * Funzione: ottieni_frequenza_cliente
- * -----------------------------------
- *
- * Restituisce un intero che indica la frequenza (es. numero di prenotazioni)
- * associate all'utente cliente.
- *
- * Implementazione:
- *    Restituisce la frequenza calcolata sulla struttura Data dell’utente.
- *
- * Parametri:
- *    utente: puntatore all'utente
- *
- * Pre-condizione:
- *    utente non deve essere NULL
- *
- * Post-condizione:
- *    ritorna un intero che rappresenta la frequenza
- *
- * Side-effect:
- *    nessuno
- */
-int ottieni_frequenza_cliente(Utente utente) {
-    return ottieni_frequenza_lista(utente->data);
-}
-
-/*
  * Funzione: ottieni_permesso
  * --------------------------
  *

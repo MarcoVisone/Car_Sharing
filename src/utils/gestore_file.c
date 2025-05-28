@@ -548,7 +548,7 @@ Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_
  * Salva su file le informazioni della struttura Data.
  *
  * Implementazione:
- * Scrive su file il numero di prenotazioni, la frequenza e l'intero storico
+ * Scrive su file il numero di prenotazioni e l'intero storico
  * delle prenotazioni contenuto nella struttura Data.
  *
  * Parametri:
@@ -596,7 +596,7 @@ static void salva_data(FILE *file_data, Utente u){
  * Carica da file le informazioni per ricostruire una struttura Data.
  *
  * Implementazione:
- * Legge da file il numero di prenotazioni, la frequenza e ricostruisce
+ * Legge da file il numero di prenotazioni e ricostruisce
  * lo storico delle prenotazioni. Restituisce una nuova struttura Data.
  *
  * Parametri:
@@ -689,7 +689,7 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     Byte permesso = ottieni_permesso(u);
     fwrite(&permesso, sizeof(Byte), 1, file_utente);
 
-    if (permesso == CLIENTE) { // Salva lo storico e frequenza solo se l'utente è un CLIENTE
+    if (permesso == CLIENTE) { // Salva lo storico solo se l'utente è un CLIENTE
         salva_data(file_data, u);
     }
 }

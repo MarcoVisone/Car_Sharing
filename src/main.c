@@ -285,7 +285,7 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
 
                 double sconto_totale = 0;
                 char motivo_sconto[MOTIVO_SCONTO * 2] = "";
-                Byte molto_frequente = (ottieni_frequenza_cliente(utente) % 5) == 0;
+                Byte molto_frequente = (ottieni_numero_prenotazioni_utente(utente) % 5) == 0;
                 Byte fascia_oraria = determina_fascia_oraria(inizio_intervallo(intervallo_prenotazione));
 
                 if(molto_frequente){

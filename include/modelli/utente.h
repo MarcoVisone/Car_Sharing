@@ -254,27 +254,6 @@ const char *ottieni_email(const Utente utente);
 const uint8_t *ottieni_password(const Utente utente);
 
 /*
- * Funzione: ottieni_frequenza_cliente
- * -----------------------------------
- *
- * Restituisce un intero che indica la frequenza (es. numero di prenotazioni)
- * associate all'utente cliente.
- *
- * Parametri:
- *    utente: puntatore all'utente
- *
- * Pre-condizione:
- *    utente non deve essere NULL
- *
- * Post-condizione:
- *    ritorna un intero che rappresenta la frequenza
- *
- * Side-effect:
- *    nessuno
- */
-int ottieni_frequenza_cliente(const Utente utente);
-
-/*
  * Funzione: ottieni_permesso
  * --------------------------
  *
