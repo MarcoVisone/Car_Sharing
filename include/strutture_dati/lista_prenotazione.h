@@ -100,4 +100,6 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p);
  */
 Prenotazione ottieni_prenotazione_lista(ListaPre l);
 
+ListaPre duplica_lista_prenotazioni(ListaPre l);
+
 #endif // LISTA_PRENOTAZIONE_H

@@ -136,7 +136,7 @@ ListaPre ottieni_storico_lista(Data data){
  * Side-effect:
  *    modifica la lista interna
  */
-ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
+Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
     if (data == NULL) {
         return NULL;
     }
@@ -149,7 +149,7 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
     data->numero_prenotazioni +=1;
     data->frequenza += 1;
 
-    return temp;
+    return temp != NULL;
 }
 
 /*
@@ -178,7 +178,7 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
  * Side-effect:
  *    modifica la lista interna
  */
-ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
+Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
     if (data == NULL) {
         return NULL;
     }
@@ -188,7 +188,7 @@ ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
     data->frequenza -= 1;
     data->numero_prenotazioni -=1;
 
-    return data->storico;
+    return data->storico != NULL;
 }
 
 /*
@@ -277,7 +277,7 @@ void azzera_frequenza(Data data){
  * Side-effect:
  *    allocazione dinamica di memoria
  */
- Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
+Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
     if (data == NULL || dimensione == NULL) {
         return NULL;
     }

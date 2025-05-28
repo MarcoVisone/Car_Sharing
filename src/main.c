@@ -34,14 +34,15 @@ typedef enum {
 } TipoFascia;
 
 // Dichiarazioni delle funzioni di utilità per il main
+void invio();
+TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_utente, const char *file_dati);
+TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_veicolo, const char *file_prenotazioni);
 TipoFascia determina_fascia_oraria(time_t timestamp);
 double calcola_sconto_percentuale(TipoFascia fascia);
 const char* ottieni_descrizione_fascia(TipoFascia fascia);
 void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti tabella_utenti);
 void menu_amministratore(Utente amministratore, TabellaVeicoli tabella_veicoli, TabellaUtenti tabella_utenti);
 void scelta_menu(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti);
-TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_utente, const char *file_dati);
-TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_veicolo, const char *file_prenotazioni);
 void salva_tabella_utenti(TabellaUtenti tabella_utenti, const char *file_utente, const char *file_dati);
 void salva_tabella_veicoli(TabellaVeicoli tabella_veicoli, const char *file_veicoli, const char *file_prenotazioni);
 
@@ -76,7 +77,6 @@ int main() {
 
     // --- CICLO PRINCIPALE DI ACCESSO/REGISTRAZIONE ---
     Byte scelta;
-
     do {
         scelta = benvenuto();
 
@@ -123,6 +123,12 @@ int main() {
     return 0;
 }
 
+void invio(){
+    puts("Premi invio per continuare...");
+    char c = getchar();
+    while(c != '\n') c = getchar();
+}
+
 TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_utente, const char *file_dati){
     TabellaUtenti tabella_utenti = NULL;
 
@@ -158,15 +164,15 @@ TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_v
     Veicolo *veicoli_caricati = carica_vettore_veicoli(file_veicolo, file_prenotazioni, &num_veicoli_caricati);
 
     if(veicoli_caricati == NULL){
-        tabella_veicoli = crea_tabella_utenti(grandezza);
+        tabella_veicoli = crea_tabella_veicoli(grandezza);
         return tabella_veicoli;
     }
 
     //Metto il doppio degli utenti caricati per evitare collisioni
-    tabella_veicoli = crea_tabella_utenti(num_veicoli_caricati * 2);
+    tabella_veicoli = crea_tabella_veicoli(num_veicoli_caricati * 2);
 
     if(tabella_veicoli == NULL){
-        printf("Errore caricamento !\n");
+        printf("Errore caricamento veicoli!\n");
         for(unsigned i = 0; i < num_veicoli_caricati; i++) distruggi_veicolo(veicoli_caricati[i]);
         free(veicoli_caricati);
         return NULL;
@@ -179,14 +185,6 @@ TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_v
     return tabella_veicoli;
 }
 
-void invio(){
-    puts("Premi invio per continuare...");
-    char c = getchar();
-    if(c != '\n'){
-        stdin_fflush();
-    }
-}
-
 TipoFascia determina_fascia_oraria(time_t timestamp) {
     struct tm *tm_info = localtime(&timestamp);
     int ora = tm_info->tm_hour;
@@ -197,7 +195,6 @@ TipoFascia determina_fascia_oraria(time_t timestamp) {
         return FASCIA_NORMALE;
     }
 
-    // Giorni feriali - sconti per orari meno richiesti
     if (ora >= 22 || ora < 6) {
         return FASCIA_NOTTURNA;     // Notte: poca domanda
     }
@@ -304,12 +301,11 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
                     if (strlen(motivo_sconto) > 0) {
                         strcat(motivo_sconto, " + ");
                     }
-                    char temp[100];
+                    char temp[MOTIVO_SCONTO];
                     snprintf(temp, sizeof(temp), "%s (%.0f%%)",
                              ottieni_descrizione_fascia(fascia_oraria), sconto_fascia * 100);
                     strcat(motivo_sconto, temp);
                 }
-
 
                 if (!prenota_veicolo(veicolo_selezionato, nuova_prenotazione, sconto_totale, motivo_sconto)) {
                     stampa_errore("Prenotazione annullata dall'utente o errore.");
@@ -327,7 +323,7 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
             case '3': { // Gestisci le mie prenotazioni
                 Byte codice = gestisci_le_mie_prenotazioni(ottieni_email(utente), tabella_utenti, tabella_veicoli);
                 if (codice < 0) {
-                    stampa_errore("Errore con gestione prenotazioni!\n");
+                    stampa_errore("Errore sconosciuto!");
                     invio();
                 }
                 break;

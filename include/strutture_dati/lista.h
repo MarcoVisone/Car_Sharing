@@ -134,6 +134,8 @@ Nodo ottieni_prossimo(Nodo nodo);
  */
 void imposta_prossimo(Nodo nodo, Nodo prossimo);
 
+Nodo inverti_lista(Nodo nodo);
+
 /*
  * Funzione: lista_vuota
  * ---------------------

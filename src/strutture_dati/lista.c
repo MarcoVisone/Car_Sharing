@@ -182,6 +182,21 @@ void imposta_prossimo(Nodo nodo, Nodo prossimo){
     nodo->next = prossimo;
 }
 
+Nodo inverti_lista(Nodo nodo){
+    Nodo curr = nodo;
+    Nodo prossimo = NULL;
+    Nodo prev = NULL;
+
+    while(curr != NULL){
+        prossimo = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = prossimo;
+    }
+
+    return curr;
+}
+
 /*
  * Funzione: lista_vuota
  * ---------------------

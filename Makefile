@@ -56,4 +56,4 @@ utils.o: src/utils/utils.c include/utils/utils.h
 	gcc -Wall -Wextra -std=c99 -Iinclude -c src/utils/utils.c -o utils.o
 
 clean:
-	rm -f *.o main
+	rm -f *.o car_sharing

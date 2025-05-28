@@ -120,7 +120,7 @@ void distruggi_veicolo(Veicolo v){
  */
 char *ottieni_targa(Veicolo v){
 	if(v == NULL) return NULL;
-    return v->targa;
+    return mia_strdup(v->targa);
 }
 
 /*
@@ -176,7 +176,7 @@ void imposta_targa(Veicolo v, char *targa){
  */
 char* ottieni_modello(Veicolo v){
 	if(v == NULL) return NULL;
-    return v->modello;
+    return mia_strdup(v->modello);
 }
 
 /*
@@ -229,7 +229,7 @@ void imposta_modello(Veicolo v, char *modello){
  */
 char* ottieni_posizione(Veicolo v){
 	if(v == NULL) return NULL;
-    return v->posizione;
+    return mia_strdup(v->posizione);
 }
 
 /*
@@ -391,7 +391,7 @@ void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
  */
 char* ottieni_tipo_veicolo(Veicolo v){
 	if(v == NULL) return NULL;
-	return v->tipo_veicolo;
+	return mia_strdup(v->tipo_veicolo);
 }
 
 /*

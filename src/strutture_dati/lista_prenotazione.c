@@ -172,3 +172,14 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p) {
 Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
 }
+
+ListaPre duplica_lista_prenotazioni(ListaPre l){
+    ListaPre nuova_lista = crea_lista();
+
+    while(lista_vuota(l)){
+        nuova_lista = aggiungi_nodo(ottieni_item(l), l);
+        l = ottieni_prossimo(l);
+    }
+
+    return inverti_lista(nuova_lista);
+}

@@ -133,7 +133,7 @@ void distruggi_prenotazione(Prenotazione p) {
 char *ottieni_cliente_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
 
-    return p->cliente;
+    return mia_strdup(p->cliente);
 }
 
 /*
@@ -165,7 +165,7 @@ char *ottieni_cliente_prenotazione(Prenotazione p) {
 char *ottieni_veicolo_prenotazione(Prenotazione p){
     if(p == NULL) return NULL;
 
-    return p->targa;
+    return mia_strdup(p->targa);
 }
 
 /*

@@ -9,6 +9,7 @@
 #include "modelli/data.h"
 #include "utils/utils.h"
 #include <string.h>
+#include <sys/types.h>
 
 struct utente {
     char nome[DIMENSIONE_NOME];
@@ -312,7 +313,7 @@ char *ottieni_cognome(Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return utente->cognome;
+    return mia_strdup(utente->cognome);
 }
 
 /*
@@ -340,7 +341,7 @@ char *ottieni_nome(Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return utente->nome;
+    return mia_strdup(utente->nome);
 }
 
 /*
@@ -368,7 +369,7 @@ char *ottieni_email(Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return utente->email;
+    return mia_strdup(utente->email);
 }
 
 /*
@@ -396,7 +397,14 @@ uint8_t *ottieni_password(Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return utente->password;
+
+    uint8_t *password = malloc(sizeof(uint8_t) * DIMENSIONE_PASSWORD);
+
+    for(unsigned int i = 0; i < DIMENSIONE_PASSWORD; i++){
+        password[i] = utente->password[i];
+    }
+
+    return password;
 }
 
 /*
@@ -513,7 +521,7 @@ Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione) {
         return 0;
     }
 
-    return aggiungi_a_storico_lista(utente->data, prenotazione) != NULL;
+    return aggiungi_a_storico_lista(utente->data, prenotazione);
 }
 
 /*
@@ -546,14 +554,14 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione) {
         return 0;
     }
 
-    ListaPre storico = rimuovi_da_storico_lista(utente->data, prenotazione);
+    Byte codice = rimuovi_da_storico_lista(utente->data, prenotazione);
 
-    if(!ottieni_numero_prenotazioni(utente->data) && storico == NULL){
-        imposta_storico_lista(utente->data, storico);
+    if(!ottieni_numero_prenotazioni(utente->data) && !codice){
+        imposta_storico_lista(utente->data, NULL);
         return 1;
     }
 
-    return storico != NULL;
+    return codice;
 }
 
 /*
@@ -585,6 +593,7 @@ Data ottieni_data(Utente utente){
   if (utente == NULL) {
     return NULL;
   }
+
   return utente->data;
 }
 

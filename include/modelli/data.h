@@ -8,6 +8,8 @@
 
 #define ERRORE_FREQUENZA -2
 
+#include "modelli/byte.h"
+
 typedef struct prenotazione *Prenotazione;
 typedef struct nodo *ListaPre;
 typedef struct data *Data;
@@ -96,7 +98,7 @@ ListaPre ottieni_storico_lista(Data data);
  * Side-effect:
  *    modifica la lista interna
  */
-ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
+Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
  * Funzione: rimuovi_da_storico_lista
@@ -120,7 +122,7 @@ ListaPre aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
  * Side-effect:
  *    modifica la lista interna
  */
-ListaPre rimuovi_da_storico_lista(Data data, Prenotazione prenotazione);
+Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
  * Funzione: ottieni_frequenza_lista

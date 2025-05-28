@@ -632,7 +632,7 @@ static Data carica_data(FILE *file_data, char *buffer_str){
             goto errore; // Se una prenotazione fallisce, fallisce l'intera data
         }
 
-        if (aggiungi_a_storico_lista(d, p_caricata) == NULL) {
+        if (!aggiungi_a_storico_lista(d, p_caricata)) {
             distruggi_prenotazione(p_caricata); // Libera la prenotazione se non può essere aggiunta
             goto errore;
         }
@@ -677,9 +677,10 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     if (file_utente == NULL || u == NULL) return;
 
     // Utilizzo di const char* per i getter
-    unsigned int len = strlen(ottieni_nome(u))+1;
+    char *nome = ottieni_nome(u);
+    unsigned int len = strlen(nome)+1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
-    fwrite(ottieni_nome(u), sizeof(char), len, file_utente);
+    fwrite(nome, sizeof(char), len, file_utente);
 
     len = strlen(ottieni_cognome(u))+1;
     fwrite(&len, sizeof(unsigned int), 1, file_utente);
