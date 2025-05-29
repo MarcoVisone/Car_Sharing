@@ -334,6 +334,9 @@ Veicolo interfaccia_aggiungi_veicolo(TabellaVeicoli tabella_veicoli){
  * Post-condizioni:
  * 	  restituisce 0 in caso di uscita o fallimento nella rimozione.
  *
+ * Ritorna:
+ *    un valore di tipo Byte(0)
+ *
  * Side-effects:
  *    - Input/output su console
  *    - Allocazione e deallocazione dinamica della memoria
