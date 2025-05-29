@@ -184,7 +184,7 @@ void imposta_targa(Veicolo v, const char *targa){
  */
 const char* ottieni_modello(const Veicolo v){
 	if(v == NULL) return NULL;
-    return mia_strdup(v->modello);
+    return v->modello;
 }
 
 /*
@@ -240,7 +240,7 @@ void imposta_modello(Veicolo v, const char *modello){
  */
 const char* ottieni_posizione(const Veicolo v){
 	if(v == NULL) return NULL;
-    return mia_strdup(v->posizione);
+    return v->posizione;
 }
 
 /*
@@ -409,7 +409,7 @@ void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
  */
 const char* ottieni_tipo_veicolo(const Veicolo v){
 	if(v == NULL) return NULL;
-	return mia_strdup(v->tipo_veicolo);
+	return v->tipo_veicolo;
 }
 
 /*
