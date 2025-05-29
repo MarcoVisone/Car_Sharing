@@ -781,7 +781,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
         printf("Inserisci la targa del veicolo che vuoi selezionare (per uscire digita E): ");
         ottieni_parola(targa, NUM_CARATTERI_TARGA);
 
-        if(strcmp(targa, "E") == 0) return NULL;
+        if(uscita(targa)) return NULL;
 
         Veicolo trovato = cerca_veicolo_in_tabella(tabella_veicoli, targa);
 

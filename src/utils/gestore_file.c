@@ -620,10 +620,10 @@ static void carica_data(Utente u, FILE *file_data, char *buffer_str){
         return;
     }
 
-    int numero_prenotazioni;
-    if (fread(&numero_prenotazioni, sizeof(int), 1, file_data) != 1) return;
+    unsigned int  numero_prenotazioni;
+    if (fread(&numero_prenotazioni, sizeof(numero_prenotazioni), 1, file_data) != 1) return;
 
-    for(int i = 0; i < numero_prenotazioni; i++){
+    for(unsigned int i = 0; i < numero_prenotazioni; i++){
         Prenotazione p_caricata = carica_prenotazione(file_data, buffer_str); // Passa il buffer
         if (p_caricata == NULL) {
             return;

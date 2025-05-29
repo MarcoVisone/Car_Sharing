@@ -45,6 +45,7 @@ Data crea_data() {
     if (data == NULL) return NULL;
 
     data->storico = crea_lista();
+    data->numero_prenotazioni = 0;
 
     return data;
 }
@@ -95,10 +96,10 @@ void distruggi_data(Data data) {
  *    data non deve essere NULL
  *
  * Ritorna:
- *    la lista delle prenotazioni (ListaPre)
+ *    Una copia lista delle prenotazioni (ListaPre)
  *
  * Side-effect:
- *    nessuno
+ *    Alloca una nuova lista prenotazioni
  */
 ListaPre ottieni_storico_lista(Data data){
     if (data == NULL) {
@@ -182,7 +183,7 @@ Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
 
     data->storico = rimuovi_prenotazione_lista(data->storico, prenotazione);
 
-    data->numero_prenotazioni -=1;
+    if(data->numero_prenotazioni) data->numero_prenotazioni -=1;
 
     return data->storico != NULL;
 }

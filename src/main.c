@@ -29,8 +29,7 @@
 typedef enum {
     FASCIA_NORMALE,      // Orari di punta - nessuno sconto
     FASCIA_NOTTURNA,     // 00:00-06:00 e 22:00-23:59 - sconto per bassa domanda
-    FASCIA_MATTUTINA,    // 06:00-08:00 giorni feriali - sconto leggero
-    FASCIA_POMERIDIANA   // 14:00-17:00 giorni feriali - sconto leggero
+    FASCIA_MATTUTINA,    // 06:00-08:00  - sconto leggero
 } TipoFascia;
 
 // Dichiarazioni delle funzioni di utilità per il main
@@ -203,11 +202,7 @@ TipoFascia determina_fascia_oraria(time_t timestamp) {
         return FASCIA_MATTUTINA;    // Prima mattina: incentivo per partenze precoci
     }
 
-    if (ora >= 14 && ora < 17) {
-        return FASCIA_POMERIDIANA;  // Primo pomeriggio: dopo pranzo, meno richiesto
-    }
-
-    // Orari 8:00-14:00 e 17:00-22:00 = orari di punta = prezzo pieno
+    //orari di punta = prezzo pieno
     return FASCIA_NORMALE;
 }
 
@@ -215,7 +210,6 @@ double calcola_sconto_percentuale(TipoFascia fascia) {
     switch (fascia) {
         case FASCIA_NOTTURNA:     return 0.15;  // 15% sconto - molto meno richiesta
         case FASCIA_MATTUTINA:    return 0.10;  // 10% sconto - incentivo mattutino
-        case FASCIA_POMERIDIANA:  return 0.05;  // 5% sconto - pomeriggio tranquillo
         case FASCIA_NORMALE:
         default:                  return 0.0;   // Nessuno sconto - orari normali/di punta
     }
@@ -225,7 +219,6 @@ const char* ottieni_descrizione_fascia(TipoFascia fascia) {
     switch (fascia) {
         case FASCIA_NOTTURNA:     return "Sconto notturno";
         case FASCIA_MATTUTINA:    return "Sconto mattutino";
-        case FASCIA_POMERIDIANA:  return "Sconto pomeridiano";
         case FASCIA_NORMALE:
         default:                  return "Nessuno";
     }
@@ -285,7 +278,13 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
 
                 double sconto_totale = 0;
                 char motivo_sconto[MOTIVO_SCONTO * 2] = "";
-                Byte molto_frequente = (ottieni_numero_prenotazioni_utente(utente) % 5) == 0;
+
+                /*Se il numero di prenotazioni è 0 allora nessun premio frequenza!*/
+                Byte molto_frequente = 0;
+                printf("%d\n",ottieni_numero_prenotazioni_utente(utente));
+                if(ottieni_numero_prenotazioni_utente(utente))
+                    molto_frequente = (ottieni_numero_prenotazioni_utente(utente) % 5) == 0;
+
                 Byte fascia_oraria = determina_fascia_oraria(inizio_intervallo(intervallo_prenotazione));
 
                 if(molto_frequente){
