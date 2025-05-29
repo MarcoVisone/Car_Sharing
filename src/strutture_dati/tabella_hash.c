@@ -40,13 +40,16 @@ struct tabella_hash{
  *    - Restituisce il valore finale di hash.
  *
  * Parametri:
- *    str: stringa di input di cui calcolare l'hash
+ *    str: stringa costante di input di cui calcolare l'hash
  *
  * Pre-condizioni:
  *    str: non deve essere NULL
  *
  * Post-condizioni:
- *    restituisce un numero intero non negativo che rappresenta il valore hash della stringa
+ *    restituisce un numero che rappresenta il valore hash della stringa
+ *
+ * Ritorna:
+ *    un intero non negativo
  */
 static unsigned long djb2_hash(const char *str) {
     unsigned long hash = 5381;
@@ -74,8 +77,11 @@ static unsigned long djb2_hash(const char *str) {
  *    grandezza: deve essere maggiore di 0
  *
  * Post-condizioni:
- *    restituisce un puntatore a una nuova struttura TabellaHash se l'allocazione è riuscita,
+ *    restituisce una nuova TabellaHash se l'allocazione è riuscita,
  *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore a una nuova struttura TabellaHash o NULL
  *
  * Side-effect:
  *   alloca memoria dinamicamente per la tabella hash e i suoi bucket
@@ -132,14 +138,18 @@ TabellaHash nuova_tabella_hash(const unsigned int grandezza){
 void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valore)(void *)){
 	if(tabella_hash == NULL) return;
 
+    // Scorre tutti i bucket della tabella e libera ogni nodo e il relativo valore
 	for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
 		Nodo curr = tabella_hash->buckets[i];
 		while(!lista_vuota(curr)){
 		    Nodo temp = ottieni_prossimo(curr);
 			struct item *item = (struct item *)ottieni_item(curr);
 			if(!item) continue;
+
 			if(item->chiave) free(item->chiave);
+
 			if(item->valore) funzione_distruggi_valore(item->valore);
+
 			free(item);
 			free(curr);
 			curr = temp;
@@ -183,10 +193,12 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
 
     if (nuovi_buckets == NULL) return;
 
+    // Inizializza ogni nuovo bucket con una lista vuota
     for (unsigned int j = 0; j < nuova_grandezza; j++) {
         nuovi_buckets[j] = crea_lista();
     }
 
+    // Reinserisce tutti gli elementi esistenti nei nuovi bucket calcolando il nuovo indice
     for (unsigned int i = 0; i < tabella_hash->grandezza; i++) {
         Nodo curr = tabella_hash->buckets[i];
         while (!lista_vuota(curr)) {
@@ -223,7 +235,7 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
  *
  * Parametri:
  *    tabella_hash: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave dell'elemento
+ *    chiave: stringa costante contenente la chiave dell'elemento
  *    valore: puntatore al valore da associare alla chiave
  *
  * Pre-condizioni:
@@ -233,6 +245,9 @@ static void ridimensiona_tabella_hash(TabellaHash tabella_hash){
  *
  * Post-condizioni:
  *    restituisce 1 se l'inserimento è avvenuto con successo, 0 in caso di errore
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
  *    modifica la tabella hash aggiungendo un nuovo elemento e ridimensiona la tabella se necessario
@@ -251,6 +266,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
 	Nodo lista = tabella_hash->buckets[indice];
 	Nodo i;
 
+    // Verifica se la chiave è già presente nella lista e se lo è restituisce 0
 	for(i = lista; !lista_vuota(i); i = ottieni_prossimo(i)){
 		struct item *nuovo_item = (struct item *)ottieni_item(i);
 		if(strcmp(nuovo_item->chiave, chiave) == 0){
@@ -287,7 +303,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
  *
  * Parametri:
  *    tabella_utenti: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave dell'elemento da rimuovere
+ *    chiave: stringa costante contenente la chiave dell'elemento da rimuovere
  *    funzione_distruggi_valore: funzione da applicare al valore per liberare la memoria associata
  *
  * Pre-condizioni:
@@ -297,6 +313,9 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
  * Post-condizioni:
  *    restituisce 1 se la rimozione ha avuto successo, 0 se la chiave non è presente
  *    o se si verifica un errore
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
  *    - modifica la tabella hash rimuovendo l'elemento associato alla chiave
@@ -350,7 +369,7 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, const char *chiave, void (
  *
  * Parametri:
  *    tabella_hash: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave da cercare
+ *    chiave: stringa costante contenente la chiave da cercare
  *
  * Pre-condizioni:
  *    tabella_hash: non deve essere NULL
@@ -359,6 +378,9 @@ Byte cancella_dalla_tabella(TabellaHash tabella_hash, const char *chiave, void (
  * Post-condizioni:
  *    Se la chiave è presente, restituisce il puntatore al valore associato;
  *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore generico o NULL
  */
 const void *cerca_in_tabella(const TabellaHash tabella_hash, const char *chiave){
 	if(tabella_hash == NULL || chiave == NULL) return NULL;
@@ -366,6 +388,7 @@ const void *cerca_in_tabella(const TabellaHash tabella_hash, const char *chiave)
 	unsigned long indice = djb2_hash(chiave) % tabella_hash->grandezza;
 	Nodo curr = tabella_hash->buckets[indice];
 
+    // Scorre la lista del bucket alla ricerca dell'item con la chiave corrispondente
 	while(!lista_vuota(curr)){
 		struct item *item = (struct item *)ottieni_item(curr);
 		if(strcmp(item->chiave, chiave) == 0){
@@ -401,6 +424,9 @@ const void *cerca_in_tabella(const TabellaHash tabella_hash, const char *chiave)
  *    restituisce un array di puntatori ai valori presenti nella tabella hash,
  *    oppure NULL se ci sono errori o la tabella è vuota.
  *
+ * Ritorna:
+ *    un array di puntatori generico o NULL
+ *
  * Side-effect:
  *    alloca dinamicamente memoria per il vettore risultante
  */
@@ -414,8 +440,13 @@ void **ottieni_vettore(const TabellaHash tabella_hash, unsigned int *dimensione)
 
     unsigned int n = 0;
 
+    // Scorre tutti i bucket della tabella hash per accedere a tutte le liste di nodi
     for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
         Nodo curr = tabella_hash->buckets[i];
+
+        /* Scorre tutti i nodi nella lista del bucket corrente,
+           estrae il valore da ogni nodo e lo inserisce nel vettore
+		 */
         while(!lista_vuota(curr)){
             struct item *item = (struct item *)ottieni_item(curr);
             vettore[n++] = item->valore;

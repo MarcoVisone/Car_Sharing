@@ -27,6 +27,12 @@ struct veicolo{
  * Crea un nuovo veicolo con targa, modello, posizione,
  * tariffa e prenotazioni associate
  *
+ * Implementazione:
+ *    - Alloca memoria per un nuovo veicolo.
+ *    - Verifica validità dei parametri (non NULL, lunghezza targa, tariffa > 0).
+ *    - Copia i dati nei campi della struttura.
+ *    - Restituisce il veicolo creato o NULL in caso di errore.
+ *
  * Parametri:
  *    tipo: stringa costante che rappresenta il tipo del veicolo
  *    targa: stringa costante che rappresenta la targa del veicolo
@@ -130,6 +136,10 @@ const char *ottieni_targa(const Veicolo v){
  * -----------------------
  *
  * Imposta la targa nel veicolo puntato da v
+ *
+ * Implementazione:
+ *    - Verifica la validità dei parametri (v e targa non NULL, lunghezza targa corretta).
+ *    - Se validi, copia la targa nel campo corrispondente del veicolo.
  *
  * Parametri:
  *	   v: puntatore ad un veicolo
