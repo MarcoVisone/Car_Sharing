@@ -112,8 +112,10 @@ Prenotazione ottieni_prenotazione_lista(ListaPre l);
  * - `l` è una lista valida (può essere vuota).
  *
  * Post-condizioni:
- * - Restituisce una nuova lista allocata dinamicamente con gli stessi elementi di `l`
- *   nell'ordine originale.
+ * - La lista duplicata contiene gli stessi elementi di `l` nell'ordine originale.
+ *
+ * Ritorna:
+ * - Una nuova lista allocata dinamicamente con gli stessi elementi di `l`.
  *
  * Side-effect:
  * - Alloca memoria per la nuova lista e i suoi nodi.

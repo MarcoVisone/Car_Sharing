@@ -187,7 +187,6 @@ Prenotazione ottieni_prenotazione_lista(ListaPre l){
  *   - Avanza al nodo successivo con `ottieni_prossimo`.
  * - Al termine, la lista duplicata `nuova_lista` è in ordine inverso rispetto all'originale,
  *   quindi viene invertita tramite la funzione `inverti_lista` per mantenere l'ordine originale.
- * - Restituisce la lista duplicata invertita.
  *
  * Parametri:
  * l: lista di prenotazioni da duplicare.
@@ -196,8 +195,10 @@ Prenotazione ottieni_prenotazione_lista(ListaPre l){
  * - `l` è una lista valida (può essere vuota).
  *
  * Post-condizioni:
- * - Restituisce una nuova lista allocata dinamicamente con gli stessi elementi di `l`
- *   nell'ordine originale.
+ * - La lista duplicata contiene gli stessi elementi di `l` nell'ordine originale.
+ *
+ * Ritorna:
+ * - Una nuova lista allocata dinamicamente con gli stessi elementi di `l`.
  *
  * Side-effect:
  * - Alloca memoria per la nuova lista e i suoi nodi.
