@@ -588,6 +588,9 @@ Utente menu_accesso(TabellaUtenti tabella_utenti){
  *    - Restituisce un puntatore a Intervallo se l’input è corretto
  *    - Restituisce NULL se l’utente decide di uscire o se non è stato possibile creare un intervallo valido
  *
+ * Ritorna:
+ *    un puntatore a Intervallo o NULL
+ *
  * Side-effect:
  *    - Legge input da tastiera
  *    - Stampa messaggi
@@ -754,6 +757,9 @@ static void stampa_veicolo(const Veicolo v, Intervallo i) {
  *    se l’utente seleziona un veicolo disponibile, restituisce un puntatore al veicolo selezionato.
  *    Se l’utente esce o non ci sono veicoli disponibili, restituisce NULL.
  *
+ * Ritorna:
+ *    un puntatore ad un veicolo o NULL
+ *
  * Side-effect:
  *    Stampa a video, acquisizione input utente
  */
@@ -828,6 +834,9 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
  *
  * Post-condizione:
  *    restituisce 1 se la prenotazione è confermata, altrimenti 0
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
  *    stampa a video, acquisizione input utente, allocazione e deallocazione di memoria
