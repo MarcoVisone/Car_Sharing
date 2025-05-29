@@ -442,7 +442,7 @@ int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
         fprintf(file_output, "%s", nuova_linea);
         fprintf(file_output, "Prenotazioni di %s:\n", linea);
         ListaPre testa = ottieni_storico_utente(u);
-        for(ListaPre lista = testa; !lista_vuota(lista);){
+        for(ListaPre lista = testa; !lista_vuota(lista); lista = ottieni_prossimo(lista)){
             Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(ottieni_item(lista)));
             if(v == NULL){
                 fclose(file_input);
@@ -460,15 +460,10 @@ int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
                    tab,
                    tab,
                    ottieni_costo_prenotazione(ottieni_item(lista)));
-
-            ListaPre temp = ottieni_prossimo(lista);
             free(intervallo_stringa);
-            distruggi_prenotazione(ottieni_item(lista));
-            distruggi_nodo(lista, NULL);
-
-            lista = temp;
         }
         nuova_linea = "\n";
+        distruggi_lista_prenotazione(testa);
     }
 
     fclose(file_input);
