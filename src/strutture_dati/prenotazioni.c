@@ -944,37 +944,35 @@ Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, u
 /*
  * Funzione: ottieni_intervallo_disponibile_t
  * ------------------------------------------
- * Restituisce un intervallo disponibile all'interno di un intervallo dato `i`,
- * verificando eventuali sovrapposizioni con prenotazioni contenute in un albero binario
- * radicato in `radice`. Se si sovrappone con l'intervallo della prenotazione corrente,
- * restituisce il gap disponibile prima della prenotazione oppure NULL se non esiste.
+ * Cerca un intervallo di tempo disponibile all'interno di un intervallo dato `i`
+ * scorrendo ricorsivamente un albero binario di prenotazioni.
  *
  * Implementazione:
- * - Verifica se la radice è NULL, in tal caso duplica e restituisce l'intervallo `i`.
- * - Ottiene l'intervallo della prenotazione memorizzata nel nodo `radice`.
- * - Calcola il tempo di inizio della ricerca come inizio dell'intervallo `i`.
- * - Se l'intervallo della prenotazione e l'intervallo `i` si sovrappongono:
- *   - Se l'inizio dell'intervallo prenotazione è dopo l'inizio della ricerca,
- *     crea e restituisce un intervallo che va dall'inizio di `i` fino all'inizio
- *     della prenotazione (gap disponibile).
- *   - Altrimenti restituisce NULL, indicando assenza di gap disponibile.
+ * - Se il nodo radice è NULL, restituisce una copia dell'intervallo `i`.
+ * - Ottiene l'intervallo della prenotazione corrente dal nodo radice.
+ * - Calcola il tempo di inizio dell'intervallo `i` (start_cerca).
+ * - Se gli intervalli `cur` e `i` si sovrappongono:
+ *   - Se l'inizio di `cur` è successivo a `start_cerca`, restituisce un intervallo
+ *     che va da `start_cerca` all'inizio di `cur`.
+ *   - Altrimenti restituisce NULL (nessun intervallo disponibile prima della sovrapposizione).
  *
  * Parametri:
- * radice: puntatore al nodo radice dell'albero binario di prenotazioni.
+ * radice: puntatore al nodo corrente dell'albero di prenotazioni.
  * i: intervallo temporale da verificare per disponibilità.
  *
  * Pre-condizioni:
- * - `i` è un intervallo valido.
- * - `radice` è un puntatore a nodo valido o NULL.
+ * - `i` deve essere un intervallo valido.
  *
  * Post-condizioni:
- * - Restituisce un intervallo disponibile (gap) all'interno di `i` se trovato.
- * - Restituisce una copia di `i` se l'albero è vuoto (radice NULL).
- * - Restituisce NULL se non è disponibile alcun intervallo libero.
+ * - Restituisce un intervallo disponibile all'interno di `i` se trovato, NULL altrimenti.
+ *
+ * Ritorna:
+ * - Un intervallo disponibile come `Intervallo` (allocato dinamicamente)
+ *   o NULL se non esistono intervalli disponibili o in caso di sovrapposizioni.
  *
  * Side-effect:
- * - Può allocare memoria per l'intervallo duplicato o creato.
- * - La memoria restituita deve essere gestita dal chiamante.
+ * - Può allocare memoria per l'intervallo restituito; la gestione della memoria
+ *   è responsabilità del chiamante.
  */
 static Intervallo ottieni_intervallo_disponibile_t(struct nodo *radice, Intervallo i) {
     if (!radice)
@@ -1008,30 +1006,32 @@ static Intervallo ottieni_intervallo_disponibile_t(struct nodo *radice, Interval
 /*
  * Funzione: ottieni_intervallo_disponibile
  * ----------------------------------------
- * Restituisce un intervallo disponibile all'interno di un intervallo dato `i`
- * cercando tra le prenotazioni memorizzate in una struttura `Prenotazioni`.
+ * Verifica la disponibilità di un intervallo di tempo all'interno di una struttura
+ * di prenotazioni, restituendo un intervallo disponibile se presente.
  *
  * Implementazione:
- * - Verifica se `prenotazioni` o `i` sono NULL; in tal caso restituisce NULL.
- * - Chiama la funzione `ottieni_intervallo_disponibile_t` passando la radice
- *   dell'albero interno alle prenotazioni e l'intervallo `i`.
- * - Restituisce il risultato ottenuto dalla funzione chiamata.
+ * - Controlla che `prenotazioni` e `i` non siano NULL.
+ * - Invoca la funzione ausiliaria `ottieni_intervallo_disponibile_t` passando la radice
+ *   dell'albero delle prenotazioni e l'intervallo `i`.
  *
  * Parametri:
- * prenotazioni: struttura contenente le prenotazioni (albero binario).
+ * prenotazioni: struttura contenente l'albero delle prenotazioni.
  * i: intervallo temporale da verificare per disponibilità.
  *
  * Pre-condizioni:
- * - `prenotazioni` deve essere un puntatore valido a una struttura `Prenotazioni` o NULL.
- * - `i` deve essere un intervallo valido o NULL.
+ * - `prenotazioni` non deve essere NULL.
+ * - `i` non deve essere NULL e deve essere un intervallo valido.
  *
  * Post-condizioni:
- * - Restituisce un intervallo disponibile all'interno di `i` se trovato.
- * - Restituisce NULL se non ci sono intervalli disponibili o se input non valido.
+ * - Restituisce un intervallo disponibile all'interno di `i` se trovato, NULL altrimenti.
+ *
+ * Ritorna:
+ * - Un intervallo disponibile come `Intervallo` (allocato dinamicamente)
+ *   o NULL se non esistono intervalli disponibili o input non valido.
  *
  * Side-effect:
- * - Nessuno diretto, ma la funzione chiamata può allocare memoria.
- * - La memoria dell'intervallo restituito deve essere gestita dal chiamante.
+ * - Può allocare memoria per l'intervallo restituito; la gestione della memoria
+ *   è responsabilità del chiamante.
  */
 Intervallo ottieni_intervallo_disponibile(Prenotazioni prenotazioni, Intervallo i){
     if(prenotazioni == NULL || i == NULL){

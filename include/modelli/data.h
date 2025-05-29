@@ -15,207 +15,203 @@ typedef struct data *Data;
 /*
  * Funzione: crea_data
  * -------------------
- *
- * Crea e inizializza una nuova struttura Data.
+ * Crea e inizializza una nuova struttura Data per la gestione dello storico delle prenotazioni.
  *
  * Parametri:
- *    nessuno
+ * - Nessuno.
  *
- * Pre-condizione:
- *    nessuna
+ * Pre-condizioni:
+ * - Nessuna.
+ *
+ * Post-condizioni:
+ * - La struttura `Data` è pronta per l'uso, con lista storica vuota e contatore a zero.
  *
  * Ritorna:
- *    un nuovo oggetto Data allocato dinamicamente,
- *    NULL in caso di errore di allocazione
+ * - Puntatore alla nuova struttura `Data`, oppure NULL se l'allocazione fallisce.
  *
  * Side-effect:
- *    allocazione dinamica di memoria
+ * - Alloca memoria.
  */
 Data crea_data();
 
 /*
  * Funzione: distruggi_data
  * ------------------------
- *
- * Dealloca la memoria associata a una struttura Data,
- * liberando anche le eventuali liste interne.
+ * Dealloca la memoria occupata da una struttura `Data`, incluso il suo storico.
  *
  * Parametri:
- *    data: puntatore alla struttura Data da distruggere
+ * data: puntatore alla struttura `Data` da distruggere.
  *
- * Pre-condizione:
- *    data non deve essere NULL
+ * Pre-condizioni:
+ * - `data` deve essere un puntatore valido o NULL.
  *
- * Post-condizione:
- *    memoria liberata
+ * Post-condizioni:
+ * - La memoria associata a `data` è stata liberata.
+ *
+ * Ritorna:
+ * - Nessun valore restituito (void).
  *
  * Side-effect:
- *    deallocazione dinamica di memoria
+ * - Dealloca memoria.
  */
 void distruggi_data(Data data);
 
 /*
  * Funzione: ottieni_storico_lista
  * -------------------------------
- *
- * Restituisce la lista delle prenotazioni associate alla Data.
+ * Restituisce una copia dello storico delle prenotazioni associato a un utente.
  *
  * Parametri:
- *    data: puntatore alla struttura Data
+ * data: struttura `Data` contenente lo storico.
  *
- * Pre-condizione:
- *    data non deve essere NULL
+ * Pre-condizioni:
+ * - `data` deve essere valido.
+ *
+ * Post-condizioni:
+ * - Nessuna modifica alla struttura originale.
  *
  * Ritorna:
- *    la lista delle prenotazioni (ListaPre)
+ * - Una copia della lista delle prenotazioni, oppure NULL se errore.
  *
  * Side-effect:
- *    nessuno
+ * - Alloca memoria per la copia della lista.
  */
 ListaPre ottieni_storico_lista(Data data);
 
 /*
  * Funzione: aggiungi_a_storico_lista
  * ----------------------------------
- *
- * Aggiunge una prenotazione alla lista interna della Data.
+ * Aggiunge una prenotazione allo storico dell'utente.
  *
  * Parametri:
- *    data: puntatore alla struttura Data
- *    prenotazione: prenotazione da aggiungere
+ * data: puntatore alla struttura `Data`.
+ * prenotazione: prenotazione da aggiungere.
  *
- * Pre-condizione:
- *    data e prenotazione non devono essere NULL
+ * Pre-condizioni:
+ * - `data` e `prenotazione` devono essere validi.
  *
- * Post-condizione:
- *    la lista interna della Data è aggiornata con la nuova prenotazione
+ * Post-condizioni:
+ * - La prenotazione è stata aggiunta allo storico.
  *
  * Ritorna:
- *    la lista aggiornata con la prenotazione aggiunta
+ * - 1 se l'aggiunta è andata a buon fine, 0 altrimenti.
  *
  * Side-effect:
- *    modifica la lista interna
+ * - Modifica la lista `storico` e incrementa il contatore.
  */
 Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
  * Funzione: rimuovi_da_storico_lista
  * ----------------------------------
- *
- * Rimuove una prenotazione dalla lista interna della Data.
+ * Rimuove una prenotazione dallo storico dell'utente.
  *
  * Parametri:
- *    data: puntatore alla struttura Data
- *    prenotazione: prenotazione da rimuovere
+ * data: struttura `Data` da cui rimuovere.
+ * prenotazione: prenotazione da rimuovere.
  *
- * Pre-condizione:
- *    data e prenotazione non devono essere NULL
+ * Pre-condizioni:
+ * - `data` e `prenotazione` devono essere validi.
  *
- * Post-condizione:
- *    la lista interna della Data è aggiornata dopo la rimozione
+ * Post-condizioni:
+ * - La prenotazione viene rimossa, e il contatore aggiornato.
  *
  * Ritorna:
- *    la lista aggiornata dopo la rimozione
+ * - 1 se la lista risultante non è NULL, 0 se è NULL.
  *
  * Side-effect:
- *    modifica la lista interna
+ * - Modifica la lista e il contatore.
  */
 Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
  * Funzione: ottieni_vettore_storico
  * ---------------------------------
- *
- * Restituisce un array contenente tutte le prenotazioni presenti nello storico.
+ * Converte la lista dello storico delle prenotazioni in un array.
  *
  * Parametri:
- *    data: struttura contenente lo storico delle prenotazioni
- *    dimensione: puntatore a intero dove verrà memorizzata la dimensione del vettore
+ * data: struttura `Data` contenente lo storico.
+ * dimensione: puntatore a variabile dove scrivere la dimensione dell’array restituito.
  *
- * Pre-condizione:
- *    data deve essere una struttura valida
+ * Pre-condizioni:
+ * - `data` e `dimensione` devono essere validi.
  *
- * Post-condizione:
- *    viene restituito un vettore allocato dinamicamente contenente tutte le prenotazioni,
- *    oppure NULL se data è NULL o se l'allocazione fallisce
+ * Post-condizioni:
+ * - Viene restituito un array contenente tutte le prenotazioni.
  *
  * Ritorna:
- *    vettore di prenotazioni o NULL in caso di errore
+ * - Puntatore all’array delle prenotazioni, oppure NULL in caso di errore.
  *
  * Side-effect:
- *    allocazione dinamica di memoria
+ * - Alloca memoria per l’array restituito.
  */
 Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione);
-
 
 /*
  * Funzione: ottieni_numero_prenotazioni
  * -------------------------------------
- *
- * Restituisce il numero di prenotazioni contenute nella struttura Data.
+ * Restituisce il numero totale di prenotazioni associate a una struttura `Data`.
  *
  * Parametri:
- *    data: struttura Data da cui ottenere il numero di prenotazioni
+ * data: struttura `Data` di riferimento.
  *
- * Pre-condizione:
- *    data deve essere una struttura valida
+ * Pre-condizioni:
+ * - `data` può essere NULL.
  *
- * Post-condizione:
- *    nessuna
+ * Post-condizioni:
+ * - Nessuna modifica a `data`.
  *
  * Ritorna:
- *    numero di prenotazioni o -1 se data è NULL
+ * - Il numero di prenotazioni oppure -1 (come unsigned) se `data` è NULL.
  *
  * Side-effect:
- *    nessuno
+ * - Nessuno.
  */
 unsigned int ottieni_numero_prenotazioni(Data data);
 
 /*
  * Funzione: imposta_numero_prenotazioni
  * -------------------------------------
- *
- * Imposta il numero di prenotazioni nella struttura Data.
+ * Imposta manualmente il numero di prenotazioni in una struttura `Data`.
  *
  * Parametri:
- *    data: struttura Data su cui effettuare la modifica
- *    numero_prenotazioni: nuovo valore da assegnare
+ * data: struttura `Data` da modificare.
+ * numero_prenotazioni: valore da impostare.
  *
- * Pre-condizione:
- *    data deve essere una struttura valida
+ * Pre-condizioni:
+ * - `data` deve essere valido.
  *
- * Post-condizione:
- *    il campo numero_prenotazioni della struttura viene aggiornato
+ * Post-condizioni:
+ * - Il campo `numero_prenotazioni` viene aggiornato.
  *
  * Ritorna:
- *    nessun valore
+ * - Nessun valore restituito (void).
  *
  * Side-effect:
- *    modifica della struttura Data
+ * - Modifica lo stato della struttura.
  */
 void imposta_numero_prenotazioni(Data data, int numero_prenotazioni);
 
 /*
  * Funzione: imposta_storico_lista
  * -------------------------------
- *
- * Imposta la lista delle prenotazioni storico nella struttura Data.
+ * Imposta direttamente la lista dello storico in una struttura `Data`.
  *
  * Parametri:
- *    data: struttura Data da aggiornare
- *    lista_prenotazione: nuova lista storico da assegnare
+ * data: struttura `Data` da modificare.
+ * lista_prenotazione: lista da assegnare al campo `storico`.
  *
- * Pre-condizione:
- *    data deve essere una struttura valida
+ * Pre-condizioni:
+ * - `data` deve essere valido.
  *
- * Post-condizione:
- *    il campo storico della struttura viene aggiornato
+ * Post-condizioni:
+ * - Il campo `storico` della struttura viene aggiornato.
  *
  * Ritorna:
- *    nessun valore
+ * - Nessun valore restituito (void).
  *
  * Side-effect:
- *    modifica della struttura Data
+ * - Modifica la lista associata.
  */
 void imposta_storico_lista(Data data, ListaPre lista_prenotazione);
 

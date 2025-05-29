@@ -190,24 +190,27 @@ Prenotazione *ottieni_vettore_prenotazioni_per_file(Prenotazioni prenotazioni, u
 /*
  * Funzione: ottieni_intervallo_disponibile
  * ----------------------------------------
- * Restituisce un intervallo disponibile all'interno di un intervallo dato `i`
- * cercando tra le prenotazioni memorizzate in una struttura `Prenotazioni`.
+ * Verifica la disponibilità di un intervallo di tempo all'interno di una struttura
+ * di prenotazioni, restituendo un intervallo disponibile se presente.
  *
  * Parametri:
- * prenotazioni: struttura contenente le prenotazioni (albero binario).
+ * prenotazioni: struttura contenente l'albero delle prenotazioni.
  * i: intervallo temporale da verificare per disponibilità.
  *
  * Pre-condizioni:
- * - `prenotazioni` deve essere un puntatore valido a una struttura `Prenotazioni` o NULL.
- * - `i` deve essere un intervallo valido o NULL.
+ * - `prenotazioni` non deve essere NULL.
+ * - `i` non deve essere NULL e deve essere un intervallo valido.
  *
  * Post-condizioni:
- * - Restituisce un intervallo disponibile all'interno di `i` se trovato.
- * - Restituisce NULL se non ci sono intervalli disponibili o se input non valido.
+ * - Restituisce un intervallo disponibile all'interno di `i` se trovato, NULL altrimenti.
+ *
+ * Ritorna:
+ * - Un intervallo disponibile come `Intervallo` (allocato dinamicamente)
+ *   o NULL se non esistono intervalli disponibili o input non valido.
  *
  * Side-effect:
- * - Nessuno diretto, ma la funzione chiamata può allocare memoria.
- * - La memoria dell'intervallo restituito deve essere gestita dal chiamante.
+ * - Può allocare memoria per l'intervallo restituito; la gestione della memoria
+ *   è responsabilità del chiamante.
  */
 Intervallo ottieni_intervallo_disponibile(Prenotazioni prenotazioni, Intervallo i);
 

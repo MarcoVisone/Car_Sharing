@@ -15,65 +15,69 @@ typedef struct utente *Utente;
 /*
  * Funzione: crea_tabella_utenti
  * -----------------------------
- *
- * crea una nuova tabella hash per la memorizzazione degli utenti,
- * con la dimensione specificata
+ * Inizializza una nuova tabella hash per la gestione degli utenti,
+ * con una dimensione specificata.
  *
  * Parametri:
- *    grandezza: dimensione iniziale della tabella
+ * grandezza: numero di bucket della tabella hash.
  *
- * Pre-condizione:
- *    nessuna
+ * Pre-condizioni:
+ * - `grandezza` deve essere maggiore di 0.
  *
- * Post-condizione:
- *    viene restituito un nuovo oggetto TabellaUtenti allocato dinamicamente
- *    oppure NULL se l'allocazione fallisce
+ * Post-condizioni:
+ * - La tabella hash viene creata e pronta per essere utilizzata.
+ *
+ * Ritorna:
+ * - Un puntatore alla nuova tabella hash.
  *
  * Side-effect:
- *    allocazione dinamica di memoria
+ * - Alloca memoria per la nuova tabella.
  */
 TabellaUtenti crea_tabella_utenti(unsigned int grandezza);
 
 /*
  * Funzione: distruggi_tabella_utenti
  * ----------------------------------
- *
- * dealloca la memoria associata alla tabella hash degli utenti,
- * liberando tutte le strutture interne
+ * Distrugge la tabella hash contenente gli utenti, deallocando memoria.
  *
  * Parametri:
- *    tabella_utenti: puntatore alla tabella da distruggere
+ * tabella_utenti: la tabella da distruggere.
  *
- * Pre-condizione:
- *    tabella_utenti non deve essere NULL
+ * Pre-condizioni:
+ * - `tabella_utenti` deve essere valida o NULL.
  *
- * Post-condizione:
- *    la memoria occupata dalla tabella e dalle strutture interne è liberata
+ * Post-condizioni:
+ * - Tutti gli utenti nella tabella vengono distrutti.
+ * - La memoria della tabella viene liberata.
+ *
+ * Ritorna:
+ * - Nessun valore restituito (void).
  *
  * Side-effect:
- *    deallocazione dinamica di memoria
+ * - Dealloca memoria per la tabella e i suoi contenuti.
  */
 void distruggi_tabella_utenti(TabellaUtenti tabella_utenti);
 
 /*
  * Funzione: aggiungi_utente_in_tabella
  * ------------------------------------
- *
- * inserisce un utente nella tabella hash
+ * Inserisce un nuovo utente nella tabella hash.
  *
  * Parametri:
- *    tabella_utenti: puntatore alla tabella hash
- *    utente: puntatore all'utente da aggiungere
+ * tabella_utenti: la tabella dove inserire l’utente.
+ * utente: il puntatore all’oggetto utente da inserire.
  *
- * Pre-condizione:
- *    tabella_utenti e utente non devono essere NULL
+ * Pre-condizioni:
+ * - `tabella_utenti` e `utente` devono essere validi.
  *
- * Post-condizione:
- *    ritorna Byte (1) se l'inserimento ha avuto successo,
- *    0 in caso di fallimento (es. utente già presente o errore di allocazione)
+ * Post-condizioni:
+ * - L’utente è presente nella tabella.
+ *
+ * Ritorna:
+ * - 1 in caso di successo, 0 in caso di errore.
  *
  * Side-effect:
- *    modifica la tabella hash aggiungendo un nuovo utente
+ * - La tabella viene modificata.
  */
 Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente);
 
@@ -102,47 +106,47 @@ Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, const char *email);
 /*
  * Funzione: rimuovi_utente_in_tabella
  * -----------------------------------
- *
- * rimuove un utente dalla tabella hash dato l'indirizzo email
+ * Rimuove un utente dalla tabella hash tramite la sua email.
  *
  * Parametri:
- *    tabella_utenti: puntatore alla tabella hash
- *    email: stringa contenente l'email dell'utente da rimuovere
+ * tabella_utenti: la tabella da cui rimuovere l’utente.
+ * email: la chiave identificativa dell’utente.
  *
- * Pre-condizione:
- *    tabella_utenti e email non devono essere NULL
+ * Pre-condizioni:
+ * - `tabella_utenti` e `email` devono essere validi.
  *
- * Post-condizione:
- *    ritorna Byte (1) se la rimozione ha avuto successo,
- *    0 se l'utente non è stato trovato o in caso di errore
+ * Post-condizioni:
+ * - L’utente viene rimosso dalla tabella.
+ *
+ * Ritorna:
+ * - 1 in caso di successo, 0 se la rimozione fallisce.
  *
  * Side-effect:
- *    modifica la tabella hash rimuovendo l'utente specificato
+ * - Dealloca memoria per l’utente rimosso.
  */
 Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email);
 
 /*
  * Funzione: carica_utenti
- * ------------------------
- *
- * carica un insieme di utenti in una tabella hash
+ * -----------------------
+ * Carica una serie di utenti in una tabella hash.
  *
  * Parametri:
- *    tabella_utenti: puntatore alla tabella hash in cui inserire i utenti
- *    utente: array di puntatori a utenti da caricare
- *    dimensione: numero di utenti presenti nell'array
+ * tabella_utenti: la tabella in cui caricare gli utenti.
+ * utente: array di puntatori a oggetti `Utente`.
+ * dimensione: numero di elementi nell’array.
  *
  * Pre-condizioni:
- *    - tabella_utenti: non deve essere NULL
- *    - utente: non deve essere NULL
- *    - dimensione: deve essere maggiore di 0
+ * - `tabella_utenti`, `utente` devono essere validi e `dimensione > 0`.
  *
  * Post-condizioni:
- *    Non restituisce niente
+ * - Tutti gli utenti validi vengono inseriti nella tabella.
+ *
+ * Ritorna:
+ * - Nessun valore restituito (void).
  *
  * Side-effect:
- *    Gli utenti vengono inseriti nella tabella hash. Se un utente ha un'email
- *    uguale rispetto a uno già presente, l'utente non viene inserito
+ * - La tabella viene modificata e aggiornata con nuovi utenti.
  */
 void carica_utenti(TabellaUtenti tabella_utenti, Utente *utente, unsigned int dimensione);
 

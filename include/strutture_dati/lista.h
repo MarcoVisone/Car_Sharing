@@ -14,167 +14,181 @@ typedef void *Item;
 /*
  * Funzione: crea_lista
  * --------------------
- * Crea una nuova lista vuota, rappresentata da un puntatore Nodo.
+ * Crea e restituisce una lista vuota (inizialmente NULL).
  *
- * Pre-condizione:
- *    nessuna
+ * Parametri:
+ * - Nessuno.
  *
- * Post-condizione:
- *    ritorna un nodo che rappresenta la lista vuota (NULL o nodo sentinella)
+ * Pre-condizioni:
+ * - Nessuna.
+ *
+ * Post-condizioni:
+ * - Viene restituito un valore NULL, che rappresenta una lista vuota.
  *
  * Ritorna:
- *    Nodo nuovo nodo lista vuota
+ * - NULL, che rappresenta una lista vuota.
  *
  * Side-effect:
- *    nessuno
+ * - Nessuno.
  */
 Nodo crea_lista();
 
 /*
  * Funzione: distruggi_nodo
  * ------------------------
- * Dealloca la memoria del nodo passato come parametro,
- * e chiama la funzione di distruzione per l'item contenuto nel nodo.
+ * Libera la memoria occupata da un nodo, distruggendo anche l'item se indicato.
  *
  * Parametri:
- *    nodo: puntatore al nodo da distruggere
- *    funzione_distruggi_item: funzione callback per liberare la memoria
- *                            associata all'item contenuto nel nodo
+ * nodo: il nodo da distruggere.
+ * funzione_distruggi_item: puntatore a funzione che distrugge il contenuto `item`.
  *
- * Pre-condizione:
- *    nodo non deve essere NULL
- *    funzione_distruggi_item deve essere valida (non NULL)
+ * Pre-condizioni:
+ * - `funzione_distruggi_item` può essere NULL.
  *
- * Post-condizione:
- *    la memoria del nodo e dell'item è liberata
+ * Post-condizioni:
+ * - Il nodo viene deallocato.
+ * - Se la funzione è fornita, viene chiamata sull'item.
+ *
+ * Ritorna:
+ * - void
  *
  * Side-effect:
- *    deallocazione dinamica di memoria
+ * - Libera memoria associata al nodo.
+ * - Potenzialmente libera anche la memoria dell'item.
  */
 void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *));
 
 /*
  * Funzione: aggiungi_nodo
  * -----------------------
- * Inserisce un nuovo nodo contenente l'item in testa alla lista.
+ * Aggiunge un nuovo nodo in testa alla lista, contenente l'item fornito.
  *
  * Parametri:
- *    item: puntatore all'elemento da inserire nella lista
- *    nodo: puntatore al nodo testa della lista esistente
+ * item: puntatore all'oggetto da inserire nel nodo.
+ * nodo: nodo a cui collegare il nuovo nodo in testa.
  *
- * Pre-condizione:
- *    nodo e item possono essere NULL (lista vuota o elemento nullo)
+ * Pre-condizioni:
+ * - `item` deve essere valido (non NULL, se richiesto dalla logica dell'app).
  *
- * Post-condizione:
- *    ritorna il nuovo nodo testa della lista con l'item aggiunto
+ * Post-condizioni:
+ * - Un nuovo nodo viene allocato e aggiunto in testa alla lista.
  *
  * Ritorna:
- *    Nodo nuovo nodo testa della lista
+ * - Il nuovo nodo creato (non NULL).
  *
  * Side-effect:
- *    modifica la struttura della lista aggiungendo un nuovo nodo
+ * - Alloca memoria dinamica per il nuovo nodo.
  */
 Nodo aggiungi_nodo(Item item, Nodo nodo);
 
 /*
  * Funzione: ottieni_item
  * ----------------------
- * Restituisce l'item contenuto nel nodo.
+ * Restituisce il contenuto `item` di un nodo.
  *
  * Parametri:
- *    nodo: puntatore al nodo da cui estrarre l'item
+ * nodo: nodo da cui ottenere l'item.
  *
- * Pre-condizione:
- *    nodo non deve essere NULL
+ * Pre-condizioni:
+ * - `nodo` può essere NULL.
+ *
+ * Post-condizioni:
+ * - Nessuna modifica allo stato del nodo.
  *
  * Ritorna:
- *    puntatore all'item contenuto nel nodo
+ * - Puntatore all'item, oppure NULL se `nodo` è NULL.
  *
  * Side-effect:
- *    nessuno
+ * - Nessuno.
  */
 Item ottieni_item(Nodo nodo);
 
 /*
  * Funzione: ottieni_prossimo
  * --------------------------
- * Restituisce il puntatore al nodo successivo della lista.
+ * Restituisce il puntatore al nodo successivo nella lista.
  *
  * Parametri:
- *    nodo: puntatore al nodo corrente
+ * nodo: nodo da cui ottenere il successivo.
  *
- * Pre-condizione:
- *    nodo non deve essere NULL
+ * Pre-condizioni:
+ * - `nodo` può essere NULL.
+ *
+ * Post-condizioni:
+ * - Nessuna modifica allo stato del nodo.
  *
  * Ritorna:
- *    puntatore al nodo successivo, oppure NULL se non c'è un nodo successivo
+ * - Puntatore al nodo successivo, oppure NULL se `nodo` è NULL.
  *
  * Side-effect:
- *    nessuno
+ * - Nessuno.
  */
 Nodo ottieni_prossimo(Nodo nodo);
 
 /*
  * Funzione: imposta_prossimo
  * --------------------------
- * Imposta il puntatore al nodo successivo per il nodo corrente.
+ * Imposta il nodo successivo per un nodo corrente.
  *
  * Parametri:
- *    nodo: puntatore al nodo corrente
- *    prossimo: puntatore al nodo da impostare come successivo
+ * nodo: nodo da modificare.
+ * prossimo: nodo da impostare come successivo.
  *
- * Pre-condizione:
- *    nodo non deve essere NULL
+ * Pre-condizioni:
+ * - `nodo` può essere NULL.
  *
- * Post-condizione:
- *    il campo "prossimo" del nodo è modificato
+ * Post-condizioni:
+ * - Il campo `next` del nodo viene aggiornato con il nuovo valore.
+ *
+ * Ritorna:
+ * - void
  *
  * Side-effect:
- *    modifica la struttura della lista
+ * - Modifica il campo `next` della struttura `nodo`.
  */
 void imposta_prossimo(Nodo nodo, Nodo prossimo);
 
 /*
  * Funzione: inverti_lista
  * ----------------------
+ * Inverte l'ordine degli elementi di una lista collegata singolarmente.
  *
- * Inverte l'ordine degli elementi di una lista collegata
- *
- * Implementazione:
- *    Scorre la lista puntata da `nodo` cambiando il puntatore `next` di ogni
- *    nodo per farlo puntare al nodo precedente. Usa tre puntatori temporanei:
- *    `curr` per il nodo corrente, `prossimo` per il nodo successivo, e `prev`
- *    per il nodo precedente. Alla fine restituisce il nuovo nodo di testa,
- *    cioè l'ultimo nodo della lista originale.
+ * Parametri:
+ * nodo: puntatore al primo nodo della lista originale.
  *
  * Pre-condizioni:
- *    `nodo` è il puntatore al primo elemento di una lista collegata o NULL
+ * - `nodo` è il puntatore al primo elemento di una lista collegata o NULL.
  *
  * Post-condizioni:
- *    Restituisce il puntatore al nuovo primo nodo della lista invertita
+ * - La lista è invertita modificando i puntatori `next` di ciascun nodo.
+ *
+ * Ritorna:
+ * - Il puntatore al nuovo primo nodo della lista invertita (precedentemente l'ultimo nodo).
  *
  * Side-effect:
- *    Modifica i puntatori `next` dei nodi nella lista originale
+ * - Modifica i puntatori `next` dei nodi nella lista originale.
  */
 Nodo inverti_lista(Nodo nodo);
 
 /*
  * Funzione: lista_vuota
  * ---------------------
- * Verifica se la lista è vuota.
+ * Verifica se una lista (rappresentata da un nodo) è vuota.
  *
  * Parametri:
- *    lista: puntatore alla lista (nodo testa)
+ * lista: puntatore al nodo iniziale della lista.
  *
- * Pre-condizione:
- *    nessuna
+ * Pre-condizioni:
+ * - Nessuna.
+ *
+ * Post-condizioni:
+ * - Nessuna modifica alla lista.
  *
  * Ritorna:
- *    Byte 1 se la lista è vuota (NULL),
- *    0 altrimenti
+ * - 1 se la lista è vuota (lista == NULL), 0 altrimenti.
  *
  * Side-effect:
- *    nessuno
+ * - Nessuno.
  */
 Byte lista_vuota(Nodo lista);
 
