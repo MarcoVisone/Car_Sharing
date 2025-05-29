@@ -60,8 +60,55 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
  */
 Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, unsigned int *num_veicoli);
 
+/*
+ * Funzione: salva_vettore_utenti
+ * ------------------------------
+ *
+ * Salva un array di utenti su due file: uno per l'anagrafica, uno per i dati.
+ *
+ * Parametri:
+ * nome_file_utente: nome del file per l'anagrafica
+ * nome_file_data: nome del file per i dati storici
+ * vettore: array di puntatori a Utente
+ * num_utenti: numero di utenti nell'array
+ *
+ * Pre-condizione:
+ * vettore e nomi file devono essere validi
+ *
+ * Post-condizione:
+ * i dati degli utenti sono scritti nei file
+ *
+ * Ritorna:
+ * nessun valore
+ *
+ * Side-effect:
+ * apertura e scrittura su file
+ */
 void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int num_utenti);
 
+/*
+ * Funzione: carica_vettore_utenti
+ * -------------------------------
+ *
+ * Carica da due file un array di utenti.
+ *
+ * Parametri:
+ * nome_file_utente: nome del file contenente i dati anagrafici
+ * nome_file_data: nome del file contenente i dati storici
+ * num_utenti: puntatore a intero dove memorizzare il numero di utenti caricati
+ *
+ * Pre-condizione:
+ * nomi file devono essere validi; num_utenti deve essere allocato
+ *
+ * Post-condizione:
+ * il vettore contiene gli utenti caricati dai file
+ *
+ * Ritorna:
+ * un array di Utente, o NULL in caso di errore
+ *
+ * Side-effect:
+ * lettura da file, allocazione dinamica di memoria
+ */
 Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, unsigned int *num_utenti);
 
 #endif //GESTORE_FILE_H

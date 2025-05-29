@@ -134,6 +134,28 @@ Nodo ottieni_prossimo(Nodo nodo);
  */
 void imposta_prossimo(Nodo nodo, Nodo prossimo);
 
+/*
+ * Funzione: inverti_lista
+ * ----------------------
+ *
+ * Inverte l'ordine degli elementi di una lista collegata
+ *
+ * Implementazione:
+ *    Scorre la lista puntata da `nodo` cambiando il puntatore `next` di ogni
+ *    nodo per farlo puntare al nodo precedente. Usa tre puntatori temporanei:
+ *    `curr` per il nodo corrente, `prossimo` per il nodo successivo, e `prev`
+ *    per il nodo precedente. Alla fine restituisce il nuovo nodo di testa,
+ *    cioè l'ultimo nodo della lista originale.
+ *
+ * Pre-condizioni:
+ *    `nodo` è il puntatore al primo elemento di una lista collegata o NULL
+ *
+ * Post-condizioni:
+ *    Restituisce il puntatore al nuovo primo nodo della lista invertita
+ *
+ * Side-effect:
+ *    Modifica i puntatori `next` dei nodi nella lista originale
+ */
 Nodo inverti_lista(Nodo nodo);
 
 /*

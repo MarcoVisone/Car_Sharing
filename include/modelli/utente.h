@@ -339,8 +339,44 @@ Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
  */
 Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
+/*
+ * Funzione: ottieni_numero_prenotazioni_utente
+ * --------------------------------------------
+ *
+ * Restituisce il numero di prenotazioni associate a un utente
+ *
+ * Implementazione:
+ *    Verifica se il puntatore `u` è NULL. In tal caso, restituisce 0.
+ *    Altrimenti, richiama la funzione `ottieni_numero_prenotazioni`
+ *    passando la struttura `data` dell'utente e restituisce il valore ottenuto.
+ *
+ * Pre-condizioni:
+ *    `u` è un puntatore valido a una struttura `Utente`, oppure NULL
+ *
+ * Post-condizioni:
+ *    Restituisce il numero di prenotazioni associate all’utente oppure 0 se `u` è NULL
+ *
+ * Side-effect:
+ *    nessuno
+ */
 unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
 
+/*
+ * Funzione: utente_in_stringa
+ * ---------------------------
+ *
+ * Converte i dati di un utente in una stringa formattata, utile per la visualizzazione
+ *
+ * Pre-condizioni:
+ *    `utente` è un puntatore valido a una struttura `Utente` oppure NULL
+ *
+ * Post-condizioni:
+ *    Restituisce una stringa allocata dinamicamente con le informazioni dell'utente,
+ *    oppure NULL se `utente` è NULL
+ *
+ * Side-effect:
+ *    Alloca memoria dinamica che deve essere liberata manualmente con `free`
+ */
 char *utente_in_stringa(const Utente utente);
 
 #endif // UTENTE_H

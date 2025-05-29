@@ -174,6 +174,35 @@ Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
 }
 
+/*
+ * Funzione: duplica_lista_prenotazioni
+ * ------------------------------------
+ * Crea una copia duplicata di una lista di prenotazioni, preservandone l'ordine originale.
+ *
+ * Implementazione:
+ * - Crea una nuova lista vuota chiamata `nuova_lista`.
+ * - Scorre la lista `l` originale finché non è vuota:
+ *   - Per ogni nodo, ottiene l'elemento corrente con `ottieni_item` e lo aggiunge
+ *     in testa alla `nuova_lista` usando `aggiungi_nodo`.
+ *   - Avanza al nodo successivo con `ottieni_prossimo`.
+ * - Al termine, la lista duplicata `nuova_lista` è in ordine inverso rispetto all'originale,
+ *   quindi viene invertita tramite la funzione `inverti_lista` per mantenere l'ordine originale.
+ * - Restituisce la lista duplicata invertita.
+ *
+ * Parametri:
+ * l: lista di prenotazioni da duplicare.
+ *
+ * Pre-condizioni:
+ * - `l` è una lista valida (può essere vuota).
+ *
+ * Post-condizioni:
+ * - Restituisce una nuova lista allocata dinamicamente con gli stessi elementi di `l`
+ *   nell'ordine originale.
+ *
+ * Side-effect:
+ * - Alloca memoria per la nuova lista e i suoi nodi.
+ * - La memoria della lista duplicata deve essere gestita e liberata dal chiamante.
+ */
 ListaPre duplica_lista_prenotazioni(ListaPre l){
     ListaPre nuova_lista = crea_lista();
 

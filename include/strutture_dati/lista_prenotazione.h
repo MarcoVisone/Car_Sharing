@@ -100,6 +100,25 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p);
  */
 Prenotazione ottieni_prenotazione_lista(ListaPre l);
 
+/*
+ * Funzione: duplica_lista_prenotazioni
+ * ------------------------------------
+ * Crea una copia duplicata di una lista di prenotazioni, preservandone l'ordine originale.
+ *
+ * Parametri:
+ * l: lista di prenotazioni da duplicare.
+ *
+ * Pre-condizioni:
+ * - `l` è una lista valida (può essere vuota).
+ *
+ * Post-condizioni:
+ * - Restituisce una nuova lista allocata dinamicamente con gli stessi elementi di `l`
+ *   nell'ordine originale.
+ *
+ * Side-effect:
+ * - Alloca memoria per la nuova lista e i suoi nodi.
+ * - La memoria della lista duplicata deve essere gestita e liberata dal chiamante.
+ */
 ListaPre duplica_lista_prenotazioni(ListaPre l);
 
 #endif // LISTA_PRENOTAZIONE_H
