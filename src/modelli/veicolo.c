@@ -27,27 +27,26 @@ struct veicolo{
  * Crea un nuovo veicolo con targa, modello, posizione,
  * tariffa e prenotazioni associate
  *
- * Implementazione:
- *    se sono rispettate le pre-condizioni alloca dinamicamente memoria per una struttura Veicolo e inizializza
- *    i relativi campi con i valori forniti come parametri
- *
  * Parametri:
- *    tipo: stringa che rappresenta il tipo del veicolo
- *    targa: stringa che rappresenta la targa del veicolo
- *    modello: stringa che rappresenta il modello del veicolo
- *    posizione: stringa che rappresenta la posizione del veicolo
+ *    tipo: stringa costante che rappresenta il tipo del veicolo
+ *    targa: stringa costante che rappresenta la targa del veicolo
+ *    modello: stringa costante che rappresenta il modello del veicolo
+ *    posizione: stringa costante che rappresenta la posizione del veicolo
  *    tariffa: numero che rappresenta la tariffa al minuto in euro di un veicolo
  *    prenotazioni: puntatore alle prenotazioni associate ad un veicolo
  *
  * Pre-condizioni:
- *	 targa: non deve essere NULL e deve essere di 7 caratteri
- *   modello: non deve essere NULL
- *   posizione: non deve essere NULL
- *   tariffa: deve essere maggiore di 0
+ *    targa: non deve essere NULL e deve essere di 7 caratteri
+ *    modello: non deve essere NULL
+ *    posizione: non deve essere NULL
+ *    tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
- *   restituisce un nuovo oggetto Veicolo se l'allocazione è andata a buon fine,
- *   altrimenti restituisce NULL
+ *    restituisce un nuovo oggetto Veicolo se l'allocazione è andata a buon fine,
+ *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    Un oggetto di tipo Veicolo oppure NULL
  *
  * Side-effect:
  *    alloca memoria dinamicamente per il veicolo
@@ -82,16 +81,16 @@ Veicolo crea_veicolo(const char *tipo, const char *targa, const char *modello, c
  *    la memoria allocata per il veicolo e per le prenotazioni associate ad esso
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- *	non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- *	libera la memoria occupata dalla struttura Veicolo e dalle sue prenotazioni
+ *    libera la memoria occupata dalla struttura Veicolo e dalle sue prenotazioni
  */
 void distruggi_veicolo(Veicolo v){
 	if(v == NULL) return;
@@ -110,13 +109,16 @@ void distruggi_veicolo(Veicolo v){
  *    restituisce la stringa contenuta nel campo targa del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *	  v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce una stringa contenente la targa del veicolo
+ *    restituisce una stringa costante contenente la targa del veicolo
+ *
+ * Ritorna:
+ *    una stringa costante oppure NULL
  */
 const char *ottieni_targa(const Veicolo v){
 	if(v == NULL) return NULL;
@@ -129,23 +131,19 @@ const char *ottieni_targa(const Veicolo v){
  *
  * Imposta la targa nel veicolo puntato da v
  *
- * Implementazione:
- *    se le pre-condizioni sono rispettate copia la stringa targa nel campo targa della struttura veicolo
- *    con snprintf per evitare overflow di buffer, altrimenti non fa nulla
- *
  * Parametri:
- *	v: puntatore ad un veicolo
- *	targa: stringa contenente la targa da impostare
+ *	   v: puntatore ad un veicolo
+ *	   targa: stringa contenente la targa da impostare
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *	targa: non deve essere NULL e deve essere di 7 caratteri
+ *	   v: non deve essere NULL
+ *	   targa: non deve essere NULL e deve essere di 7 caratteri
  *
  * Post-condizione:
- *	non restituisce niente
+ *	   non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo targa del veicolo v con il valore fornito
+ *    aggiorna il campo targa del veicolo v con il valore fornito
  */
 void imposta_targa(Veicolo v, const char *targa){
 	if(v == NULL || targa == NULL || strlen(targa) != NUM_CARATTERI_TARGA - 1) return;
@@ -163,16 +161,16 @@ void imposta_targa(Veicolo v, const char *targa){
  *    restituisce la stringa contenuta nel campo modello del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *	   v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce una stringa contenente il modello del veicolo
+ *    restituisce il modello del veicolo puntato da v
  *
  * Ritorna:
- *	il modello del veicolo puntato da v
+ *    una stringa costante contenente il modello del veicolo
  */
 const char* ottieni_modello(const Veicolo v){
 	if(v == NULL) return NULL;
@@ -190,18 +188,18 @@ const char* ottieni_modello(const Veicolo v){
  *    con snprintf per evitare overflow di buffer, altrimenti non fa nulla
  *
  * Parametri:
- * 	v: puntatore ad un veicolo
- *	modello: stringa contenente il modello da impostare
+ *    v: puntatore ad un veicolo
+ *	  modello: stringa costante contenente il modello da impostare
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *	modello: non deve essere NULL e deve essere lungo al massimo 50 caratteri
+ *	  v: non deve essere NULL
+ *	  modello: non deve essere NULL e deve essere lungo al massimo 50 caratteri
  *
  * Post-condizione:
- *	non restituisce niente
+ *	  non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo modello del veicolo v con il valore fornito
+ * 	  aggiorna il campo modello del veicolo v con il valore fornito
  */
 void imposta_modello(Veicolo v, const char *modello){
     if(v == NULL || modello == NULL || strlen(modello) > MAX_LUNGHEZZA_MODELLO - 1) return;
@@ -219,13 +217,16 @@ void imposta_modello(Veicolo v, const char *modello){
  *    restituisce la stringa contenuta nel campo posizione del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *	  v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce una stringa contenente la posizione del veicolo
+ *	  restituisce la posizione del veicolo
+ *
+ * Ritorna:
+ *    una stringa costante
  */
 const char* ottieni_posizione(const Veicolo v){
 	if(v == NULL) return NULL;
@@ -239,22 +240,22 @@ const char* ottieni_posizione(const Veicolo v){
  * imposta la posizione del veicolo puntato da v
  *
  * Implementazione:
- *    se le pre-condizioni sono rispettate copia la stringa posizione nel campo posizione della struttura veicolo
+ *    se non ci sono errori copia la stringa posizione nel campo posizione della struttura veicolo
  *    con snprintf per evitare overflow di buffer, altrimenti non fa nulla
  *
  * Parametri:
- * 	v: puntatore ad un veicolo
- *	posizione: stringa contenente la posizione da impostare
+ *    v: puntatore ad un veicolo
+ *	  posizione: stringa costante contenente la posizione da impostare
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *	posizione: non deve essere NULL e deve essere lunga al massimo 200 caratteri
+ *	  v: non deve essere NULL
+ *	  posizione: non deve essere NULL e deve essere lunga al massimo 200 caratteri
  *
  * Post-condizione:
- *	non restituisce niente
+ *	  non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo posizione del veicolo con il valore fornito
+ * 	  aggiorna il campo posizione del veicolo con il valore fornito
  */
 void imposta_posizione(Veicolo v, const char *posizione){
     if(v == NULL || strlen(posizione) > MAX_LUNGHEZZA_POSIZIONE - 1) return;
@@ -272,13 +273,16 @@ void imposta_posizione(Veicolo v, const char *posizione){
  *    restituisce il numero contenuto nel campo tariffa del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce un double che è la tariffa al minuto del veicolo puntato da v
+ *    restituisce la tariffa al minuto del veicolo puntato da v
+ *
+ * Ritorna:
+ *    un double
  */
 double ottieni_tariffa(const Veicolo v){
     if(v == NULL) return -1;
@@ -296,18 +300,18 @@ double ottieni_tariffa(const Veicolo v){
  *    altrimenti non fa nulla
  *
  * Parametri:
- *	v: puntatore ad un veicolo
- *	tariffa: double che contiene la tariffa al minuto di un veicolo
+ *    v: puntatore ad un veicolo
+ *    tariffa: double che contiene la tariffa al minuto di un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *	tariffa: deve essere maggiore di 0
+ *    v: non deve essere NULL
+ *    tariffa: deve essere maggiore di 0
  *
  * Post-condizione:
- *	non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo tariffa del veicolo con il valore fornito
+ *    aggiorna il campo tariffa del veicolo con il valore fornito
  */
 void imposta_tariffa(Veicolo v, double tariffa){
     if(v == NULL || tariffa <= 0) return;
@@ -325,13 +329,16 @@ void imposta_tariffa(Veicolo v, double tariffa){
  *    restituisce l'albero contenente le prenotazioni del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce l'albero contenente le prenotazioni del veicolo
+ *    restituisce le prenotazioni del veicolo
+ *
+ * Ritorna:
+ *    un albero AVL
  */
 Prenotazioni ottieni_prenotazioni(const Veicolo v){
     if(v == NULL) return NULL;
@@ -351,19 +358,18 @@ Prenotazioni ottieni_prenotazioni(const Veicolo v){
  *    veicolo vengono cancellate
  *
  * Parametri:
- *	v: puntatore ad un veicolo
- *	prenotazioni: albero contenente le prenotazioni da assegnare al veicolo
+ *    v: puntatore ad un veicolo
+ *    prenotazioni: albero contenente le prenotazioni da assegnare al veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizioni:
- *	non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- * 	aggiorna il campo prenotazioni del veicolo con il puntatore fornito
+ *    aggiorna il campo prenotazioni del veicolo con il puntatore fornito
  */
-
 void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
     if(v == NULL) return;
     v->prenotazioni = prenotazioni;
@@ -380,14 +386,16 @@ void imposta_prenotazioni(Veicolo v, Prenotazioni prenotazioni){
  *    restituisce la stringa contenuta nel campo tipo_veicolo del veicolo
  *
  * Parametri:
- *	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
- * Post-condizione:
- *	restituisce una stringa contenente il tipo del veicolo
+ * Post-condizioni:
+ *    restituisce il tipo del veicolo
  *
+ * Ritorna:
+ *     una stringa costante
  */
 const char* ottieni_tipo_veicolo(const Veicolo v){
 	if(v == NULL) return NULL;
@@ -405,18 +413,18 @@ const char* ottieni_tipo_veicolo(const Veicolo v){
  *    con snprintf per evitare overflow di buffer, altrimenti non fa nulla
  *
  * Parametri:
- *	v: puntatore ad un veicolo
- *	tipo: stringa che contiene il tipo di un veicolo
+ *    v: puntatore ad un veicolo
+ *    tipo: stringa costante che contiene il tipo di un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *	tipo: non deve essere NULL e deve essere lungo al massimo 30 caratteri
+ *    v: non deve essere NULL
+ *    tipo: non deve essere NULL e deve essere lungo al massimo 30 caratteri
  *
  * Post-condizioni:
- *	non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- * 	modifica il campo tipo_veicolo nella struttura veicolo
+ *    modifica il campo tipo_veicolo nella struttura veicolo
  */
 void imposta_tipo_veicolo(Veicolo v, const char *tipo){
 	if(v == NULL || tipo == NULL || strlen(tipo) > MAX_LUNGHEZZA_TIPO - 1) return;
@@ -430,19 +438,22 @@ void imposta_tipo_veicolo(Veicolo v, const char *tipo){
  * confronta una stringa "tipo" con il tipo del veicolo puntato da v
  *
  * Implementazione:
- *    se le pre-condizioni sono rispettate e la stringa tipo è uguale al tipo del veicolo puntato da v restituisce 1,
- *    altrimenti 0. Se le pre-condizioni non sono rispettate restituisce -1
+ *    se v e tipo non sono NULL e la stringa tipo è uguale al tipo del veicolo puntato da v restituisce 1,
+ *    altrimenti 0. Se v e tipo sono NULL restituisce -1
  *
  * Parametri:
- * 	v: puntatore ad un veicolo
- * 	tipo: stringa che rappresenta il tipo di un veicolo
+ *    v: puntatore ad un veicolo
+ *    tipo: stringa che rappresenta il tipo di un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *  tipo: non deve essere NULL
+ *    v: non deve essere NULL
+ *    tipo: non deve essere NULL
  *
  * Post-condizione:
- *	restituisce 1 se il tipo del veicolo è uguale a "tipo", altrimenti 0
+ *    restituisce 1 se il tipo del veicolo è uguale a "tipo", altrimenti 0
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  */
 Byte confronta_tipo(const Veicolo v, const char *tipo){
 	if(v == NULL || tipo == NULL) return -1;
@@ -450,27 +461,30 @@ Byte confronta_tipo(const Veicolo v, const char *tipo){
 }
 
 /*
-* Funzione: aggiungi_prenotazione_veicolo
-* ---------------------------------------
-*
-* aggiunge una prenotazione al veicolo puntato da v
-*
-* Implementazione:
-*    Se il puntatore al veicolo o alla prenotazione è NULL, la funzione restituisce 0.
-*    Altrimenti, chiama la funzione aggiungi_prenotazione, che inserisce la prenotazione
-*    nell'albero delle prenotazioni del veicolo. Se l'inserimento ha successo, restituisce 1,
-*    altrimenti restituisce 0.
-*
-* Parametri:
-*	v: puntatore ad un veicolo
-*	prenotazione: puntatore alla struttura prenotazione
-*
-* Pre-condizioni:
-*	v: non deve essere NULL
-*	prenotazione: non deve essere NULL
-*
-* Post-condizione:
-*	restituisce 1 se la prenotazione è stata aggiunta, altrimenti 0
+ * Funzione: aggiungi_prenotazione_veicolo
+ * ---------------------------------------
+ *
+ * aggiunge una prenotazione al veicolo puntato da v
+ *
+ * Implementazione:
+ *    Se il puntatore al veicolo o alla prenotazione è NULL, la funzione restituisce 0.
+ *    Altrimenti, chiama la funzione aggiungi_prenotazione, che inserisce la prenotazione
+ *    nell'albero delle prenotazioni del veicolo. Se l'inserimento ha successo, restituisce 1,
+ *    altrimenti restituisce 0.
+ *
+ * Parametri:
+ *    v: puntatore ad un veicolo
+ *    prenotazione: puntatore alla struttura prenotazione
+ *
+ * Pre-condizioni:
+ *    v: non deve essere NULL
+ *    prenotazione: non deve essere NULL
+ *
+ * Post-condizione:
+ *    restituisce 1 se la prenotazione è stata aggiunta, altrimenti 0
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  */
 Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 	if(v == NULL || prenotazione == NULL) return 0;
@@ -479,27 +493,30 @@ Byte aggiungi_prenotazione_veicolo(Veicolo v, Prenotazione prenotazione){
 }
 
 /*
-* Funzione: rimuovi_prenotazione_veicolo
-* ---------------------------------------
-*
-* rimuove una prenotazione dato il suo intervallo temporale dal veicolo puntato da v
-*
-* Implementazione:
-*    se il puntatore al veicolo o alla prenotazione è NULL, la funzione restituisce 0.
-*    Altrimenti, chiama la funzione cancella_prenotazione, che cancella la prenotazione
-*    dall'albero delle prenotazioni del veicolo. Se la rimozione ha successo, restituisce 1,
-*    altrimenti restituisce 0.
-*
-* Parametri:
-*	v: puntatore ad un veicolo
-*	intervallo: puntatore alla struttura intervallo
-*
-* Pre-condizioni:
-*	v: non deve essere NULL
-*	prenotazione: non deve essere NULL
-*
-* Post-condizione:
-*	restituisce 1 se la prenotazione è stata rimossa, altrimenti 0
+ * Funzione: rimuovi_prenotazione_veicolo
+ * --------------------------------------
+ *
+ * rimuove una prenotazione dato il suo intervallo temporale dal veicolo puntato da v
+ *
+ * Implementazione:
+ *    se il puntatore al veicolo o alla prenotazione è NULL, la funzione restituisce 0.
+ *    Altrimenti, chiama la funzione cancella_prenotazione, che cancella la prenotazione
+ *    dall'albero delle prenotazioni del veicolo. Se la rimozione ha successo, restituisce 1,
+ *    altrimenti restituisce 0.
+ *
+ * Parametri:
+ *    v: puntatore ad un veicolo
+ *    intervallo: puntatore alla struttura intervallo
+ *
+ * Pre-condizioni:
+ *    v: non deve essere NULL
+ *    prenotazione: non deve essere NULL
+ *
+ * Post-condizione:
+ *    restituisce 1 se la prenotazione è stata rimossa, altrimenti 0
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  */
 Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo){
 	if(v == NULL || intervallo == NULL) return 0;
@@ -523,15 +540,18 @@ Byte rimuovi_prenotazione_veicolo(Veicolo v, Intervallo intervallo){
  *    Se sono uguali restituisce 1, altrimenti restituisce 0.
  *
  * Parametri:
- * 	v: puntatore ad un veicolo
- * 	targa: stringa che contiene la targa di un veicolo
+ *    v: puntatore ad un veicolo
+ *    targa: stringa costante che contiene la targa di un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
- *  targa: non deve essere NULL e deve essere lunga 7 caratteri
+ *    v: non deve essere NULL
+ *    targa: non deve essere NULL e deve essere lunga 7 caratteri
  *
  * Post-condizione:
- *	restituisce 1 se le targhe sono uguali e 0 se sono diverse
+ *    restituisce 1 se le targhe sono uguali e 0 se sono diverse
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  */
 Byte confronta_targhe(const Veicolo v, const char *targa){
     if(v == NULL || targa == NULL || strlen(targa) != NUM_CARATTERI_TARGA - 1) return -1;
@@ -552,13 +572,16 @@ Byte confronta_targhe(const Veicolo v, const char *targa){
  *    La stringa risultante è restituita al chiamante, che dovrà occuparsi di liberarne la memoria.
  *
  * Parametri:
- * 	v: puntatore ad un veicolo
+ *    v: puntatore ad un veicolo
  *
  * Pre-condizioni:
- *	v: non deve essere NULL
+ *    v: non deve essere NULL
  *
  * Post-condizione:
- * 	restituisce una stringa che contiene tutte le informazioni di un veicolo
+ *    restituisce una stringa che contiene tutte le informazioni di un veicolo
+ *
+ * Ritorna:
+ *    una stringa
  */
 char* veicolo_in_stringa(const Veicolo v){
     if(v == NULL) return NULL;
