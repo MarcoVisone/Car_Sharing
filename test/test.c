@@ -5,10 +5,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "modelli/intervallo.h"
 #include "modelli/prenotazione.h"
 #include "modelli/veicolo.h"
 #include "strutture_dati/lista.h"
+#include "strutture_dati/lista_prenotazione.h"
 #include "strutture_dati/prenotazioni.h"
 #include "strutture_dati/tabella_veicoli.h"
 #include "modelli/utente.h"
@@ -189,6 +191,9 @@ int main(int argc, char **argv){
 
     if(!(file_test_suite && file_utenti && file_veicoli)){
         printf("Errore apertura file utenti!\n");
+        fclose(file_test_suite);
+        fclose(file_utenti);
+        fclose(file_veicoli);
         return -1;
     }
 
@@ -196,12 +201,20 @@ int main(int argc, char **argv){
     if(txt_in_utenti(file_utenti, tabella_utenti) < 0){
         printf("Errore caricamento utenti!\n(Controlla il formato nome;cognome;email;password)");
         distruggi_tabella_utenti(tabella_utenti);
+        fclose(file_test_suite);
+        fclose(file_utenti);
+        fclose(file_veicoli);
         return -1;
     }
 
     TabellaVeicoli tabella_veicoli = crea_tabella_veicoli(numero_veicoli);
     if(txt_in_veicoli(file_veicoli, tabella_veicoli)){
-        printf("Errore caricamento utenti!\n(Controlla il formato targa;modello;posizione;tariffa;tipo)");
+        printf("Errore caricamento veicoli!\n(Controlla il formato targa;modello;posizione;tariffa;tipo)");
+        distruggi_tabella_utenti(tabella_utenti);
+        distruggi_tabella_veicoli(tabella_veicoli);
+        fclose(file_utenti);
+        fclose(file_test_suite);
+        fclose(file_veicoli);
         return -1;
     }
 
@@ -210,6 +223,10 @@ int main(int argc, char **argv){
     FILE *file_result = fopen("result.txt", "w");
     if(file_result == NULL){
         printf("Errore apertura file result.txt!\n");
+        fclose(file_utenti);
+        fclose(file_veicoli);
+        fclose(file_test_suite);
+        fclose(file_result);
         return -1;
     }
 
@@ -251,8 +268,14 @@ int main(int argc, char **argv){
         }
         int risultato = compara_file(oracle_file, output_file);
         fprintf(file_result, "%s: %sHA SUPERATO IL TEST\n", tc, risultato ? "NON " : "");
+        fclose(oracle_file);
+        fclose(output_file);
     }
-
+    distruggi_tabella_utenti(tabella_utenti);
+    distruggi_tabella_veicoli(tabella_veicoli);
+    fclose(file_test_suite);
+    fclose(file_veicoli);
+    fclose(file_utenti);
     fclose(file_result);
     return 0;
 }
@@ -335,8 +358,9 @@ int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
         Byte codice = aggiungi_prenotazione(ottieni_prenotazioni(v), pre);
         Utente u = cerca_utente_in_tabella(tabella_utenti, email);
         if(u == NULL) return -1;
-        if(codice == OK)
+        if(codice == OK){
             if(!aggiungi_a_storico_utente(u, pre)) return -1;
+        }
         fprintf(file_output, "%s %s %s %s %s",
                 codice == OCCUPATO?"OCCUPATO":"OK",
                 ottieni_cliente_prenotazione(pre),
@@ -345,6 +369,8 @@ int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
                 data_fine);
         if(codice == OK){
             fprintf(file_output," Costo=%0.2lf", ottieni_costo_prenotazione(pre));
+        }else{
+            distruggi_prenotazione(pre);
         }
         fprintf(file_output, "\n");
     }
@@ -375,7 +401,10 @@ int test_case_due(TabellaVeicoli tabella_veicoli){
         unsigned int dimensione;
         Veicolo *vettore_veicoli = ottieni_veicoli_disponibili(tabella_veicoli, i, &dimensione);
         const char *sep = "";
-        if(vettore_veicoli == NULL) return -1;
+        if(vettore_veicoli == NULL){
+            distruggi_intervallo(i);
+            return -1;
+        }
         for(unsigned int i = 0; i < dimensione; i++){
             if(vettore_veicoli[i] != NULL){
                 fprintf(file_output, "%s'%s'", sep, ottieni_targa(vettore_veicoli[i]));
@@ -383,6 +412,8 @@ int test_case_due(TabellaVeicoli tabella_veicoli){
             }
         }
         fprintf(file_output, "\n");
+        free(vettore_veicoli);
+        distruggi_intervallo(i);
     }
 
     fclose(file_input);
@@ -391,7 +422,7 @@ int test_case_due(TabellaVeicoli tabella_veicoli){
     return 1;
 }
 
-int test_case_tre(TabellaUtenti tabella_utenti, TabellaUtenti tabella_veicoli){
+int test_case_tre(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
     FILE *file_input = fopen("TC3/input.txt", "r");
     FILE *file_output = fopen("TC3/output.txt", "w");
     if(!(file_input && file_output)) return -1;
@@ -410,26 +441,36 @@ int test_case_tre(TabellaUtenti tabella_utenti, TabellaUtenti tabella_veicoli){
         if(u == NULL) return -1;
         fprintf(file_output, "%s", nuova_linea);
         fprintf(file_output, "Prenotazioni di %s:\n", linea);
-        for(ListaPre lista = ottieni_storico_utente(u); !lista_vuota(lista); lista = ottieni_prossimo(lista)){
+        ListaPre testa = ottieni_storico_utente(u);
+        for(ListaPre lista = testa; !lista_vuota(lista);){
             Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(ottieni_item(lista)));
             if(v == NULL){
                 fclose(file_input);
                 fclose(file_output);
                 return -1;
             }
+            char *intervallo_stringa = intervallo_in_stringa(ottieni_intervallo_prenotazione(ottieni_item(lista)));
             fprintf(file_output, "%s- Veicolo: %s %s\n%s%s- Data: %s\n%s%s- Costo: %0.2lf€\n",
                    tab,
                    ottieni_modello(v),
                    ottieni_targa(v),
                    tab,
                    tab,
-                   intervallo_in_stringa(ottieni_intervallo_prenotazione(ottieni_item(lista))),
+                   intervallo_stringa,
                    tab,
                    tab,
                    ottieni_costo_prenotazione(ottieni_item(lista)));
+
+            ListaPre temp = ottieni_prossimo(lista);
+            free(intervallo_stringa);
+            distruggi_prenotazione(ottieni_item(lista));
+            distruggi_nodo(lista, NULL);
+
+            lista = temp;
         }
         nuova_linea = "\n";
     }
+
     fclose(file_input);
     fclose(file_output);
     return 1;
