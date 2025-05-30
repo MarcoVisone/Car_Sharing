@@ -344,7 +344,7 @@ void imposta_data(Utente utente, Data data) {
  * - Viene restituita una nuova stringa allocata contenente il cognome.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -353,7 +353,7 @@ const char *ottieni_cognome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->cognome);
+    return utente->cognome;
 }
 
 
@@ -376,7 +376,7 @@ const char *ottieni_cognome(const Utente utente){
  * - Viene restituita una nuova stringa allocata contenente il nome.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -385,7 +385,7 @@ const char *ottieni_nome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->nome);
+    return utente->nome;
 }
 
 /*
@@ -407,7 +407,7 @@ const char *ottieni_nome(const Utente utente){
  * - Viene restituita una nuova stringa allocata contenente l'email.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -416,7 +416,7 @@ const char *ottieni_email(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->email);
+    return utente->email;
 }
 
 /*
