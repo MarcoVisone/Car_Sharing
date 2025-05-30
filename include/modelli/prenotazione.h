@@ -22,26 +22,26 @@ typedef struct prenotazione *Prenotazione;
  * Crea una nuova prenotazione con i dati specificati.
  *
  * Parametri:
- * cliente: nome del cliente che effettua la prenotazione.
- * targa: targa del veicolo associato alla prenotazione.
- * i: intervallo temporale della prenotazione.
- * costo: costo totale della prenotazione.
+ *    cliente: stringa costante contenente il nome del cliente che effettua la prenotazione.
+ *    targa: stringa costante contenente la targa del veicolo associato alla prenotazione.
+ *    i: intervallo temporale della prenotazione.
+ *    costo: costo totale della prenotazione.
  *
  * Pre-condizioni:
- * - 'cliente' deve essere una stringa non nulla.
- * - 'targa' deve essere una stringa non nulla.
- * - 'i' deve essere un intervallo valido e non nullo.
+ *    cliente: deve essere diverso da NULL
+ *    targa: deve essere diverso da NULL
+ *    i: deve essere diverso da NULL
  *
  * Post-condizioni:
- * - Restituisce un puntatore ad una nuova struttura 'Prenotazione' se l'allocazione
- * e l'inizializzazione hanno successo.
- * - Restituisce NULL in caso di errore di allocazione di memoria.
- *
- * Side-effect:
- * - Alloca memoria dinamica per la struttura 'Prenotazione' e per le stringhe 'cliente' e 'targa'.
+ *    - Restituisce un puntatore ad una nuova struttura 'Prenotazione' se l'allocazione
+ *    e l'inizializzazione hanno successo.
+ *    - Restituisce NULL in caso di errore di allocazione di memoria.
  *
  * Ritorna:
- * Un puntatore di tipo 'Prenotazione' alla prenotazione creata, o NULL in caso di fallimento.
+ *    un puntatore a prenotazione o NULL
+ *
+ * Side-effect:
+ *    - Alloca memoria dinamica per la struttura 'Prenotazione' e per le stringhe 'cliente' e 'targa'.
  */
 Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervallo i, double costo);
 
@@ -51,21 +51,18 @@ Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervall
  * Libera la memoria allocata per una data prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione da distruggere.
+ *    p: puntatore alla prenotazione da distruggere.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - La memoria associata alla prenotazione 'p' (inclusi i campi interni 'cliente', 'targa' e 'intervallo')
- * viene deallocata.
- * - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca memoria dinamica precedentemente allocata per la prenotazione e i suoi campi.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - La memoria associata alla prenotazione 'p' (inclusi i campi interni 'cliente', 'targa' e 'intervallo')
+ *    viene deallocata.
+ *    - Se 'p' è NULL, la funzione non ha alcun effetto.
  */
 void distruggi_prenotazione(Prenotazione p);
 
@@ -75,20 +72,20 @@ void distruggi_prenotazione(Prenotazione p);
  * Restituisce il nome del cliente associato alla prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
+ *    p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce una stringa contenente il nome del cliente se 'p' è valido.
- * - Restituisce NULL se 'p' è NULL.
- *
- * Side-effect:
- * - Nessuno.
+ *    - Restituisce una stringa contenente il nome del cliente se 'p' è valido.
+ *    - Restituisce NULL se 'p' è NULL.
  *
  * Ritorna:
- * Una stringa (puntatore a char) con il nome del cliente. La stringa non deve essere modificata o liberata dal chiamante.
+ *    una stringa o NULL
+ *
+ * Side-effect:
+ *    nessuno
  */
 const char *ottieni_cliente_prenotazione(Prenotazione p);
 
@@ -98,20 +95,20 @@ const char *ottieni_cliente_prenotazione(Prenotazione p);
  * Restituisce la targa del veicolo associato alla prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
+ *    p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce una stringa contenente la targa del veicolo se 'p' è valido.
- * - Restituisce NULL se 'p' è NULL.
- *
- * Side-effect:
- * - Nessuno.
+ *    - Restituisce una stringa contenente la targa del veicolo se 'p' è valido.
+ *    - Restituisce NULL se 'p' è NULL.
  *
  * Ritorna:
- * Una stringa (puntatore a char) con la targa del veicolo. La stringa non deve essere modificata o liberata dal chiamante.
+ *    una stringa o NULL
+ *
+ * Side-effect:
+ *    nessuno
  */
 const char *ottieni_veicolo_prenotazione(Prenotazione p);
 
@@ -121,20 +118,20 @@ const char *ottieni_veicolo_prenotazione(Prenotazione p);
  * Restituisce l'intervallo temporale della prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
+ *    p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce un puntatore all'intervallo temporale se 'p' è valido.
- * - Restituisce NULL se 'p' è NULL.
- *
- * Side-effect:
- * - Nessuno.
+ *    - Restituisce un puntatore all'intervallo temporale se 'p' è valido.
+ *    - Restituisce NULL se 'p' è NULL.
  *
  * Ritorna:
- * Un puntatore di tipo 'Intervallo' all'intervallo temporale della prenotazione. L'intervallo non deve essere modificato o liberato dal chiamante.
+ *    un puntatore a intervallo o NULL
+ *
+ * Side-effect:
+ *    nessuno
  */
 Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
 
@@ -144,20 +141,20 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p);
  * Restituisce il costo della prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
+ *    p: puntatore alla prenotazione.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce il valore del costo della prenotazione se 'p' è valido.
- * - Restituisce -1.0 (o un altro valore sentinella) se 'p' è NULL.
- *
- * Side-effect:
- * - Nessuno.
+ *    - Restituisce il valore del costo della prenotazione se 'p' è valido.
+ *    - Restituisce -1.0 se 'p' è NULL.
  *
  * Ritorna:
- * Un valore double rappresentante il costo della prenotazione.
+ *    un double o -1
+ *
+ * Side-effect:
+ *    nessuno
  */
 double ottieni_costo_prenotazione(Prenotazione p);
 
@@ -167,24 +164,22 @@ double ottieni_costo_prenotazione(Prenotazione p);
  * Modifica il nome del cliente associato alla prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
- * cliente: la nuova stringa contenente il nome del cliente.
+ *    p: puntatore alla prenotazione.
+ *    cliente: stringa costante contenente il nome del cliente.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'.
- * - 'cliente' deve essere una stringa non nulla.
+ *    p: non deve essere NULL
+ *    cliente: non deve essere NULL
  *
  * Post-condizioni:
- * - Il nome del cliente nella prenotazione 'p' viene aggiornato con la nuova stringa 'cliente'.
- * - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca la memoria precedentemente allocata per il vecchio nome del cliente.
- * - Alloca nuova memoria dinamica per duplicare la stringa 'cliente'.
- * - Modifica la memoria interna della struttura 'Prenotazione'.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - Il nome del cliente nella prenotazione 'p' viene aggiornato con la nuova stringa 'cliente'.
+ *    - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    - Dealloca la memoria precedentemente allocata per il vecchio nome del cliente.
+ *    - Alloca nuova memoria dinamica per duplicare la stringa 'cliente'.
+ *    - Modifica la memoria interna della struttura 'Prenotazione'.
  */
 void imposta_cliente_prenotazione(Prenotazione p, const char *cliente);
 
@@ -193,25 +188,23 @@ void imposta_cliente_prenotazione(Prenotazione p, const char *cliente);
  * -------------------------------------
  * Modifica la targa del veicolo associato alla prenotazione.
  *
- * Parametri:
- * p: puntatore alla prenotazione.
- * targa: la nuova stringa contenente la targa del veicolo.
+* Parametri:
+ *    p: puntatore alla prenotazione.
+ *    targa: stringa costante contenente la targa del veicolo.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
- * - 'targa' deve essere una stringa non nulla.
+ *    p: non deve essere NULL
+ *    targa: non deve essere NULL
  *
  * Post-condizioni:
- * - La targa del veicolo nella prenotazione 'p' viene aggiornata con la nuova stringa 'targa'.
- * - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca la memoria precedentemente allocata per la vecchia targa del veicolo.
- * - Alloca nuova memoria dinamica per duplicare la stringa 'targa'.
- * - Modifica la memoria interna della struttura 'Prenotazione'.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - La targa del veicolo nella prenotazione 'p' viene aggiornata con la nuova stringa 'targa'.
+ *    - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    - Dealloca la memoria precedentemente allocata per la vecchia targa del veicolo.
+ *    - Alloca nuova memoria dinamica per duplicare la stringa 'targa'.
+ *    - Modifica la memoria interna della struttura 'Prenotazione'.
  */
 void imposta_veicolo_prenotazione(Prenotazione p, const char *targa);
 
@@ -221,23 +214,21 @@ void imposta_veicolo_prenotazione(Prenotazione p, const char *targa);
  * Modifica l'intervallo temporale della prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
- * i: il nuovo intervallo temporale.
+ *    p: puntatore alla prenotazione.
+ *    i: il nuovo intervallo temporale.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
- * - 'i' deve essere un puntatore valido ad una struttura 'Intervallo'
+ *    p: non deve essere NULL
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
- * - L'intervallo temporale nella prenotazione 'p' viene aggiornato con il nuovo intervallo 'i'.
- * - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca la memoria precedentemente allocata per il vecchio intervallo.
- * - Modifica la memoria interna della struttura 'Prenotazione'.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - L'intervallo temporale nella prenotazione 'p' viene aggiornato con il nuovo intervallo 'i'.
+ *    - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    - Dealloca la memoria precedentemente allocata per il vecchio intervallo.
+ *    - Modifica la memoria interna della struttura 'Prenotazione'.
  */
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
 
@@ -247,21 +238,19 @@ void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i);
  * Modifica il costo della prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione.
- * costo: il nuovo valore double del costo.
+ *    p: puntatore alla prenotazione.
+ *    costo: il nuovo valore double del costo.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Il costo della prenotazione 'p' viene aggiornato con il nuovo valore 'costo'.
- * - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica la memoria interna della struttura 'Prenotazione'.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - Il costo della prenotazione 'p' viene aggiornato con il nuovo valore 'costo'.
+ *    - Se 'p' è NULL, la funzione non ha alcun effetto.
+ *    - Modifica la memoria interna della struttura 'Prenotazione'.
  */
 void imposta_costo_prenotazione(Prenotazione p, double costo);
 
@@ -271,21 +260,21 @@ void imposta_costo_prenotazione(Prenotazione p, double costo);
  * Crea una copia profonda della prenotazione data.
  *
  * Parametri:
- * p: puntatore alla prenotazione da duplicare.
+ *    p: puntatore alla prenotazione da duplicare.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce un puntatore ad una nuova struttura 'Prenotazione' che è una copia esatta di 'p' se 'p' è valido.
- * - La copia include duplicazioni delle stringhe 'cliente' e 'targa' e dell'oggetto 'Intervallo'.
- * - Restituisce NULL se 'p' è NULL o in caso di errore di allocazione di memoria durante la duplicazione.
- *
- * Side-effect:
- * - Alloca nuova memoria dinamica per la prenotazione duplicata e per le sue stringhe e l'intervallo.
+ *    - Restituisce un puntatore ad una nuova struttura 'Prenotazione' che è una copia esatta di 'p' se 'p' è valido.
+ *    - La copia include duplicazioni delle stringhe 'cliente' e 'targa' e dell'oggetto 'Intervallo'.
+ *    - Restituisce NULL se 'p' è NULL o in caso di errore di allocazione di memoria durante la duplicazione.
  *
  * Ritorna:
- * Un puntatore di tipo 'Prenotazione' alla copia della prenotazione, o NULL in caso di fallimento.
+ *    un puntatore a prenotazione o NULL
+ *
+ * Side-effect:
+ *    - Alloca nuova memoria dinamica per la prenotazione duplicata e per le sue stringhe e l'intervallo.
  */
 Prenotazione duplica_prenotazione(Prenotazione p);
 
@@ -295,21 +284,21 @@ Prenotazione duplica_prenotazione(Prenotazione p);
  * Genera una rappresentazione testuale formattata dei dati della prenotazione.
  *
  * Parametri:
- * p: puntatore alla prenotazione di cui si vuole ottenere la rappresentazione in stringa.
+ *    p: puntatore alla prenotazione di cui si vuole ottenere la rappresentazione in stringa.
  *
  * Pre-condizioni:
- * - 'p' deve essere un puntatore valido ad una struttura 'Prenotazione'
+ *    p: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce una stringa allocata dinamicamente contenente i dettagli della prenotazione (cliente, veicolo, periodo, costo).
- * - La stringa sarà formattata su più righe.
- * - Restituisce NULL se 'p' è NULL o in caso di errore di allocazione di memoria per il buffer.
- *
- * Side-effect:
- * - Alloca memoria dinamica per la stringa risultante. È responsabilità del chiamante liberare questa memoria.
+ *    - Restituisce una stringa allocata dinamicamente contenente i dettagli della prenotazione (cliente, veicolo, periodo, costo).
+ *    - La stringa sarà formattata su più righe.
+ *    - Restituisce NULL se 'p' è NULL o in caso di errore di allocazione di memoria per il buffer.
  *
  * Ritorna:
- * Una stringa (puntatore a char) con la rappresentazione testuale della prenotazione.
+ *    una stringa o NULL
+ *
+ * Side-effect:
+ *    - Alloca memoria dinamica per la stringa risultante. È responsabilità del chiamante liberare questa memoria.
  */
 char* prenotazione_in_stringa(Prenotazione p);
 
