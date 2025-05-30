@@ -11,5 +11,9 @@ Sistema di prenotazione veicoli per car sharing.
 ## 🛠️ Compilazione
 
 ```bash
+make  //Per compilare e avviare il programma
+
+```bash
+cd test
 make
-./main
+./test test_suite.txt utenti.txt veicoli.txt
