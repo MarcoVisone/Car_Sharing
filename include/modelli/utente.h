@@ -297,9 +297,6 @@ const uint8_t *ottieni_password(const Utente utente);
  *
  * Ritorna:
  *     un valore di tipo Byte
- *
- * Side-effect:
- *    - Nessuno.
  */
 Byte ottieni_permesso(Utente utente);
 
@@ -319,9 +316,6 @@ Byte ottieni_permesso(Utente utente);
  *
  * Ritorna:
  *    una lista o NULL
- *
- * Side-effect:
- *    - Nessuno.
  */
 ListaPre ottieni_storico_utente(Utente utente);
 
@@ -390,9 +384,6 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
  *
  * Ritorna:
  *    un numero intero positivo
- *
- * Side-effect:
- *    - Nessuno.
  */
 unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
 
