@@ -18,8 +18,6 @@
 #define CLIENTE 1
 #define ERRORE_PERMESSO -1
 
-typedef struct prenotazione *Prenotazione;
-typedef struct nodo *ListaPre;
 typedef struct utente *Utente;
 
 /*
@@ -414,6 +412,28 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
  * - Nessuno.
  */
 unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
+
+/*
+ * Funzione: crea_nuova_data
+ * --------------------------------------------
+ * Distrugge la vecchia data e una nuova data dentro Utente
+ *
+ * Parametri:
+ * u: puntatore all'oggetto `Utente`.
+ *
+ * Pre-condizioni:
+ * - `u` non può essere NULL.
+ *
+ * Post-condizioni:
+ * - Un valore 0 se l'operazione è andata male, 1 se è andata a buon fine
+ *
+ * Ritorna:
+ * - Un valore Byte (8 bit)
+ *
+ * Side-effect:
+ * - Viene deallocata e allocata memoria dentro al campo data.
+ */
+Byte crea_nuova_data(Utente u);
 
 /*
  * Funzione: utente_in_stringa

@@ -137,12 +137,13 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
     i = crea_intervallo(inizio, fine);
     if(i == NULL) goto errore;
     imposta_intervallo_prenotazione(p, i);
+    distruggi_intervallo(i);
 
     return p;
 
-errore:
-    distruggi_prenotazione(p);
-    return NULL;
+    errore:
+        distruggi_prenotazione(p);
+        return NULL;
 }
 
 /*
@@ -181,6 +182,7 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
 
     for (i = 0; i < size; i++) {
         salva_prenotazione(fp, p[i]);
+        distruggi_prenotazione(p[i]);
     }
 
     free(p);
@@ -617,6 +619,10 @@ static void salva_data(FILE *file_data, Utente u){
  */
 static void carica_data(Utente u, FILE *file_data, char *buffer_str){
     if(file_data == NULL || buffer_str == NULL || u == NULL){
+        return;
+    }
+
+    if(crea_nuova_data(u) <= 0){
         return;
     }
 

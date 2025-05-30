@@ -433,21 +433,17 @@ const void *cerca_in_tabella(const TabellaHash tabella_hash, const char *chiave)
 void **ottieni_vettore(const TabellaHash tabella_hash, unsigned int *dimensione){
     if(tabella_hash == NULL || dimensione == NULL) return NULL;
 
+    // Usa il numero effettivo di elementi per l'allocazione
     void **vettore = malloc(sizeof(void *) * tabella_hash->numero_buckets);
     if(vettore == NULL){
         return NULL;
     }
 
     unsigned int n = 0;
-
-    // Scorre tutti i bucket della tabella hash per accedere a tutte le liste di nodi
-    for(unsigned int i = 0; i < tabella_hash->grandezza; i++){
+    // Itera su tutti i bucket, ma controlla di non superare il numero atteso
+    for(unsigned int i = 0; i < tabella_hash->grandezza && n < tabella_hash->numero_buckets; i++){
         Nodo curr = tabella_hash->buckets[i];
-
-        /* Scorre tutti i nodi nella lista del bucket corrente,
-           estrae il valore da ogni nodo e lo inserisce nel vettore
-		 */
-        while(!lista_vuota(curr)){
+        while(!lista_vuota(curr) && n < tabella_hash->numero_buckets){
             struct item *item = (struct item *)ottieni_item(curr);
             vettore[n++] = item->valore;
             curr = ottieni_prossimo(curr);

@@ -355,6 +355,7 @@ int test_case_uno(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicoli){
 
         Intervallo i = converti_data_in_intervallo(data_inizio, data_fine);
         Prenotazione pre = crea_prenotazione(email, targa, i, calcola_costo(ottieni_tariffa(v), i));
+        distruggi_intervallo(i);
         Byte codice = aggiungi_prenotazione(ottieni_prenotazioni(v), pre);
         Utente u = cerca_utente_in_tabella(tabella_utenti, email);
         if(u == NULL) return -1;
