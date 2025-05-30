@@ -26,26 +26,26 @@ typedef struct utente *Utente;
  * Crea e inizializza un nuovo utente con le informazioni fornite.
  *
  * Parametri:
- * email: stringa contenente l'email dell'utente.
- * password: puntatore ai dati della password (array di byte).
- * nome: stringa contenente il nome dell'utente.
- * cognome: stringa contenente il cognome dell'utente.
- * permesso: valore di tipo `Byte` che rappresenta il livello di permesso dell'utente.
+ *    email: stringa costante contenente l'email dell'utente.
+ *    password: puntatore ai dati della password (array di byte).
+ *    nome: stringa costante contenente il nome dell'utente.
+ *    cognome: stringa costante contenente il cognome dell'utente.
+ *    permesso: valore di tipo `Byte` che rappresenta il livello di permesso dell'utente.
  *
  * Pre-condizioni:
- * - `email`, `nome` e `cognome` devono essere stringhe valide e non NULL.
- * - `password` può essere NULL.
+ *    email: non deve essere NULL
+ *    nome: non deve essere NULL
+ *    cognome: non deve essere NULL
  *
  * Post-condizioni:
- * - Viene creato un nuovo utente con i dati forniti.
+ *    restituisce un nuovo utente, in caso di errore restituisce NULL
  *
  * Ritorna:
- * - Un puntatore a una nuova struttura `Utente` allocata dinamicamente,
- *   o NULL in caso di errore di allocazione.
+ *    un puntatore a utente o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamica per la struttura `utente` e, opzionalmente, per la struttura dati associata.
- *   La memoria deve essere liberata dal chiamante.
+ *    - Alloca memoria dinamica per la struttura `utente` e, opzionalmente, per la struttura dati associata.
+ *    La memoria deve essere liberata dal chiamante.
  */
 Utente crea_utente(const char *email, const uint8_t *password, const char *nome, const char *cognome, Byte permesso);
 
@@ -56,19 +56,16 @@ Utente crea_utente(const char *email, const uint8_t *password, const char *nome,
  * eventuali risorse interne collegate.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da deallocare.
+ *    utente: puntatore all'oggetto `Utente` da deallocare.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL (in tal caso la funzione non fa nulla).
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Tutta la memoria associata all'utente e alle sue risorse interne è liberata.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Libera memoria dinamica associata all'utente e alle sue strutture interne.
+ *    - Tutta la memoria associata all'utente e alle sue risorse interne è liberata.
  */
 void distruggi_utente(Utente utente);
 
@@ -78,20 +75,18 @@ void distruggi_utente(Utente utente);
  * Imposta il nome di un utente con la stringa fornita.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * nome: stringa contenente il nuovo nome da assegnare.
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    nome: stringa costante contenente il nuovo nome da assegnare.
  *
  * Pre-condizioni:
- * - `utente` e `nome` devono essere non NULL.
+ *    utente: non deve essere NULL
+ *    nome: non deve essere NULL
  *
  * Post-condizioni:
- * - Il campo `nome` dell'utente viene aggiornato con il nuovo valore.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `nome` della struttura `utente`.
+ *    - Il campo `nome` dell'utente viene aggiornato con il nuovo valore.
  */
 void imposta_nome(Utente utente, const char *nome);
 
@@ -101,20 +96,18 @@ void imposta_nome(Utente utente, const char *nome);
  * Imposta il cognome di un utente con la stringa fornita.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * cognome: stringa contenente il nuovo cognome da assegnare.
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    cognome: stringa costante contenente il nuovo cognome da assegnare.
  *
  * Pre-condizioni:
- * - `utente` deve essere non NULL.
+ *    utente: non deve essere NULL
+ *    cognome: non deve essere NULL
  *
  * Post-condizioni:
- * - Il campo `cognome` dell'utente viene aggiornato con il nuovo valore.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `cognome` della struttura `utente`.
+ *    - Il campo `cognome` dell'utente viene aggiornato con il nuovo valore.
  */
 void imposta_cognome(Utente utente, const char *cognome);
 
@@ -124,20 +117,18 @@ void imposta_cognome(Utente utente, const char *cognome);
  * Imposta l'email di un utente con la stringa fornita.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * email: stringa contenente la nuova email da assegnare.
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    email: stringa costante contenente la nuova email da assegnare.
  *
  * Pre-condizioni:
- * - `utente` deve essere non NULL.
+ *    utente: non deve essere NULL
+ *    email: non deve essere NULL
  *
  * Post-condizioni:
- * - Il campo `email` dell'utente viene aggiornato con il nuovo valore.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `email` della struttura `utente`.
+ *    - Il campo `email` dell'utente viene aggiornato con il nuovo valore.
  */
 void imposta_email(Utente utente, const char *email);
 
@@ -147,21 +138,18 @@ void imposta_email(Utente utente, const char *email);
  * Imposta la password di un utente copiando i dati forniti.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * password: puntatore ai dati della nuova password (array di byte).
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    password: puntatore ai dati della nuova password (array di byte).
  *
  * Pre-condizioni:
- * - `utente` deve essere non NULL.
- * - `password` deve puntare a un array di almeno `DIMENSIONE_PASSWORD` byte.
+ *    utente: non deve essere NULL
+ *    password: deve puntare a un array di grandezza DIMENSIONE_PASSWORD
  *
  * Post-condizioni:
- * - Il campo `password` dell'utente viene aggiornato con i nuovi dati.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `password` della struttura `utente`.
+ *    - Il campo `password` dell'utente viene aggiornato con i nuovi dati.
  */
 void imposta_password(Utente utente, const uint8_t *password);
 
@@ -171,20 +159,17 @@ void imposta_password(Utente utente, const uint8_t *password);
  * Imposta il livello di permesso di un utente.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * permesso: valore di tipo Byte che indica il nuovo livello di permesso.
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    permesso: valore di tipo Byte che indica il nuovo livello di permesso.
  *
  * Pre-condizioni:
- * - `utente` deve essere non NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Il campo `permesso` dell'utente viene aggiornato con il nuovo valore.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `permesso` della struttura `utente`.
+ *    - Il campo `permesso` dell'utente viene aggiornato con il nuovo valore.
  */
 void imposta_permesso(Utente utente, Byte permesso);
 
@@ -194,20 +179,17 @@ void imposta_permesso(Utente utente, Byte permesso);
  * Imposta la data associata a un utente, a meno che l'utente sia un admin.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente` da modificare.
- * data: oggetto `Data` da assegnare all'utente.
+ *    utente: puntatore all'oggetto `Utente` da modificare.
+ *    data: oggetto `Data` da assegnare all'utente.
  *
  * Pre-condizioni:
- * - `utente` deve essere non NULL.
+ *    utente: non deve essere NULL.
  *
  * Post-condizioni:
- * - Il campo `data` dell'utente è aggiornato con il nuovo valore, tranne se è admin.
- *
- * Ritorna:
- * - void
+ *    non restituisce niente
  *
  * Side-effect:
- * - Modifica il campo `data` della struttura `utente`.
+ *    - Il campo `data` dell'utente è aggiornato con il nuovo valore, tranne se è admin.
  */
 void imposta_data(Utente utente, Data data);
 
@@ -217,19 +199,19 @@ void imposta_data(Utente utente, Data data);
  * Restituisce una copia dinamica della stringa cognome di un utente.
  *
  * Parametri:
- * utente: puntatore costante all'oggetto `Utente`.
+ *    utente: puntatore costante all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Viene restituita una nuova stringa allocata contenente il cognome.
+ *    restituisce il cognome dell'utente oppure NULL in caso di errore
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ *    una stringa costante o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamica che deve essere liberata dal chiamante.
+ *    - Alloca memoria dinamica che deve essere liberata dal chiamante.
  */
 const char *ottieni_cognome(const Utente utente);
 
@@ -239,19 +221,19 @@ const char *ottieni_cognome(const Utente utente);
  * Restituisce una copia dinamica della stringa nome di un utente.
  *
  * Parametri:
- * utente: puntatore costante all'oggetto `Utente`.
+ *    utente: puntatore costante all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Viene restituita una nuova stringa allocata contenente il nome.
+ *    restituisce il nome dell'utente oppure NULL in caso di errore
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ *    una stringa costante o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamica che deve essere liberata dal chiamante.
+ *    - Alloca memoria dinamica che deve essere liberata dal chiamante.
  */
 const char *ottieni_nome(const Utente utente);
 
@@ -261,19 +243,19 @@ const char *ottieni_nome(const Utente utente);
  * Restituisce una copia dinamica della stringa email di un utente.
  *
  * Parametri:
- * utente: puntatore costante all'oggetto `Utente`.
+ *    utente: puntatore costante all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Viene restituita una nuova stringa allocata contenente l'email.
+ *    restituisce l'email dell'utente oppure NULL in caso di errore
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ *    una stringa costante o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamica che deve essere liberata dal chiamante.
+ *    - Alloca memoria dinamica che deve essere liberata dal chiamante.
  */
 const char *ottieni_email(const Utente utente);
 
@@ -283,19 +265,19 @@ const char *ottieni_email(const Utente utente);
  * Restituisce una copia dinamica della password di un utente.
  *
  * Parametri:
- * utente: puntatore costante all'oggetto `Utente`.
+ *    utente: puntatore costante all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Viene restituito un puntatore a un array di byte allocato dinamicamente.
+ *    restituisce la password dell'utente oppure NULL in caso di errore
  *
  * Ritorna:
- * - Puntatore a array di byte contenente la password, oppure NULL se `utente` è NULL.
+ *    un puntatore o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamica che deve essere liberata dal chiamante.
+ *    - Alloca memoria dinamica che deve essere liberata dal chiamante.
  */
 const uint8_t *ottieni_password(const Utente utente);
 
@@ -305,20 +287,19 @@ const uint8_t *ottieni_password(const Utente utente);
  * Restituisce il livello di permesso di un utente.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente`.
+ *    utente: puntatore all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Nessuna modifica allo stato dell'utente.
+ *    restituisce la costante ERRORE_PERMESSO se c'è un errore, altrimenti il permesso dell'utente
  *
  * Ritorna:
- * - Il valore di tipo Byte che rappresenta il permesso,
- *   oppure `ERRORE_PERMESSO` se `utente` è NULL.
+ *     un valore di tipo Byte
  *
  * Side-effect:
- * - Nessuno.
+ *    - Nessuno.
  */
 Byte ottieni_permesso(Utente utente);
 
@@ -328,19 +309,19 @@ Byte ottieni_permesso(Utente utente);
  * Restituisce la lista storico delle prenotazioni di un utente.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente`.
+ *    utente: puntatore all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - Nessuna modifica allo stato dell'utente.
+ *    restituisce la lista delle prenotazioni, oppure NULL se `utente` è NULL.
  *
  * Ritorna:
- * - La lista `ListaPre` delle prenotazioni, oppure NULL se `utente` è NULL.
+ *    una lista o NULL
  *
  * Side-effect:
- * - Nessuno.
+ *    - Nessuno.
  */
 ListaPre ottieni_storico_utente(Utente utente);
 
@@ -350,20 +331,21 @@ ListaPre ottieni_storico_utente(Utente utente);
  * Aggiunge una prenotazione allo storico di un utente.
  *
  * Parametri:
- * utente: puntatore all'oggetto `Utente`.
- * prenotazione: prenotazione da aggiungere allo storico.
+ *    utente: puntatore all'oggetto `Utente`.
+ *    prenotazione: prenotazione da aggiungere allo storico.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
+ *    prenotazione: non deve essere NULL
  *
  * Post-condizioni:
- * - Lo storico dati dell'utente è aggiornato con la nuova prenotazione.
+ *    restituisce 1 in caso di successo, 0 in caso di fallimento o utente NULL.
  *
  * Ritorna:
- * - 1 in caso di successo, 0 in caso di fallimento o utente NULL.
+ *    un valore di tipo Byte(0 o 1)
  *
  * Side-effect:
- * - Modifica lo storico dati dell'utente.
+ *    - Lo storico dati dell'utente è aggiornato con la nuova prenotazione.
  */
 Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
 
@@ -373,21 +355,22 @@ Byte aggiungi_a_storico_utente(Utente utente, Prenotazione prenotazione);
  * Rimuove una prenotazione dallo storico di un utente.
  * Se lo storico risulta vuoto dopo la rimozione, imposta lo storico a NULL.
  *
- * Parametri:
- * utente: puntatore all'oggetto `Utente`.
- * prenotazione: prenotazione da rimuovere dallo storico.
+* Parametri:
+ *    utente: puntatore all'oggetto `Utente`.
+ *    prenotazione: prenotazione da rimuovere dallo storico.
  *
  * Pre-condizioni:
- * - `utente` può essere NULL.
+ *    utente: non deve essere NULL
+ *    prenotazione: non deve essere NULL
  *
  * Post-condizioni:
- * - Lo storico dati dell'utente è aggiornato di conseguenza.
+ *    restituisce 1 se la rimozione ha avuto successo, altrimenti 0
  *
  * Ritorna:
- * - 1 se lo storico è stato svuotato, 0 in caso di errore o fallimento.
+ *    un valore di tipo Byte(0 o 1)
  *
  * Side-effect:
- * - Modifica lo storico dati dell'utente.
+ *    - Lo storico dati dell'utente è aggiornato di conseguenza.
  */
 Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
 
@@ -397,19 +380,19 @@ Byte rimuovi_da_storico_utente(Utente utente, Prenotazione prenotazione);
  * Restituisce il numero di prenotazioni nello storico di un utente.
  *
  * Parametri:
- * u: puntatore all'oggetto `Utente`.
+ *    u: puntatore all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `u` può essere NULL.
+ *    u: non deve essere NULL
  *
  * Post-condizioni:
- * - Nessuna modifica allo stato dell'utente.
+ *    restituisce il numero di prenotazioni oppure 0 se c'è un errore
  *
  * Ritorna:
- * - Numero di prenotazioni associate all'utente, 0 se `u` è NULL.
+ *    un numero intero positivo
  *
  * Side-effect:
- * - Nessuno.
+ *    - Nessuno.
  */
 unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
 
@@ -419,19 +402,19 @@ unsigned int ottieni_numero_prenotazioni_utente(const Utente u);
  * Distrugge la vecchia data e una nuova data dentro Utente
  *
  * Parametri:
- * u: puntatore all'oggetto `Utente`.
+ *    u: puntatore all'oggetto `Utente`.
  *
  * Pre-condizioni:
- * - `u` non può essere NULL.
+ *    u: non deve essere NULL
  *
  * Post-condizioni:
- * - Un valore 0 se l'operazione è andata male, 1 se è andata a buon fine
+ *    restituisce 1 se la creazione è andata a buon fine, altrimenti 0
  *
  * Ritorna:
- * - Un valore Byte (8 bit)
+ *    un valore di tipo Byte(0 o 1)
  *
  * Side-effect:
- * - Viene deallocata e allocata memoria dentro al campo data.
+ *    - Viene deallocata e allocata memoria dentro al campo data.
  */
 Byte crea_nuova_data(Utente u);
 
