@@ -1,4 +1,18 @@
 Link a github:
     https://github.com/MarcoVisone/Car_Sharing.git
 
+Partecipanti del gruppo:
+    Antonio Sicignano: 
+        Email: a.sicignano49@studenti.unisa.it
+        GitHub: AntoSici587
+        Matricola: 0512121634
+    Manuel Nello Russo:
+        Email: n.russo45@studenti.unisa.it
+        GitHub: ManuelRussoo
+        Matricola: 0512121772
+    Marco Visone:
+        Email: m.visone3@studenti.unisa.it
+        GitHub: MarcoVisone
+        Matricola: 0512122246
+
 Un saluto dal gruppo 👋
