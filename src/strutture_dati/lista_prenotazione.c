@@ -23,13 +23,13 @@
  *    prenotazione: puntatore generico alla prenotazione
  *
  * Pre-condizioni:
- *    prenotazione deve puntare a una struttura Prenotazione valida
+ *    prenotazione: deve puntare a una struttura Prenotazione valida
  *
  * Post-condizioni:
- *    la memoria della prenotazione viene deallocata
+ *    non restituisce niente
  *
  * Side-effect:
- *    Dealloca memoria della prenotazione
+ *    la memoria della prenotazione viene deallocata
  */
 static void distruggi_prenotazione_t(void *prenotazione){
     Prenotazione p = (Prenotazione)prenotazione;
@@ -49,13 +49,13 @@ static void distruggi_prenotazione_t(void *prenotazione){
  *    l: lista da distruggere
  *
  * Pre-condizioni:
- *    l può essere NULL (in tal caso non fa nulla)
+ *    l: non deve essere NULL
  *
  * Post-condizioni:
- *    tutta la memoria della lista e delle prenotazioni viene liberata
+ *    non restituisce niente
  *
  * Side-effect:
- *    Dealloca memoria per tutti i nodi e prenotazioni
+ *    tutta la memoria della lista e delle prenotazioni viene liberata
  */
 void distruggi_lista_prenotazione(ListaPre l){
     if(lista_vuota(l)) return;
@@ -82,11 +82,15 @@ void distruggi_lista_prenotazione(ListaPre l){
  *    p: prenotazione da aggiungere
  *
  * Pre-condizioni:
- *    p non deve essere NULL
+ *    p: non deve essere NULL
+ *    l: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce la nuova testa della lista con la prenotazione aggiunta,
  *    oppure NULL in caso di errore di allocazione
+ *
+ * Ritorna:
+ *    una lista
  *
  * Side-effect:
  *    Alloca memoria per un nuovo nodo
@@ -110,11 +114,15 @@ ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
  *    p: prenotazione di riferimento per l'intervallo
  *
  * Pre-condizioni:
- *    p non deve essere NULL
+ *    p: non deve essere NULL
+ *    l: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce la testa della lista (potenzialmente modificata)
  *    se trovata, la prenotazione viene rimossa e la memoria liberata
+ *
+ * Ritorna:
+ *    una lista
  *
  * Side-effect:
  *    Potrebbe deallocare memoria del nodo e della prenotazione
@@ -164,11 +172,14 @@ ListaPre rimuovi_prenotazione_lista(ListaPre l, Prenotazione p) {
  *    l: nodo della lista
  *
  * Pre-condizioni:
- *    l non deve essere NULL
+ *    l: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce la prenotazione contenuta nel nodo,
  *    oppure NULL se l è NULL
+ *
+ * Ritorna:
+ *    una prenotazione
  */
 Prenotazione ottieni_prenotazione_lista(ListaPre l){
     return ottieni_item(l);
@@ -180,29 +191,29 @@ Prenotazione ottieni_prenotazione_lista(ListaPre l){
  * Crea una copia duplicata di una lista di prenotazioni, preservandone l'ordine originale.
  *
  * Implementazione:
- * - Crea una nuova lista vuota chiamata `nuova_lista`.
- * - Scorre la lista `l` originale finché non è vuota:
- *   - Per ogni nodo, ottiene l'elemento corrente con `ottieni_item` e lo aggiunge
- *     in testa alla `nuova_lista` usando `aggiungi_nodo`.
- *   - Avanza al nodo successivo con `ottieni_prossimo`.
- * - Al termine, la lista duplicata `nuova_lista` è in ordine inverso rispetto all'originale,
- *   quindi viene invertita tramite la funzione `inverti_lista` per mantenere l'ordine originale.
+ *    - Crea una nuova lista vuota chiamata `nuova_lista`.
+ *    - Scorre la lista `l` originale finché non è vuota:
+ *    - Per ogni nodo, ottiene l'elemento corrente con `ottieni_item` e lo aggiunge
+ *    in testa alla `nuova_lista` usando `aggiungi_nodo`.
+ *    - Avanza al nodo successivo con `ottieni_prossimo`.
+ *    - Al termine, la lista duplicata `nuova_lista` è in ordine inverso rispetto all'originale,
+ *    quindi viene invertita tramite la funzione `inverti_lista` per mantenere l'ordine originale.
  *
  * Parametri:
- * l: lista di prenotazioni da duplicare.
+ *    l: lista di prenotazioni da duplicare.
  *
  * Pre-condizioni:
- * - `l` è una lista valida (può essere vuota).
+ *    l: non deve essere NULL
  *
  * Post-condizioni:
- * - La lista duplicata contiene gli stessi elementi di `l` nell'ordine originale.
+ *    restituisce un duplicato della lista originale
  *
  * Ritorna:
- * - Una nuova lista allocata dinamicamente con gli stessi elementi di `l`.
+ *    una lista
  *
  * Side-effect:
- * - Alloca memoria per la nuova lista e i suoi nodi.
- * - La memoria della lista duplicata deve essere gestita e liberata dal chiamante.
+ *    Alloca memoria per la nuova lista e i suoi nodi.
+ *    La memoria della lista duplicata deve essere gestita e liberata dal chiamante.
  */
 ListaPre duplica_lista_prenotazioni(ListaPre l){
     ListaPre nuova_lista = crea_lista();
