@@ -318,7 +318,6 @@ void imposta_data(Utente utente, Data data) {
  *
  * Implementazione:
  *    - Se `utente` è NULL, ritorna NULL.
- *    - Usa `mia_strdup` per duplicare la stringa `cognome`.
  *
  * Parametri:
  *    utente: puntatore costante all'oggetto `Utente`.
@@ -350,7 +349,6 @@ const char *ottieni_cognome(const Utente utente){
  *
  * Implementazione:
  *    - Se `utente` è NULL, ritorna NULL.
- *    - Usa `mia_strdup` per duplicare la stringa `nome`.
  *
  * Parametri:
  *    utente: puntatore costante all'oggetto `Utente`.
