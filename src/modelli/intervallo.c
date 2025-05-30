@@ -22,8 +22,8 @@ struct intervallo{
  * Converte una stringa di data/ora in un valore time_t.
  *
  * Implementazione:
- *    Effettua il parsing della stringa nel formato "dd/mm/yyyy HH:MM"
- *    utilizzando sscanf e costruisce una struttura tm.
+ *    Viene passsata la stringa con il formato "dd/mm/yyyy HH:MM"
+ *    a sscanf e costruisce una struttura tm.
  *    La struttura tm viene poi convertita in time_t usando mktime.
  *
  * Parametri:
