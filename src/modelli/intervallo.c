@@ -27,14 +27,17 @@ struct intervallo{
  *    La struttura tm viene poi convertita in time_t usando mktime.
  *
  * Parametri:
- *    data: stringa con data/ora da convertire
+ *    data: stringa costante con data/ora da convertire
  *
  * Pre-condizioni:
- *    data non deve essere NULL e deve essere nel formato corretto
+ *    data: non deve essere NULL e deve essere nel formato corretto
  *
  * Post-condizioni:
  *    restituisce il timestamp corrispondente,
  *    oppure -1 in caso di formato non valido
+ *
+ * Ritorna:
+ *    un time_t o -1
  */
  static time_t converti_data_in_time_t(const char *data){
     struct tm tm = {0};
@@ -72,6 +75,9 @@ struct intervallo{
  *    restituisce un nuovo Intervallo allocato,
  *    oppure NULL in caso di errore
  *
+ * Ritorna:
+ *    un nuovo intervallo o NULL
+ *
  * Side-effect:
  *    Alloca memoria per la struttura intervallo
  */
@@ -99,13 +105,13 @@ Intervallo crea_intervallo(time_t inizio, time_t fine){
  *    i: intervallo da deallocare
  *
  * Pre-condizioni:
- *    i può essere NULL (in tal caso non fa nulla)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
- *    la memoria è stata deallocata se i non era NULL
+ *    non restituisce niente
  *
  * Side-effect:
- *    Dealloca memoria
+ *    Dealloca memoria se i non è NULL
  */
 void distruggi_intervallo(Intervallo i){
     if(i == NULL){
@@ -127,10 +133,13 @@ void distruggi_intervallo(Intervallo i){
  *    i: intervallo da interrogare
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce inizio o 0 se i è NULL
+ *
+ * Ritorna:
+ *    un time_t o 0
  */
 time_t inizio_intervallo(Intervallo i) {
     if(i == NULL){
@@ -152,10 +161,13 @@ time_t inizio_intervallo(Intervallo i) {
  *    i: intervallo da interrogare
  *
  * Pre-condizioni:
- *    i può essere NULL
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce fine o 0 se i è NULL
+ *
+ * Ritorna:
+ *    un time_t o 0
  */
 time_t fine_intervallo(Intervallo i){
     if(i == NULL){
@@ -179,10 +191,14 @@ time_t fine_intervallo(Intervallo i){
  *    esterno: secondo intervallo
  *
  * Pre-condizioni:
- *    interno ed esterno non devono essere NULL
+ *    interno: non deve essere NULL
+ *    esterno: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce 1 se c'è sovrapposizione, 0 altrimenti o in caso di errori
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0 o 1)
  */
 Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
     if((interno == NULL || esterno == NULL)){
@@ -204,10 +220,13 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno){
  *    i: intervallo da copiare
  *
  * Pre-condizioni:
- *    i può essere NULL (restituisce NULL in tal caso)
+ *    i: deve essere diverso da NULL
  *
  * Post-condizioni:
  *    restituisce una nuova copia o NULL se i è NULL o in caso di errore
+ *
+ * Ritorna:
+ *    un intervallo o NULL
  *
  * Side-effect:
  *    Alloca memoria per la nuova struttura
@@ -233,13 +252,17 @@ Intervallo duplica_intervallo(Intervallo i){
  *    b: secondo intervallo
  *
  * Pre-condizioni:
- *    a e b non devono essere NULL
+ *    a: deve essere diverso da NULL
+ *    b: deve essere diverso da NULL
  *
  * Post-condizioni:
  *    restituisce:
  *    - -1 se a inizia prima di b
  *    - 1 se a inizia dopo b
  *    - 0 se iniziano insieme o in caso di errori
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0, -1 o 1)
  */
 Byte compara_intervalli(Intervallo a, Intervallo b) {
     if(a == NULL || b == NULL) return 0;
@@ -262,10 +285,14 @@ Byte compara_intervalli(Intervallo a, Intervallo b) {
  *    fine: stringa data di fine
  *
  * Pre-condizioni:
- *    inizio e fine non devono essere NULL e devono essere nel formato corretto
+ *    inizio: non deve essere NULL
+ *    fine: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce un nuovo Intervallo o NULL in caso di errori
+ *
+ * Ritorna:
+ *    un nuovo intervallo o NULL
  *
  * Side-effect:
  *    Alloca memoria per la struttura intervallo
@@ -296,12 +323,15 @@ Intervallo converti_data_in_intervallo(const char *inizio, const char *fine){
  *    i: intervallo da convertire
  *
  * Pre-condizioni:
- *    i può essere NULL (restituisce NULL in tal caso)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce una stringa allocata dinamicamente nel formato
  *    "dd/mm/yyyy HH:MM -> dd/mm/yyyy HH:MM",
  *    oppure NULL se i è NULL o in caso di errore
+ *
+ * Ritorna:
+ *    una stringa o NULL
  *
  * Side-effect:
  *    Alloca memoria per la stringa risultante

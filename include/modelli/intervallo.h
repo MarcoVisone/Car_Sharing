@@ -29,6 +29,9 @@ typedef struct intervallo* Intervallo;
  *    restituisce un nuovo Intervallo allocato dinamicamente,
  *    oppure NULL in caso di errore o parametri non validi
  *
+ * Ritorna:
+ *    un nuovo intervallo o NULL
+ *
  * Side-effect:
  *    Alloca memoria per la struttura intervallo
  */
@@ -43,13 +46,13 @@ Intervallo crea_intervallo(time_t inizio, time_t fine);
  *    i: puntatore all'intervallo da distruggere
  *
  * Pre-condizioni:
- *    i deve essere un puntatore valido (può essere NULL)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
- *    la memoria dell'intervallo viene deallocata se i non è NULL
+ *    non restituisce niente
  *
  * Side-effect:
- *    Dealloca memoria
+ *    Dealloca memoria se i non è NULL
  */
 void distruggi_intervallo(Intervallo i);
 
@@ -62,10 +65,13 @@ void distruggi_intervallo(Intervallo i);
  *    i: puntatore all'intervallo
  *
  * Pre-condizioni:
- *    i deve essere un puntatore valido (può essere NULL)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
- *    restituisce il timestamp di inizio o 0 se l'intervallo è NULL
+ *    restituisce inizio o 0 se i è NULL
+ *
+ * Ritorna:
+ *    un time_t o 0
  */
 time_t inizio_intervallo(Intervallo i);
 
@@ -78,10 +84,13 @@ time_t inizio_intervallo(Intervallo i);
  *    i: puntatore all'intervallo
  *
  * Pre-condizioni:
- *    i deve essere un puntatore valido (può essere NULL)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
- *    restituisce il timestamp di fine o 0 se l'intervallo è NULL
+ *    restituisce fine o 0 se i è NULL
+ *
+ * Ritorna:
+ *    un time_t o 0
  */
 time_t fine_intervallo(Intervallo i);
 
@@ -95,12 +104,14 @@ time_t fine_intervallo(Intervallo i);
  *    esterno: secondo intervallo da controllare
  *
  * Pre-condizioni:
- *    - interno non deve essere NULL
- *    - esterno non deve essere NULL
+ *    interno: non deve essere NULL
+ *    esterno: non deve essere NULL
  *
  * Post-condizioni:
- *    restituisce 1 (true) se gli intervalli si sovrappongono,
- *    0 (false) altrimenti o in caso di parametri non validi
+ *    restituisce 1 se c'è sovrapposizione, 0 altrimenti o in caso di errori
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0 o 1)
  */
 Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
 
@@ -114,12 +125,14 @@ Byte intervalli_si_sovrappongono(Intervallo interno, Intervallo esterno);
  *    fine: stringa con data/ora di fine (formato "dd/mm/yyyy HH:MM")
  *
  * Pre-condizioni:
- *    - inizio non deve essere NULL e deve essere nel formato corretto
- *    - fine non deve essere NULL e deve essere nel formato corretto
+ *    inizio: non deve essere NULL
+ *    fine: non deve essere NULL
  *
  * Post-condizioni:
- *    restituisce un nuovo Intervallo allocato dinamicamente,
- *    oppure NULL in caso di errore o parametri non validi
+ *    restituisce un nuovo Intervallo o NULL in caso di errori
+ *
+ * Ritorna:
+ *    un nuovo intervallo o NULL
  *
  * Side-effect:
  *    Alloca memoria per la struttura intervallo
@@ -135,14 +148,16 @@ Intervallo converti_data_in_intervallo(const char *inizio, const char *fine);
  *    i: puntatore all'intervallo da duplicare
  *
  * Pre-condizioni:
- *    i deve essere un puntatore valido (può essere NULL)
+ *    i: deve essere diverso da NULL
  *
  * Post-condizioni:
- *    restituisce una nuova copia dell'intervallo,
- *    oppure NULL se i è NULL o in caso di errore
+ *    restituisce una nuova copia o NULL se i è NULL o in caso di errore
+ *
+ * Ritorna:
+ *    un intervallo o NULL
  *
  * Side-effect:
- *    Alloca memoria per la nuova struttura intervallo
+ *    Alloca memoria per la nuova struttura
  */
 Intervallo duplica_intervallo(Intervallo i);
 
@@ -156,14 +171,17 @@ Intervallo duplica_intervallo(Intervallo i);
  *    b: secondo intervallo da confrontare
  *
  * Pre-condizioni:
- *    - a non deve essere NULL
- *    - b non deve essere NULL
+ *    a: deve essere diverso da NULL
+ *    b: deve essere diverso da NULL
  *
  * Post-condizioni:
  *    restituisce:
  *    - -1 se a inizia prima di b
  *    - 1 se a inizia dopo b
- *    - 0 se iniziano nello stesso momento o in caso di errori
+ *    - 0 se iniziano insieme o in caso di errori
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0, -1 o 1)
  */
 Byte compara_intervalli(Intervallo a, Intervallo b);
 
@@ -176,12 +194,15 @@ Byte compara_intervalli(Intervallo a, Intervallo b);
  *    i: puntatore all'intervallo da convertire
  *
  * Pre-condizioni:
- *    i deve essere un puntatore valido (può essere NULL)
+ *    i: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce una stringa allocata dinamicamente nel formato
  *    "dd/mm/yyyy HH:MM -> dd/mm/yyyy HH:MM",
  *    oppure NULL se i è NULL o in caso di errore
+ *
+ * Ritorna:
+ *    una stringa o NULL
  *
  * Side-effect:
  *    Alloca memoria per la stringa risultante
