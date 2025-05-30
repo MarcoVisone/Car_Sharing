@@ -28,6 +28,7 @@ make
 cd test
 make
 ./test test_suite.txt utenti.txt veicoli.txt
+```
 
 👥 Autori
 Il progetto è stato sviluppato da:
