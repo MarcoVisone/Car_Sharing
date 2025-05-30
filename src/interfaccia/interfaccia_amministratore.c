@@ -44,6 +44,9 @@ static void sep_noleggi();
  * Post-condizioni:
  *    Restituisce 0 in caso di successo, -1 se non ci sono utenti o in caso di errore
  *
+ * Ritorna:
+ *    un valore di tipo Byte(0 o -1)
+ *
  * Side-effects:
  *    - Input/output su console
  *    - Allocazione e deallocazione dinamica della memoria
@@ -115,11 +118,14 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
  * Implementazione:
  *   Stampa una tabella formattata con tre colonne: Cliente, Periodo e Costo
  *
- * Parametri: nessuno
+ * Parametri:
+ *    nessuno
  *
- * Pre-condizioni: nessuna
+ * Pre-condizioni:
+ *    nessuna
  *
- * Post-condizioni: nessuna
+ * Post-condizioni:
+ *    nessuna
  *
  * Side-effects:
  *    - Output formattato su console
@@ -141,11 +147,14 @@ static void intest_noleggi() {
  * Implementazione:
  *   Stampa una linea di separazione per chiudere la tabella formattata
  *
- * Parametri: nessuno
+ * Parametri:
+ *    nessuno
  *
- * Pre-condizioni: nessuna
+ * Pre-condizioni:
+ *    nessuna
  *
- * Post-condizioni: nessuna
+ * Post-condizioni:
+ *    nessuna
  *
  * Side-effects:
  *    - Output formattato su console
@@ -175,6 +184,9 @@ static void sep_noleggi() {
  *
  * Post-condizioni:
  *    Restituisce 1 in caso di successo, -1 in caso di errore
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 o -1)
  *
  * Side-effects:
  *    - Output formattato su console
@@ -243,6 +255,9 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
  * Post-condizioni:
  *    Restituisce il nuovo veicolo creato se l'operazione ha successo, NULL altrimenti
  *
+ * Ritorna:
+ *    puntatore ad un veicolo o NULL
+ *
  * Side-effects:
  *    - Input/output su console
  *    - Allocazione dinamica della memoria per il nuovo veicolo
@@ -267,7 +282,7 @@ Veicolo interfaccia_aggiungi_veicolo(TabellaVeicoli tabella_veicoli){
         lun = strlen(targa);
 
         if(lun != (NUM_CARATTERI_TARGA-2)){
-            printf("Targa non valida!\n");
+            printf("Targa non valida! (deve essere di 7 caratteri)\n");
         }
         codice = cerca_veicolo_in_tabella(tabella_veicoli, targa) != NULL;
         if(codice){

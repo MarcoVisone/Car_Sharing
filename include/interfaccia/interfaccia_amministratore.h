@@ -27,6 +27,9 @@ typedef struct tabella_hash *TabellaUtenti;
  * Post-condizioni:
  *    Restituisce 0 in caso di successo, -1 se non ci sono utenti o in caso di errore
  *
+ * Ritorna:
+ *    un valore di tipo Byte(0 o -1)
+ *
  * Side-effects:
  *    - Input/output su console
  *    - Allocazione e deallocazione dinamica della memoria
@@ -50,6 +53,9 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
  * Post-condizioni:
  *    Restituisce 1 in caso di successo, -1 in caso di errore
  *
+ * Ritorna:
+ *    un valore di tipo Byte(1 o -1)
+ *
  * Side-effects:
  *    - Output formattato su console
  *    - Allocazione e deallocazione dinamica della memoria
@@ -72,6 +78,9 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli);
  *
  * Post-condizioni:
  *    Restituisce il nuovo veicolo creato se l'operazione ha successo, NULL altrimenti
+ *
+ * Ritorna:
+ *    puntatore ad un veicolo o NULL
  *
  * Side-effects:
  *    - Input/output su console

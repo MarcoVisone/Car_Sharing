@@ -18,16 +18,16 @@ typedef struct utente* Utente;
  * Stampa un messaggio di errore formattato con prefisso identificativo.
  *
  * Parametri:
- *    msg: stringa contenente il messaggio di errore da visualizzare
+ *    msg: stringa costante contenente il messaggio di errore da visualizzare
  *
  * Pre-condizione:
  *    msg deve essere un puntatore a stringa valido (non NULL)
  *
- * Post-condizione:
- *    Il messaggio viene stampato su stdout con formattazione di errore
+ * Post-condizioni:
+ *    non restituisce niente
  *
  * Side-effect:
- *    Output su console
+ *    Il messaggio viene stampato su stdout con formattazione di errore
  */
 void stampa_errore(const char *msg);
 
@@ -38,16 +38,16 @@ void stampa_errore(const char *msg);
  * Stampa un messaggio di successo formattato con prefisso identificativo.
  *
  * Parametri:
- *    msg: stringa contenente il messaggio di successo da visualizzare
+ *    msg: stringa costante contenente il messaggio di successo da visualizzare
  *
  * Pre-condizione:
  *    msg deve essere un puntatore a stringa valido (non NULL)
  *
- * Post-condizione:
- *    Il messaggio viene stampato su stdout con formattazione di successo
+ * Post-condizioni:
+ *    non restituisce niente
  *
  * Side-effect:
- *    Output su console
+ *    Il messaggio viene stampato su stdout con formattazione di successo
  */
 void stampa_successo(const char *msg);
 
@@ -66,8 +66,11 @@ void stampa_successo(const char *msg);
  * Post-condizione:
  *    Il messaggio viene stampato su stdout con formattazione informativa
  *
+ * Post-condizioni:
+ *    non restituisce niente
+ *
  * Side-effect:
- *    Output su console
+ *    Il messaggio viene stampato su stdout con formattazione informativa
  */
 void stampa_info(const char *msg);
 
@@ -85,6 +88,9 @@ void stampa_info(const char *msg);
  *
  * Post-condizione:
  *    Restituisce 1 se la stringa è "E" o "e", 0 altrimenti
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0 o 1)
  *
  * Side-effect:
  *    Nessuno
@@ -105,11 +111,12 @@ Byte uscita(char *str);
  *    stringa deve essere un puntatore a buffer valido
  *    lunghezza deve essere maggiore di 0
  *
- * Post-condizione:
- *    La stringa letta è memorizzata nel buffer senza carattere newline
- *    Il buffer stdin è pulito in caso di overflow
+ * Post-condizioni:
+ *    non restituisce niente
  *
  * Side-effect:
+ *    La stringa letta è memorizzata nel buffer senza carattere newline
+ *    Il buffer stdin è pulito in caso di overflow
  *    Lettura da stdin, possibile pulizia del buffer di input
  */
 void inserisci_stringa(char *stringa, unsigned int lunghezza);
@@ -128,6 +135,9 @@ void inserisci_stringa(char *stringa, unsigned int lunghezza);
  *
  * Post-condizione:
  *    Restituisce il carattere corrispondente alla scelta dell'utente
+
+ * Ritorna:
+ *    un valore di tipo Byte
  *
  * Side-effect:
  *    Pulizia console, stampa del menu, lettura da stdin, pulizia buffer
@@ -149,10 +159,11 @@ Byte benvenuto();
  *    dimensione deve essere maggiore di 0
  *
  * Post-condizione:
- *    La stringa letta da input è memorizzata in 'stringa'
- *    I caratteri '\n' o ' ' vengono rimossi se presenti
+ *    non restituisce niente
  *
  * Side-effect:
+ *    La stringa letta da input è memorizzata in 'stringa'
+ *    I caratteri '\n' o ' ' vengono rimossi se presenti
  *    Lettura da stdin
  */
 void ottieni_parola(char *stringa, int dimensione);
@@ -164,16 +175,16 @@ void ottieni_parola(char *stringa, int dimensione);
  * Stampa un'intestazione formattata per sezioni dell'interfaccia utente.
  *
  * Parametri:
- *    titolo: stringa contenente il titolo da visualizzare
+ *    titolo: stringa costante contenente il titolo da visualizzare
  *
  * Pre-condizione:
  *    titolo deve essere un puntatore a stringa valido (non NULL)
  *
  * Post-condizione:
- *    Il titolo viene stampato con formattazione di intestazione
+ *    non restituisce niente
  *
  * Side-effect:
- *    Output su console
+ *    Il titolo viene stampato con formattazione di intestazione
  */
 void stampa_header(const char *titolo);
 
@@ -193,6 +204,9 @@ void stampa_header(const char *titolo);
  * Post-condizione:
  *    Se le credenziali sono corrette, restituisce il puntatore all'utente
  *    Se l'utente sceglie di uscire o supera i tentativi, restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore ad un utente o NULL
  *
  * Side-effect:
  *    Lettura da stdin, possibili deallocazioni di memoria
@@ -217,6 +231,9 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti);
  *    Se la registrazione va a buon fine, l'utente è inserito in tabella
  *    Ritorna 1 in caso di successo, 0 se l'utente esce, -1 in caso di fallimento
  *
+ * Ritorna:
+ *    un valore di tipo Byte(0, 1 o -1)
+ *
  * Side-effect:
  *    Aggiunta di un nuovo utente alla tabella utenti
  */
@@ -235,9 +252,10 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso);
  *    tabella_utenti deve essere inizializzata e non NULL
  *
  * Post-condizione:
- *    L'utente è stato registrato (se operazione riuscita) e informato del risultato
+ *    non restituisce niente
  *
  * Side-effect:
+ *    L'utente è stato registrato (se operazione riuscita) e informato del risultato
  *    Output su console, attesa input utente, possibile modifica tabella utenti
  */
 void menu_registrazione(TabellaUtenti tabella_utenti);
@@ -256,6 +274,9 @@ void menu_registrazione(TabellaUtenti tabella_utenti);
  *
  * Post-condizione:
  *    Restituisce il puntatore all'utente se l'accesso è riuscito, NULL altrimenti
+ *
+ * Ritorna:
+ *    un puntatore ad un utente o NULL
  *
  * Side-effect:
  *    Output su console, attesa input utente
@@ -334,7 +355,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
  *    v: veicolo da prenotare
  *    p: prenotazione da associare al veicolo
  *    percentuale: sconto da applicare (compreso tra 0.0 e 1.0)
- *    motivo: stringa che rappresenta la motivazione dello sconto
+ *    motivo: stringa costante che rappresenta la motivazione dello sconto
  *
  * Pre-condizioni:
  *    v: deve essere diverso da NULL
@@ -372,9 +393,10 @@ Byte prenota_veicolo(Veicolo v, Prenotazione p, double percentuale, const char *
  *    data_riferimento: deve essere un timestamp valido
  *
  * Post-condizione:
- *    visualizza l'interfaccia utente e termina quando l'utente sceglie di uscire
+ *    non restituisce niente
  *
  * Side-effect:
+ *    visualizza l'interfaccia utente e termina quando l'utente sceglie di uscire
  *    stampa a video, pulizia schermo, acquisizione input utente,
  *    allocazione e deallocazione di memoria per le stringhe temporanee
  */
@@ -391,7 +413,7 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  * con dettagli su veicolo, modello, periodo di noleggio e costo totale
  *
  * Parametri:
- *    email_utente: stringa contenente l'email dell'utente di cui visualizzare lo storico
+ *    email_utente: stringa costante contenente l'email dell'utente di cui visualizzare lo storico
  *    tabella_utenti: tabella contenente tutti gli utenti registrati
  *    tabella_veicoli: tabella contenente tutti i veicoli del sistema
  *
@@ -402,6 +424,9 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
  *
  * Post-condizione:
  *    restituisce 1 se l'operazione ha successo, -1 in caso di errore (utente non trovato o storico vuoto)
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 o -1)
  *
  * Side-effect:
  *    stampa a video, acquisizione input utente per conferma uscita,
@@ -419,16 +444,20 @@ Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, 
  * di un utente, mostrandole in una tabella formattata.
  *
  * Parametri:
- *    email_utente: stringa con l'email dell'utente (non NULL)
- *    tabella_utenti: tabella degli utenti (non NULL)
- *    tabella_veicoli: tabella dei veicoli (non NULL)
+ *    email_utente: stringa costante contenente l'email dell'utente
+ *    tabella_utenti: puntatore a tabella degli utenti
+ *    tabella_veicoli: puntatore a tabella dei veicoli
  *
  * Pre-condizioni:
- *    email_utente deve essere una stringa valida
- *    tabella_utenti e tabella_veicoli devono essere inizializzate
+ *    email_utente: non deve essere NULL
+ *    tabella_utenti: non deve essere NULL
+ *    tabella_veicoli: non deve essere NULL
  *
  * Post-condizioni:
  *    Restituisce 1 se tutto ok, 0 se errore, -1 se utente non trovato
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(0, 1 o -1)
  *
  * Side-effect:
  *    Modifica lo storico prenotazioni se l'utente cancella una prenotazione
