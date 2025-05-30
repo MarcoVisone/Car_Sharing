@@ -145,7 +145,6 @@ int main() {
     }
 
     printf("\n>> Programma terminato e memoria liberata correttamente.\n");
-
     return 0;
 }
 

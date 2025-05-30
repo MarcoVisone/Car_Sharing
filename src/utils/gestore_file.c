@@ -110,29 +110,27 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
     size_t n_read;
     Intervallo i = NULL;
 
-    // Legge cliente
+     // Legge cliente
     if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
     if (len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n_read = fread(buffer_str, sizeof(char), len, fp);
     if (n_read != len) goto errore;
     imposta_cliente_prenotazione(p, buffer_str);
 
-    // Legge targa
+     // Legge targa
     if(fread(&len, sizeof(len), 1, fp) != 1) goto errore;
     if (len == 0 || len > DIMENSIONE_BUFFER) goto errore;
     n_read = fread(buffer_str, sizeof(char), len, fp);
     if (n_read != len) goto errore;
     imposta_veicolo_prenotazione(p, buffer_str);
-
-    // Legge costo
+     // Legge costo
     double costo;
     if(fread(&costo, sizeof(costo), 1, fp) != 1) goto errore;
     imposta_costo_prenotazione(p, costo);
-
     // Legge intervallo
     time_t inizio, fine;
     if(fread(&inizio, sizeof(inizio), 1, fp) != 1 ||
-       fread(&fine, sizeof(fine), 1, fp) != 1) goto errore;
+        fread(&fine, sizeof(fine), 1, fp) != 1) goto errore;
 
     i = crea_intervallo(inizio, fine);
     if(i == NULL) goto errore;
@@ -145,6 +143,7 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
         distruggi_prenotazione(p);
         return NULL;
 }
+
 
 /*
  * Autore: Marco Visone
@@ -626,19 +625,21 @@ static void carica_data(Utente u, FILE *file_data, char *buffer_str){
         return;
     }
 
-    unsigned int  numero_prenotazioni;
-    if (fread(&numero_prenotazioni, sizeof(numero_prenotazioni), 1, file_data) != 1) return;
+    unsigned int numero_prenotazioni;
+    if (fread(&numero_prenotazioni, sizeof(numero_prenotazioni), 1, file_data) != 1) {
+        return;
+    }
 
     for(unsigned int i = 0; i < numero_prenotazioni; i++){
-        Prenotazione p_caricata = carica_prenotazione(file_data, buffer_str); // Passa il buffer
+
+        Prenotazione p_caricata = carica_prenotazione(file_data, buffer_str);
         if (p_caricata == NULL) {
-            return;
+            distruggi_prenotazione(p_caricata);
+            continue;
         }
 
-        if (!aggiungi_a_storico_utente(u, p_caricata)) {
-            distruggi_prenotazione(p_caricata);
-            return;// Libera la prenotazione se non può essere aggiunta
-        }
+        aggiungi_a_storico_utente(u, p_caricata);
+        distruggi_prenotazione(p_caricata);
     }
 }
 
