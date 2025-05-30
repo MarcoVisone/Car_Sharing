@@ -39,7 +39,10 @@ make
 ./test test_suite.txt utenti.txt veicoli.txt
 ```
 
+---
+
 👥 Autori
 Il progetto è stato sviluppato da:
-
-Marco Visone, Antonio Sicignano, Nello Manuel Russo
+* Marco Visone
+* Antonio Sicignano
+* Nello Manuel Russo
