@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 /*
- * Funzione: crea_tabella_utenti
+ * Funzione: crea_tabella_Utenti
  * -----------------------------
  * Inizializza una nuova tabella hash per la gestione degli utenti,
  * con una dimensione specificata.
@@ -40,58 +40,50 @@ TabellaUtenti crea_tabella_utenti(unsigned int grandezza){
 
 /*
  * Funzione: distruggi_utente_t
- * ----------------------------
- * Funzione di distruzione per un utente, compatibile con la tabella hash.
+ * -----------------------------
  *
- * Implementazione:
- * - Converte il parametro `void*` in `Utente`.
- * - Chiama la funzione `distruggi_utente` per liberare la memoria dell’utente.
+ * funzione di supporto che effettua il cast del puntatore generico void *
+ * a un oggetto di tipo Utente, permettendo l'utilizzo della funzione distruggi_utente
  *
  * Parametri:
- * utente: puntatore generico da convertire in `Utente`.
+ *    utente: puntatore generico a un utente
  *
  * Pre-condizioni:
- * - `utente` deve essere un puntatore valido a un oggetto di tipo `Utente`.
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - L’oggetto utente viene correttamente deallocato.
- *
- * Ritorna:
- * - Nessun valore restituito (void).
+ *    non restituisce niente
  *
  * Side-effect:
- * - Libera la memoria dell’utente.
+ *    la memoria associata al utente viene liberata
  */
 static void distruggi_utente_t(void *utente){
     Utente u = (Utente)utente;
     distruggi_utente(u);
 }
 
-
 /*
  * Funzione: distruggi_tabella_utenti
- * ----------------------------------
- * Distrugge la tabella hash contenente gli utenti, deallocando memoria.
+ * -----------------------------------
+ *
+ * libera tutta la memoria associata alla tabella dei utenti,
+ * inclusi tutti i utenti memorizzati
  *
  * Implementazione:
- * - Verifica che la tabella non sia NULL.
- * - Chiama `distruggi_tabella`, passando `distruggi_utente_t` come funzione di distruzione.
+ *    Utilizza la funzione `distruggi_tabella`, passando una funzione
+ *    di distruzione specifica per i utenti (`distruggi_utente_t`).
  *
  * Parametri:
- * tabella_utenti: la tabella da distruggere.
+ *    tabella_utenti: tabella hash contenente i utenti
  *
  * Pre-condizioni:
- * - `tabella_utenti` deve essere valida o NULL.
+ *    tabella_utenti: non deve essere NULL
  *
  * Post-condizioni:
- * - Tutti gli utenti nella tabella vengono distrutti.
- * - La memoria della tabella viene liberata.
- *
- * Ritorna:
- * - Nessun valore restituito (void).
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca memoria per la tabella e i suoi contenuti.
+ *    tutta la memoria associata alla tabella e ai utenti viene liberata
  */
 void distruggi_tabella_utenti(TabellaUtenti tabella_utenti){
     if(tabella_utenti == NULL)
@@ -99,32 +91,32 @@ void distruggi_tabella_utenti(TabellaUtenti tabella_utenti){
     distruggi_tabella(tabella_utenti, distruggi_utente_t);
 }
 
-
 /*
  * Funzione: aggiungi_utente_in_tabella
- * ------------------------------------
- * Inserisce un nuovo utente nella tabella hash.
+ * -------------------------------------
+ *
+ * inserisce un utente all'interno della tabella hash dei utenti, utilizzando la targa come chiave
  *
  * Implementazione:
- * - Verifica che la tabella non sia NULL.
- * - Ottiene la chiave (email) dell’utente tramite `ottieni_email`.
- * - Inserisce l’utente nella tabella usando `inserisci_in_tabella`.
+ *    chiama la funzione inserisci_in_tabella utilizzando la targa del utente come chiave
+ *    e il puntatore al utente come valore.
  *
  * Parametri:
- * tabella_utenti: la tabella dove inserire l’utente.
- * utente: il puntatore all’oggetto utente da inserire.
+ *    tabella_utenti: puntatore alla tabella hash dei utenti
+ *    utente: puntatore al utente da inserire
  *
  * Pre-condizioni:
- * - `tabella_utenti` e `utente` devono essere validi.
+ *    tabella_utenti: non deve essere NULL
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - L’utente è presente nella tabella.
+ *    restituisce 1 se l'inserimento è avvenuto con successo, 0 altrimenti
  *
  * Ritorna:
- * - 1 in caso di successo, 0 in caso di errore.
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
- * - La tabella viene modificata.
+ *    modifica la tabella hash aggiungendo il utente
  */
 Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente){
     if(tabella_utenti == NULL){
@@ -136,28 +128,28 @@ Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente){
 
 /*
  * Funzione: cerca_utente_in_tabella
- * ---------------------------------
- * Cerca un utente nella tabella hash tramite la sua email.
+ * -----------------------------------
+ *
+ * cerca un utente nella tabella hash dei utenti utilizzando la targa come chiave
  *
  * Implementazione:
- * - Verifica che la tabella non sia NULL.
- * - Chiama `cerca_in_tabella` con la chiave email.
+ *    utilizza la funzione cerca_in_tabella passando la targa come chiave,
+ *    e restituisce il puntatore al utente trovato se esiste
  *
  * Parametri:
- * tabella_utenti: la tabella in cui cercare.
- * email: la chiave univoca dell’utente.
+ *    tabella_utenti: puntatore alla tabella hash dei utenti
+ *    targa: stringa costante contenente la targa del utente da cercare
  *
  * Pre-condizioni:
- * - `tabella_utenti` e `email` devono essere validi.
+ *    tabella_utenti: non deve essere NULL
+ *    targa: non deve essere NULL
  *
  * Post-condizioni:
- * - Nessuna modifica alla tabella.
+ *    restituisce un puntatore al utente se presente nella tabella,
+ *    altrimenti restituisce NULL
  *
  * Ritorna:
- * - Puntatore all’utente trovato o NULL se non esiste.
- *
- * Side-effect:
- * - Nessuno.
+ *    un puntatore ad un utente o NULL
  */
 Utente cerca_utente_in_tabella(const TabellaUtenti tabella_utenti, const char *email){
     if(tabella_utenti == NULL){
@@ -168,28 +160,32 @@ Utente cerca_utente_in_tabella(const TabellaUtenti tabella_utenti, const char *e
 
 /*
  * Funzione: rimuovi_utente_in_tabella
- * -----------------------------------
- * Rimuove un utente dalla tabella hash tramite la sua email.
+ * ------------------------------------
+ *
+ * rimuove un utente dalla tabella dei utente utilizzando la targa come chiave
  *
  * Implementazione:
- * - Verifica che la tabella non sia NULL.
- * - Chiama `cancella_dalla_tabella` passando anche `distruggi_utente_t`.
+ *    richiama la funzione cancella_dalla_tabella passando la targa come chiave
+ *    e la funzione distruggi_utente_t per liberare la memoria del utente
  *
  * Parametri:
- * tabella_utenti: la tabella da cui rimuovere l’utente.
- * email: la chiave identificativa dell’utente.
+ *    tabella_utente: puntatore alla tabella hash contenente i utente
+ *    targa: stringa contenente la targa del utente da rimuovere
  *
  * Pre-condizioni:
- * - `tabella_utenti` e `email` devono essere validi.
+ *    tabella_utente: non deve essere NULL
+ *    targa: non deve essere NULL
  *
  * Post-condizioni:
- * - L’utente viene rimosso dalla tabella.
+ *    restituisce 1 se il utente è stato rimosso correttamente,
+ *    0 se la targa non è presente o si è verificato un errore
  *
  * Ritorna:
- * - 1 in caso di successo, 0 se la rimozione fallisce.
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
- * - Dealloca memoria per l’utente rimosso.
+ *    Modifica la tabella dei utente rimuovendo l'elemento specificato
+ *    e libera la memoria associata al utente
  */
 Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email){
     if(tabella_utenti == NULL){
@@ -200,29 +196,30 @@ Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email){
 
 /*
  * Funzione: carica_utenti
- * -----------------------
- * Carica una serie di utenti in una tabella hash.
+ * ------------------------
+ *
+ * carica un insieme di utenti in una tabella hash
  *
  * Implementazione:
- * - Verifica che la tabella, il vettore di utenti e la dimensione siano validi.
- * - Per ogni utente nel vettore, chiama `aggiungi_utente_in_tabella`.
+ *    itera sull'array di utenti fornito e li inserisce uno a uno nella tabella
+ *    usando la funzione aggiungi_utente_in_tabella.
  *
  * Parametri:
- * tabella_utenti: la tabella in cui caricare gli utenti.
- * utente: array di puntatori a oggetti `Utente`.
- * dimensione: numero di elementi nell’array.
+ *    tabella_utenti: puntatore alla tabella hash in cui inserire i utenti
+ *    utente: array di puntatori a utenti da caricare
+ *    dimensione: numero di utenti presenti nell'array
  *
  * Pre-condizioni:
- * - `tabella_utenti`, `utente` devono essere validi e `dimensione > 0`.
+ *    - tabella_utenti: non deve essere NULL
+ *    - utente: non deve essere NULL
+ *    - dimensione: deve essere maggiore di 0
  *
  * Post-condizioni:
- * - Tutti gli utenti validi vengono inseriti nella tabella.
- *
- * Ritorna:
- * - Nessun valore restituito (void).
+ *    Non restituisce niente
  *
  * Side-effect:
- * - La tabella viene modificata e aggiornata con nuovi utenti.
+ *    I utenti vengono inseriti nella tabella hash. Se un utente ha una targa
+ *    uguale rispetto a uno già presente, il utente non viene inserito
  */
 void carica_utenti(TabellaUtenti tabella_utenti, Utente *utente, unsigned int dimensione){
     if(tabella_utenti == NULL || utente == NULL || !dimensione) return;

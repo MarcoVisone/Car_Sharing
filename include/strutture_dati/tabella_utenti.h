@@ -37,92 +37,101 @@ TabellaUtenti crea_tabella_utenti(unsigned int grandezza);
 
 /*
  * Funzione: distruggi_tabella_utenti
- * ----------------------------------
- * Distrugge la tabella hash contenente gli utenti, deallocando memoria.
+ * -----------------------------------
+ *
+ * libera tutta la memoria associata alla tabella dei utenti,
+ * inclusi tutti i utenti memorizzati
+ *
+ * Implementazione:
+ *    Utilizza la funzione `distruggi_tabella`, passando una funzione
+ *    di distruzione specifica per i utenti (`distruggi_utente_t`).
  *
  * Parametri:
- * tabella_utenti: la tabella da distruggere.
+ *    tabella_utenti: tabella hash contenente i utenti
  *
  * Pre-condizioni:
- * - `tabella_utenti` deve essere valida o NULL.
+ *    tabella_utenti: non deve essere NULL
  *
  * Post-condizioni:
- * - Tutti gli utenti nella tabella vengono distrutti.
- * - La memoria della tabella viene liberata.
- *
- * Ritorna:
- * - Nessun valore restituito (void).
+ *    non restituisce niente
  *
  * Side-effect:
- * - Dealloca memoria per la tabella e i suoi contenuti.
+ *    tutta la memoria associata alla tabella e ai utenti viene liberata
  */
 void distruggi_tabella_utenti(TabellaUtenti tabella_utenti);
 
 /*
  * Funzione: aggiungi_utente_in_tabella
- * ------------------------------------
- * Inserisce un nuovo utente nella tabella hash.
+ * -------------------------------------
+ *
+ * inserisce un utente all'interno della tabella hash dei utenti, utilizzando la targa come chiave
  *
  * Parametri:
- * tabella_utenti: la tabella dove inserire l’utente.
- * utente: il puntatore all’oggetto utente da inserire.
+ *    tabella_utenti: puntatore alla tabella hash dei utenti
+ *    utente: puntatore al utente da inserire
  *
  * Pre-condizioni:
- * - `tabella_utenti` e `utente` devono essere validi.
+ *    tabella_utenti: non deve essere NULL
+ *    utente: non deve essere NULL
  *
  * Post-condizioni:
- * - L’utente è presente nella tabella.
+ *    restituisce 1 se l'inserimento è avvenuto con successo, 0 altrimenti
  *
  * Ritorna:
- * - 1 in caso di successo, 0 in caso di errore.
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
- * - La tabella viene modificata.
+ *    modifica la tabella hash aggiungendo il utente
  */
 Byte aggiungi_utente_in_tabella(TabellaUtenti tabella_utenti, Utente utente);
 
 /*
  * Funzione: cerca_utente_in_tabella
- * ---------------------------------
+ * -----------------------------------
  *
- * cerca un utente nella tabella hash dato l'indirizzo email
+ * cerca un utente nella tabella hash dei utenti utilizzando la targa come chiave
  *
  * Parametri:
- *    tabella_utenti: puntatore alla tabella hash
- *    email: stringa contenente l'email dell'utente da cercare
+ *    tabella_utenti: puntatore alla tabella hash dei utenti
+ *    targa: stringa costante contenente la targa del utente da cercare
  *
- * Pre-condizione:
- *    tabella_utenti e email non devono essere NULL
+ * Pre-condizioni:
+ *    tabella_utenti: non deve essere NULL
+ *    targa: non deve essere NULL
  *
- * Post-condizione:
- *    ritorna il puntatore all'utente trovato,
- *    NULL se l'utente non è presente nella tabella
+ * Post-condizioni:
+ *    restituisce un puntatore al utente se presente nella tabella,
+ *    altrimenti restituisce NULL
  *
- * Side-effect:
- *    nessuno
+ * Ritorna:
+ *    un puntatore ad un utente o NULL
  */
 Utente cerca_utente_in_tabella(TabellaUtenti tabella_utenti, const char *email);
 
 /*
  * Funzione: rimuovi_utente_in_tabella
- * -----------------------------------
- * Rimuove un utente dalla tabella hash tramite la sua email.
+ * ------------------------------------
+ *
+ * rimuove un utente dalla tabella dei utente utilizzando la targa come chiave
  *
  * Parametri:
- * tabella_utenti: la tabella da cui rimuovere l’utente.
- * email: la chiave identificativa dell’utente.
+ *    tabella_utente: puntatore alla tabella hash contenente i utente
+ *    targa: stringa contenente la targa del utente da rimuovere
  *
  * Pre-condizioni:
- * - `tabella_utenti` e `email` devono essere validi.
+ *    tabella_utente: non deve essere NULL
+ *    targa: non deve essere NULL
  *
  * Post-condizioni:
- * - L’utente viene rimosso dalla tabella.
+ *    restituisce 1 se il utente è stato rimosso correttamente,
+ *    0 se la targa non è presente o si è verificato un errore
  *
  * Ritorna:
- * - 1 in caso di successo, 0 se la rimozione fallisce.
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
- * - Dealloca memoria per l’utente rimosso.
+ *    Modifica la tabella dei utente rimuovendo l'elemento specificato
+ *    e libera la memoria associata al utente
  */
 Byte rimuovi_utente_in_tabella(TabellaUtenti tabella_utenti, char *email);
 
