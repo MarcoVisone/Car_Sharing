@@ -384,7 +384,6 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
         if(uscita(email)){
             return NULL;
         }
-
         printf("Inserisci la password: ");
         ottieni_parola(password, DIMENSIONE_STRINGA_PASSWORD);
         if(uscita(password)){
@@ -394,6 +393,7 @@ Utente interfaccia_accesso(TabellaUtenti tabella_utenti){
             md5(password, strlen(password), password_mod);
             utente = cerca_utente_in_tabella(tabella_utenti, email);
         }
+
         if((utente == NULL )|| !hash_equals(ottieni_password(utente), password_mod, DIMENSIONE_PASSWORD)){
             printf("Email o password errati\n");
 
@@ -532,6 +532,7 @@ Byte interfaccia_registrazione(TabellaUtenti tabella_utenti, Byte permesso){
 void menu_registrazione(TabellaUtenti tabella_utenti){
     stampa_header("REGISTRAZIONE");
     Byte codice_reg = interfaccia_registrazione(tabella_utenti, CLIENTE);
+
     if (codice_reg == 1) {
         stampa_successo("Registrazione completata!");
     } else if(codice_reg < 0){

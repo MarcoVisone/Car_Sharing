@@ -381,7 +381,7 @@ const char *ottieni_nome(const Utente utente){
  *
  * Implementazione:
  *    - Se `utente` è NULL, ritorna NULL.
- *    - Usa `mia_strdup` per duplicare la stringa `email`.
+ *    - Restituisce la stringa `email`.
  *
  * Parametri:
  *    utente: puntatore costante all'oggetto `Utente`.
@@ -412,8 +412,7 @@ const char *ottieni_email(const Utente utente){
  *
  * Implementazione:
  *    - Se `utente` è NULL, ritorna NULL.
- *    - Alloca un array di byte di dimensione `DIMENSIONE_PASSWORD`.
- *    - Copia byte per byte la password dell'utente nel nuovo array.
+ *    - Restituisce password utente
  *
  * Parametri:
  *    utente: puntatore costante all'oggetto `Utente`.

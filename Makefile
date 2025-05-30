@@ -56,5 +56,13 @@ md5.o: src/utils/md5.c include/utils/md5.h
 utils.o: src/utils/utils.c include/utils/utils.h
 	gcc -Wall -Wextra -std=c99 -Iinclude -c src/utils/utils.c -o utils.o
 
+ifeq ($(OS),Windows_NT)
+    RM = del /Q
+    EXE_EXT = .exe
+else
+    RM = rm -f
+    EXE_EXT =
+endif
+
 clean:
-	rm -f *.o car_sharing
+		$(RM) *.o $(wildcard car_sharing$(EXE_EXT))

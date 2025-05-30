@@ -87,7 +87,6 @@ void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *)){
  *
  * Pre-condizioni:
  *    item: non deve essere NULL
- *    nodo: non deve essere NULL
  *
  * Post-condizioni:
  *    restituisce la lista con un nuovo nodo, in caso di errore restituisce la lista iniziale
@@ -99,7 +98,7 @@ void distruggi_nodo(Nodo nodo, void (*funzione_distruggi_item)(void *)){
  *    Alloca memoria dinamica per il nuovo nodo.
  */
 Nodo aggiungi_nodo(Item item, Nodo nodo){
-    if(nodo == NULL || item == NULL) return nodo;
+    if(item == NULL) return nodo;
 
     Nodo nodo2 = malloc(sizeof(struct nodo));
     nodo2->item = item;
