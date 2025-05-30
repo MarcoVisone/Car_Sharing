@@ -33,18 +33,337 @@ typedef enum {
 } TipoFascia;
 
 // Dichiarazioni delle funzioni di utilità per il main
+/*
+ * Funzione: invio
+ * ----------------------
+ * Attende che l'utente prema INVIO prima di continuare
+ *
+ * Implementazione:
+ *    - Stampa un messaggio che invita a premere INVIO
+ *    - Legge caratteri dall'input fino a quando non viene rilevato '\n'
+ *
+ * Pre-condizioni:
+ *    nessuna
+ *
+ * Post-condizione:
+ *    il buffer di input è stato svuotato
+ *
+ * Side-effect:
+ *    consuma tutti i caratteri nel buffer di input fino al newline
+ */
 void invio();
+
+/*
+ * Funzione: carica_tabella_utenti
+ * ----------------------
+ * Carica una tabella hash di utenti da file
+ *
+ * Implementazione:
+ *    - Tenta di caricare un vettore di utenti dai file specificati
+ *    - Se il caricamento fallisce, crea una tabella vuota
+ *    - Calcola una dimensione appropriata per la tabella
+ *    - Inserisce tutti gli utenti caricati nella tabella
+ *    - Libera la memoria del vettore temporaneo
+ *
+ * Parametri:
+ *    grandezza: dimensione minima della tabella hash
+ *    file_utente: percorso del file contenente i dati degli utenti
+ *    file_dati: percorso del file contenente i dati aggiuntivi degli utenti
+ *
+ * Pre-condizioni:
+ *    file_utente e file_dati devono essere percorsi validi
+ *
+ * Post-condizione:
+ *    restituisce una tabella hash contenente gli utenti caricati
+ *    oppure una tabella vuota se il caricamento fallisce
+ *
+ * Ritorna:
+ *    Una tabella hash di utenti (TabellaUtenti) oppure NULL in caso di errore
+ *
+ * Side-effect:
+ *    alloca memoria per la tabella hash e per gli utenti
+ */
 TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_utente, const char *file_dati);
+
+/*
+ * Funzione: carica_tabella_veicoli
+ * ----------------------
+ * Carica una tabella hash di veicoli da file
+ *
+ * Implementazione:
+ *    - Tenta di caricare un vettore di veicoli dai file specificati
+ *    - Se il caricamento fallisce, crea una tabella vuota
+ *    - Calcola una dimensione appropriata per la tabella
+ *    - Inserisce tutti i veicoli caricati nella tabella
+ *    - Libera la memoria del vettore temporaneo
+ *
+ * Parametri:
+ *    grandezza: dimensione minima della tabella hash
+ *    file_veicolo: percorso del file contenente i dati dei veicoli
+ *    file_prenotazioni: percorso del file contenente le prenotazioni
+ *
+ * Pre-condizioni:
+ *    file_veicolo e file_prenotazioni devono essere percorsi validi
+ *
+ * Post-condizione:
+ *    restituisce una tabella hash contenente i veicoli caricati
+ *    oppure una tabella vuota se il caricamento fallisce
+ *
+ * Ritorna:
+ *    Una tabella hash di veicoli (TabellaVeicoli) oppure NULL in caso di errore
+ *
+ * Side-effect:
+ *    alloca memoria per la tabella hash e per i veicoli
+ */
 TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_veicolo, const char *file_prenotazioni);
+
+/*
+ * Funzione: determina_fascia_oraria
+ * ----------------------
+ * Determina la fascia oraria di un timestamp
+ *
+ * Implementazione:
+ *    - Analizza l'ora e il giorno della settimana
+ *    - Classifica il timestamp in una delle fasce disponibili
+ *    - Gestisce eventuali errori nella conversione del tempo
+ *
+ * Parametri:
+ *    timestamp: valore time_t rappresentante il tempo da analizzare
+ *
+ * Pre-condizioni:
+ *    timestamp deve essere un valore valido
+ *
+ * Post-condizione:
+ *    restituisce la fascia oraria corrispondente
+ *
+ * Ritorna:
+ *    Un valore dell'enum TipoFascia
+ */
 TipoFascia determina_fascia_oraria(time_t timestamp);
+
+/*
+ * Funzione: calcola_sconto_percentuale
+ * ----------------------
+ * Calcola lo sconto percentuale in base alla fascia oraria
+ *
+ * Implementazione:
+ *    - Utilizza uno switch per selezionare la percentuale di sconto
+ *    - Restituisce valori predefiniti per ogni fascia
+ *
+ * Parametri:
+ *    fascia: tipo di fascia oraria
+ *
+ * Pre-condizioni:
+ *    fascia deve essere un valore valido dell'enum TipoFascia
+ *
+ * Post-condizione:
+ *    restituisce la percentuale di sconto corrispondente
+ *
+ * Ritorna:
+ *    Un double rappresentante la percentuale di sconto (es. 0.15 per 15%)
+ */
 double calcola_sconto_percentuale(TipoFascia fascia);
+
+/*
+ * Funzione: ottieni_descrizione_fascia
+ * ----------------------
+ * Restituisce una descrizione testuale della fascia oraria
+ *
+ * Implementazione:
+ *    - Utilizza uno switch per selezionare la stringa descrittiva
+ *    - Restituisce stringhe costanti predefinite
+ *
+ * Parametri:
+ *    fascia: tipo di fascia oraria
+ *
+ * Pre-condizioni:
+ *    fascia deve essere un valore valido dell'enum TipoFascia
+ *
+ * Post-condizione:
+ *    restituisce la descrizione corrispondente
+ *
+ * Ritorna:
+ *    Una stringa costante (const char*) con la descrizione
+ */
 const char* ottieni_descrizione_fascia(TipoFascia fascia);
+
+/*
+ * Funzione: menu_utente
+ * ----------------------
+ * Gestisce il menu principale per gli utenti clienti
+ *
+ * Implementazione:
+ *    - Mostra un menu con diverse opzioni
+ *    - Gestisce l'interazione con l'utente
+ *    - Chiama le funzioni appropriate in base alla scelta
+ *
+ * Parametri:
+ *    utente: l'utente loggato
+ *    tabella_veicoli: tabella hash dei veicoli disponibili
+ *    tabella_utenti: tabella hash degli utenti registrati
+ *
+ * Pre-condizioni:
+ *    utente deve essere un utente valido con permesso CLIENTE
+ *    tabella_veicoli e tabella_utenti devono essere inizializzate
+ *
+ * Post-condizione:
+ *    esegue le operazioni richieste dall'utente fino al logout
+ *
+ * Side-effect:
+ *    modifica lo stato delle prenotazioni e dello storico utente
+ */
 void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti tabella_utenti);
+
+/*
+ * Funzione: menu_amministratore
+ * ----------------------
+ * Gestisce il menu principale per gli utenti amministratori
+ *
+ * Implementazione:
+ *    - Mostra un menu con opzioni di amministrazione
+ *    - Gestisce l'interazione con l'utente
+ *    - Chiama le funzioni appropriate in base alla scelta
+ *
+ * Parametri:
+ *    amministratore: l'utente loggato
+ *    tabella_veicoli: tabella hash dei veicoli disponibili
+ *    tabella_utenti: tabella hash degli utenti registrati
+ *
+ * Pre-condizioni:
+ *    amministratore deve essere un utente valido con permesso ADMIN
+ *    tabella_veicoli e tabella_utenti devono essere inizializzate
+ *
+ * Post-condizione:
+ *    esegue le operazioni di amministrazione fino al logout
+ *
+ * Side-effect:
+ *    modifica lo stato dei veicoli e delle prenotazioni
+ */
 void menu_amministratore(Utente amministratore, TabellaVeicoli tabella_veicoli, TabellaUtenti tabella_utenti);
+
+/*
+ * Funzione: menu_utente
+ * ----------------------
+ * Gestisce il menu principale per gli utenti clienti con tutte le operazioni disponibili
+ *
+ * Implementazione:
+ *    - Mostra un'interfaccia testuale con 5 opzioni principali
+ *    - Gestisce la selezione e l'input dell'utente
+ *    - Per ogni opzione:
+ *        * '1': Visualizza veicoli disponibili in tempo reale
+ *        * '2': Gestisce il processo completo di prenotazione:
+ *            - Richiede intervallo di prenotazione
+ *            - Seleziona veicolo disponibile
+ *            - Calcola costi e sconti (fedeltà e fascia oraria)
+ *            - Conferma e salva la prenotazione
+ *        * '3': Gestione prenotazioni esistenti (visualizza/cancella)
+ *        * '4': Visualizza storico noleggi precedenti
+ *        * '5': Logout e uscita dal menu
+ *    - Gestisce errori e casi limite con messaggi appropriati
+ *    - Pulisce lo schermo tra le operazioni
+ *
+ * Parametri:
+ *    utente: puntatore all'utente loggato (non NULL, già validato)
+ *    tabella_veicoli: tabella hash contenente tutti i veicoli disponibili
+ *    tabella_utenti: tabella hash contenente tutti gli utenti registrati
+ *
+ * Pre-condizioni:
+ *    - utente deve essere un puntatore valido a un Utente con permesso CLIENTE
+ *    - tabella_veicoli e tabella_utenti devono essere inizializzate
+ *    - Le funzioni di interfaccia e utilità devono essere disponibili
+ *
+ * Post-condizione:
+ *    - Esegue le operazioni richieste dall'utente
+ *    - Mantiene consistente lo stato delle prenotazioni
+ *    - Termina solo quando l'utente sceglie il logout
+ *
+ * Side-effect:
+ *    - Modifica lo stato delle prenotazioni nei veicoli
+ *    - Aggiorna lo storico dell'utente
+ *    - Può allocare/distruggere oggetti Prenotazione e Intervallo
+ *    - Interagisce con stdin/stdout per l'I/O
+ */
 void scelta_menu(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti);
+
+/*
+ * Funzione: salva_tabella_utenti
+ * ----------------------
+ * Salva la tabella hash degli utenti su file
+ *
+ * Implementazione:
+ *    - Estrae un vettore di utenti dalla tabella hash
+ *    - Chiama la funzione di salvataggio su file
+ *    - Gestisce eventuali errori nei parametri
+ *
+ * Parametri:
+ *    tabella_utenti: tabella hash da salvare
+ *    file_utente: percorso del file per i dati principali
+ *    file_dati: percorso del file per i dati aggiuntivi
+ *
+ * Pre-condizioni:
+ *    tabella_utenti deve essere inizializzata
+ *    file_utente e file_dati devono essere percorsi validi
+ *
+ * Post-condizione:
+ *    i dati degli utenti sono salvati sui file specificati
+ *
+ * Side-effect:
+ *    scrive su file e alloca memoria temporanea per il vettore
+ */
 void salva_tabella_utenti(TabellaUtenti tabella_utenti, const char *file_utente, const char *file_dati);
+
+/*
+ * Funzione: salva_tabella_veicoli
+ * ----------------------
+ * Salva la tabella hash dei veicoli su file
+ *
+ * Implementazione:
+ *    - Estrae un vettore di veicoli dalla tabella hash
+ *    - Chiama la funzione di salvataggio su file
+ *    - Gestisce eventuali errori nei parametri
+ *
+ * Parametri:
+ *    tabella_veicoli: tabella hash da salvare
+ *    file_veicoli: percorso del file per i dati dei veicoli
+ *    file_prenotazioni: percorso del file per le prenotazioni
+ *
+ * Pre-condizioni:
+ *    tabella_veicoli deve essere inizializzata
+ *    file_veicoli e file_prenotazioni devono essere percorsi validi
+ *
+ * Post-condizione:
+ *    i dati dei veicoli sono salvati sui file specificati
+ *
+ * Side-effect:
+ *    scrive su file e alloca memoria temporanea per il vettore
+ */
 void salva_tabella_veicoli(TabellaVeicoli tabella_veicoli, const char *file_veicoli, const char *file_prenotazioni);
 
+/*
+ * Funzione: main
+ * ----------------------
+ * Punto di ingresso principale del programma
+ *
+ * Implementazione:
+ *    - Carica le tabelle hash da file
+ *    - Crea l'amministratore di default se necessario
+ *    - Gestisce il ciclo principale di accesso/registrazione
+ *    - Mostra i menu appropriati in base al tipo di utente
+ *    - Salva i dati prima di terminare
+ *
+ * Pre-condizioni:
+ *    i file di archivio devono essere accessibili in lettura/scrittura
+ *
+ * Post-condizione:
+ *    il programma è eseguito fino alla scelta di uscita
+ *    tutti i dati sono salvati correttamente prima di terminare
+ *
+ * Ritorna:
+ *    0 in caso di successo, -1 in caso di errore critico
+ *
+ * Side-effect:
+ *    gestisce tutte le risorse di memoria e file del programma
+ */
 int main() {
     TabellaUtenti tabella_utenti = carica_tabella_utenti(TABELLA_GRANDEZZA, FILE_UTENTI, FILE_DATI_UTENTI);
     TabellaVeicoli tabella_veicoli = carica_tabella_veicoli(TABELLA_GRANDEZZA, FILE_VEICOLI, FILE_PRENOTAZIONI_VEICOLI);
