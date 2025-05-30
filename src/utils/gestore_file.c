@@ -37,18 +37,22 @@ static uint8_t password_buffer[DIMENSIONE_PASSWORD];
  * Salva una singola prenotazione su un file binario.
  *
  * Implementazione:
- * Scrive nel file la lunghezza e il contenuto delle stringhe 'cliente' e 'targa',
- * il costo della prenotazione e gli orari di inizio e fine dell'intervallo.
+ *    Scrive nel file la lunghezza e il contenuto delle stringhe 'cliente' e 'targa',
+ *    il costo della prenotazione e gli orari di inizio e fine dell'intervallo.
  *
  * Parametri:
- * fp: puntatore al file su cui salvare la prenotazione
- * prenotazione: la prenotazione da salvare
+ *    fp: puntatore al file su cui salvare la prenotazione
+ *    prenotazione: la prenotazione da salvare
  *
  * Pre-condizioni:
- * fp e prenotazione non devono essere NULL.
+ *    fp: non deve essere NULL
+ *    prenotazione: non deve essere NULL
  *
  * Post-condizioni:
- * La prenotazione viene scritta nel file.
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    La prenotazione viene scritta nel file.
  */
 static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
     if(fp == NULL || prenotazione == NULL) return;
@@ -86,19 +90,23 @@ static void salva_prenotazione(FILE *fp, Prenotazione prenotazione){
  * Carica una singola prenotazione da un file binario.
  *
  * Implementazione:
- * Legge dal file la lunghezza e il contenuto delle stringhe 'cliente' e 'targa',
- * il costo della prenotazione e gli orari di inizio e fine dell'intervallo,
- * ricostruendo l'oggetto Prenotazione.
+ *    Legge dal file la lunghezza e il contenuto delle stringhe 'cliente' e 'targa',
+ *    il costo della prenotazione e gli orari di inizio e fine dell'intervallo,
+ *    ricostruendo l'oggetto Prenotazione.
  *
  * Parametri:
- * fp: puntatore al file da cui caricare la prenotazione
- * buffer_str: buffer temporaneo per le stringhe
+ *    fp: puntatore al file da cui caricare la prenotazione
+ *    buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
- * fp e buffer_str non devono essere NULL.
+ *    fp: non deve essere NULL
+ *    buffer_str: non deve essere NULL
  *
  * Post-condizioni:
- * Restituisce un oggetto Prenotazione caricato dal file, o NULL in caso di errore.
+ *    Restituisce un oggetto Prenotazione caricato dal file, o NULL in caso di errore.
+ *
+ * Ritorna:
+ *    un puntatore alla struttura prenotazione o NULL
  */
 static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
     if(fp == NULL || buffer_str == NULL) return NULL;
@@ -154,18 +162,22 @@ static Prenotazione carica_prenotazione(FILE *fp, char *buffer_str){
  * Salva tutte le prenotazioni di una struttura Prenotazioni su un file binario.
  *
  * Implementazione:
- * Ottiene un vettore delle prenotazioni dall'albero, scrive la dimensione del vettore,
- * e poi cicla salvando ogni singola prenotazione.
+ *    Ottiene un vettore delle prenotazioni dall'albero, scrive la dimensione del vettore,
+ *    e poi cicla salvando ogni singola prenotazione.
  *
  * Parametri:
- * fp: puntatore al file su cui salvare le prenotazioni
- * prenotazioni: la struttura Prenotazioni da salvare
+ *    fp: puntatore al file su cui salvare le prenotazioni
+ *    prenotazioni: la struttura Prenotazioni da salvare
  *
  * Pre-condizioni:
- * fp e prenotazioni non devono essere NULL.
+ *    fp: non deve essere NULL
+ *    prenotazioni: non deve essere NULL
  *
  * Post-condizioni:
- * Tutte le prenotazioni vengono scritte nel file.
+ *    non restituisce niente
+ *
+ * Side-effect:
+ *    Tutte le prenotazioni vengono scritte nel file
  */
 static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
     if (fp == NULL || prenotazioni == NULL) return;
@@ -196,18 +208,22 @@ static void salva_prenotazioni(FILE *fp, Prenotazioni prenotazioni) {
  * Carica tutte le prenotazioni da un file binario e le inserisce in una nuova struttura Prenotazioni.
  *
  * Implementazione:
- * Legge la dimensione del set di prenotazioni, crea una nuova struttura Prenotazioni,
- * e poi cicla caricando ogni singola prenotazione e aggiungendola alla struttura.
+ *    Legge la dimensione del set di prenotazioni, crea una nuova struttura Prenotazioni,
+ *    e poi cicla caricando ogni singola prenotazione e aggiungendola alla struttura.
  *
  * Parametri:
- * fp: puntatore al file da cui caricare le prenotazioni
- * buffer_str: buffer temporaneo per le stringhe
+ *    fp: puntatore al file da cui caricare le prenotazioni
+ *    buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
- * fp e buffer_str non devono essere NULL.
+ *    fp: non deve essere NULL
+ *    buffer_str: non deve essere NULL
  *
  * Post-condizioni:
- * Restituisce una nuova struttura Prenotazioni con i dati caricati, o NULL in caso di errore.
+ *    Restituisce una nuova struttura Prenotazioni con i dati caricati, o NULL in caso di errore.
+ *
+ * Ritorna:
+ *    un puntatore alla struttura prenotazioni o NULL
  */
 static Prenotazioni carica_prenotazioni(FILE *fp, char *buffer_str) {
     if (fp == NULL || buffer_str == NULL) return NULL;
@@ -242,26 +258,26 @@ static Prenotazioni carica_prenotazioni(FILE *fp, char *buffer_str) {
  * salva le informazioni di un singolo veicolo su un file binario, includendo anche le sue prenotazioni
  *
  * Implementazione:
- * - Scrive nel file file_veicolo i seguenti campi, ciascuno preceduto dalla sua lunghezza:
- * - tipo del veicolo, targa, modello, posizione, tariffa
- * - Le prenotazioni associate vengono salvate nel file file_prenotazioni tramite la funzione salva_prenotazioni
+ *    - Scrive nel file file_veicolo i seguenti campi, ciascuno preceduto dalla sua lunghezza:
+ *    - tipo del veicolo, targa, modello, posizione, tariffa
+ *    - Le prenotazioni associate vengono salvate nel file file_prenotazioni tramite la funzione salva_prenotazioni
  *
  * Parametri:
- * file_veicolo: puntatore a FILE aperto in modalità scrittura binaria, destinato ai dati del veicolo
- * file_prenotazioni: puntatore a FILE aperto in modalità scrittura binaria, destinato alle prenotazioni
- * v: veicolo da salvare
+ *    file_veicolo: puntatore a FILE aperto in modalità scrittura binaria, destinato ai dati del veicolo
+ *    file_prenotazioni: puntatore a FILE aperto in modalità scrittura binaria, destinato alle prenotazioni
+ *    v: veicolo da salvare
  *
  * Pre-condizioni:
- * file_veicolo: deve essere diverso da NULL
- * file_prenotazioni: deve essere diverso da NULL
- * v: deve essere diverso da NULL
+ *    file_veicolo: deve essere diverso da NULL
+ *    file_prenotazioni: deve essere diverso da NULL
+ *    v: deve essere diverso da NULL
  *
  * Post-condizioni:
- * non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- * - I dati del veicolo vengono scritti nel file file_veicolo
- * - Le prenotazioni vengono scritte nel file file_prenotazioni
+ *    - I dati del veicolo vengono scritti nel file file_veicolo
+ *    - Le prenotazioni vengono scritte nel file file_prenotazioni
  */
 static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v){
 	if (file_veicolo == NULL || v == NULL || file_prenotazioni == NULL) return;
@@ -303,26 +319,29 @@ static void salva_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, Veicolo v
  * carica un veicolo da un file binario e le relative prenotazioni da un secondo file binario
  *
  * Implementazione:
- * - Legge dal file file_veicolo i campi stringa tipo, targa, modello, posizione
- * preceduti dalla loro lunghezza, e un double tariffa
- * - Carica le prenotazioni associate dal file file_prenotazioni usando la funzione carica_prenotazioni
- * - Crea il veicolo con i dati letti e lo restituisce.
+ *    - Legge dal file file_veicolo i campi stringa tipo, targa, modello, posizione
+ *    preceduti dalla loro lunghezza, e un double tariffa
+ *    - Carica le prenotazioni associate dal file file_prenotazioni usando la funzione carica_prenotazioni
+ *    - Crea il veicolo con i dati letti e lo restituisce.
  *
  * Parametri:
- * file_veicolo: file binario da cui leggere i dati del veicolo
- * file_prenotazioni: file binario da cui leggere le prenotazioni associate al veicolo
- * buffer_str: buffer temporaneo per le stringhe
+ *    file_veicolo: file binario da cui leggere i dati del veicolo
+ *    file_prenotazioni: file binario da cui leggere le prenotazioni associate al veicolo
+ *    buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizioni:
- * file_veicolo: deve essere diverso da NULL
- * file_prenotazioni: deve essere diverso da NULL
- * buffer_str: non deve essere NULL
+ *    file_veicolo: deve essere diverso da NULL
+ *    file_prenotazioni: deve essere diverso da NULL
+ *    buffer_str: non deve essere NULL
  *
  * Post-condizioni:
- * restituisce NULL se uno dei file è NULL o in caso di errore, altrimenti restituisce un nuovo oggetto Veicolo
+ *    restituisce NULL se uno dei file è NULL o in caso di errore, altrimenti restituisce un nuovo oggetto Veicolo
+ *
+ * Ritorna:
+ *    un puntatore a veicolo o NULL
  *
  * Side-effect:
- * Alloca memoria dinamicamente per le stringhe temporanee (poi liberate), e per un nuovo oggetto Veicolo
+ *    Alloca memoria dinamicamente per le stringhe temporanee (poi liberate), e per un nuovo oggetto Veicolo
  */
 static Veicolo carica_veicolo(FILE *file_veicolo, FILE *file_prenotazioni, char *buffer_str){
 	if (file_veicolo == NULL || file_prenotazioni == NULL || buffer_str == NULL) return NULL;
@@ -404,32 +423,32 @@ errore:
  * salva su un file binario un vettore di veicoli e su un altro le relative prenotazioni
  *
  * Implementazione:
- * - Apre due file binari in modalità scrittura:
- * - uno per i dati dei veicoli, nome_file_veicolo
- * - uno per le prenotazioni associate, nome_file_prenotazioni
- * - Scrive nel file dei veicoli il numero totale di veicoli da salvare
- * - Per ogni veicolo nel vettore, chiama la funzione salva_veicolo
- * che scrive i dati nei rispettivi file
- * - Chiude entrambi i file al termine
+ *    - Apre due file binari in modalità scrittura:
+ *    - uno per i dati dei veicoli, nome_file_veicolo
+ *    - uno per le prenotazioni associate, nome_file_prenotazioni
+ *    - Scrive nel file dei veicoli il numero totale di veicoli da salvare
+ *    - Per ogni veicolo nel vettore, chiama la funzione salva_veicolo
+ *    che scrive i dati nei rispettivi file
+ *    - Chiude entrambi i file al termine
  *
  * Parametri:
- * nome_file_veicolo: file in cui salvare i dati dei veicoli
- * nome_file_prenotazioni: file in cui salvare le prenotazioni
- * vettore: array di veicoli da salvare
- * num_veicoli: numero di elementi nel vettore
+ *    nome_file_veicolo: file in cui salvare i dati dei veicoli
+ *    nome_file_prenotazioni: file in cui salvare le prenotazioni
+ *    vettore: array di veicoli da salvare
+ *    num_veicoli: numero di elementi nel vettore
  *
  * Pre-condizioni:
- * nome_file_veicolo: deve essere diverso da NULL
- * nome_file_prenotazioni: deve essere diverso da NULL
- * vettore: deve essere diverso da NULL
- * num_veicoli: deve essere diverso di 0
+ *    nome_file_veicolo: deve essere diverso da NULL
+ *    nome_file_prenotazioni: deve essere diverso da NULL
+ *    vettore: deve essere diverso da NULL
+ *    num_veicoli: deve essere diverso di 0
  *
  * Post-condizioni:
- * non restituisce niente
+ *    non restituisce niente
  *
  * Side-effect:
- * i dati dei veicoli e delle relative prenotazioni vengono scritti
- * nei file specificati in formato binario
+ *    i dati dei veicoli e delle relative prenotazioni vengono scritti
+ *    nei file specificati in formato binario
  */
 void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, Veicolo vettore[], unsigned int num_veicoli){
 	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || vettore == NULL || num_veicoli == 0) return; // !num_veicoli è corretto, ma num_veicoli == 0 è più esplicito
@@ -463,26 +482,29 @@ void salva_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_
  * carica un insieme di veicoli da un file binario e le relative prenotazioni da un secondo file binario
  *
  * Implementazione:
- * - Apre due file binari in lettura: uno per i veicoli e uno per le prenotazioni
- * - Legge il numero totale di veicoli da caricare dal file dei veicoli
- * - Alloca dinamicamente un array di puntatori a Veicolo
- * - Per ogni veicolo, richiama la funzione carica_veicolo per leggere i dati e le prenotazioni
+ *    - Apre due file binari in lettura: uno per i veicoli e uno per le prenotazioni
+ *    - Legge il numero totale di veicoli da caricare dal file dei veicoli
+ *    - Alloca dinamicamente un array di puntatori a Veicolo
+ *    - Per ogni veicolo, richiama la funzione carica_veicolo per leggere i dati e le prenotazioni
  *
  * Parametri:
- * nome_file_veicolo: nome del file contenente i dati dei veicoli
- * nome_file_prenotazioni: nome del file contenente le prenotazioni associate
- * num_veicoli: puntatore a variabile dove verrà salvato il numero di veicoli caricati
+ *    nome_file_veicolo: nome del file contenente i dati dei veicoli
+ *    nome_file_prenotazioni: nome del file contenente le prenotazioni associate
+ *    num_veicoli: puntatore a variabile dove verrà salvato il numero di veicoli caricati
  *
  * Pre-condizioni:
- * nome_file_veicolo: deve essere diverso da NULL
- * nome_file_prenotazioni: deve essere diverso da NULL
- * num_veicoli: non deve essere NULL
+ *    nome_file_veicolo: deve essere diverso da NULL
+ *    nome_file_prenotazioni: deve essere diverso da NULL
+ *    num_veicoli: non deve essere NULL
  *
  * Post-condizioni:
- * - Restituisce un array di Veicolo e ne imposta la dimensione in num_veicoli, restituisce NULL in caso di errore
+ *    Restituisce un array di Veicolo e ne imposta la dimensione in num_veicoli, restituisce NULL in caso di errore
+ *
+ * Ritorna:
+ *    un array di Veicolo o NULL
  *
  * Side-effect:
- * - Alloca memoria dinamicamente per il vettore restituito (va liberata dal chiamante)
+ *    Alloca memoria dinamicamente per il vettore restituito (va liberata dal chiamante)
  */
 Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_file_prenotazioni, unsigned int *num_veicoli){
 	if(nome_file_veicolo == NULL || nome_file_prenotazioni == NULL || num_veicoli == NULL) return NULL;
@@ -549,24 +571,22 @@ Veicolo *carica_vettore_veicoli(const char *nome_file_veicolo, const char *nome_
  * Salva su file le informazioni della struttura Data.
  *
  * Implementazione:
- * Scrive su file il numero di prenotazioni e l'intero storico
- * delle prenotazioni contenuto nella struttura Data.
+ *    Scrive su file il numero di prenotazioni e l'intero storico
+ *    delle prenotazioni contenuto nella struttura Data.
  *
  * Parametri:
- * file_data: puntatore al file su cui salvare i dati
- * d: struttura Data da salvare
+ *    file_data: puntatore al file su cui salvare i dati
+ *    d: struttura Data da salvare
  *
  * Pre-condizione:
- * file_data e d devono essere validi
+ *    file_data: non deve essere NULL
+ *    u: non deve essere NULL
  *
  * Post-condizione:
- * i dati della struttura sono scritti nel file
- *
- * Ritorna:
- * nessun valore
+ *    non restituisce niente
  *
  * Side-effect:
- * scrittura su file
+ *    i dati della struttura sono scritti nel file
  */
 static void salva_data(FILE *file_data, Utente u){
     if(file_data == NULL || u == NULL){
@@ -597,24 +617,23 @@ static void salva_data(FILE *file_data, Utente u){
  * Carica da file le informazioni per ricostruire una struttura Data.
  *
  * Implementazione:
- * Legge da file il numero di prenotazioni e ricostruisce
- * lo storico delle prenotazioni. Restituisce una nuova struttura Data.
+ *    Legge da file il numero di prenotazioni e ricostruisce
+ *    lo storico delle prenotazioni. Restituisce una nuova struttura Data.
  *
  * Parametri:
- * file_data: puntatore al file da cui leggere i dati
- * buffer_str: buffer temporaneo per le stringhe
+ *    file_data: puntatore al file da cui leggere i dati
+ *    buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizione:
- * file_data e buffer_str devono essere validi
+ *    file_data: non deve essere NULL
+ *    u: non deve essere NULL
+ *    buffer_str: non deve esere NULL
  *
  * Post-condizione:
- * viene restituita una nuova struttura Data con i dati caricati
- *
- * Ritorna:
- * un nuovo oggetto Data, oppure NULL in caso di errore
+ *    non restituisce niente
  *
  * Side-effect:
- * lettura da file, allocazione dinamica
+ *    lettura da file, allocazione dinamica
  */
 static void carica_data(Utente u, FILE *file_data, char *buffer_str){
     if(file_data == NULL || buffer_str == NULL || u == NULL){
@@ -651,25 +670,24 @@ static void carica_data(Utente u, FILE *file_data, char *buffer_str){
  * uno per i dati associati.
  *
  * Implementazione:
- * Scrive nome, cognome, email, password, permesso e chiama salva_data
- * per salvare la struttura Data.
+ *    Scrive nome, cognome, email, password, permesso e chiama salva_data
+ *    per salvare la struttura Data.
  *
  * Parametri:
- * file_utente: file su cui scrivere i dati dell'utente
- * file_data: file su cui scrivere i dati storici dell'utente
- * u: utente da salvare
+ *    file_utente: file su cui scrivere i dati dell'utente
+ *    file_data: file su cui scrivere i dati storici dell'utente
+ *    u: utente da salvare
  *
  * Pre-condizione:
- * file_utente e u devono essere validi
+ *    file_utente: non deve essere NULL
+ *    u: non deve essere NULL
+ *    file_data: non deve essere NULL
  *
  * Post-condizione:
- * i dati dell'utente sono salvati nei file
- *
- * Ritorna:
- * nessun valore
+ *    non restituisce niente
  *
  * Side-effect:
- * scrittura su file
+ *    i dati dell'utente sono salvati nei file
  */
 static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
     if (file_utente == NULL || u == NULL) return;
@@ -708,25 +726,27 @@ static void salva_utente(FILE *file_utente, FILE *file_data, Utente u){
  * Carica da due file le informazioni necessarie per ricostruire un utente.
  *
  * Implementazione:
- * Legge nome, cognome, email, password, permesso e, se CLIENTE, carica
- * anche la struttura Data associata.
+ *    Legge nome, cognome, email, password, permesso e, se CLIENTE, carica
+ *    anche la struttura Data associata.
  *
  * Parametri:
- * file_utente: file da cui leggere i dati dell'utente
- * file_data: file da cui leggere i dati storici
- * buffer_str: buffer temporaneo per le stringhe
+ *    file_utente: file da cui leggere i dati dell'utente
+ *    file_data: file da cui leggere i dati storici
+ *    buffer_str: buffer temporaneo per le stringhe
  *
  * Pre-condizione:
- * file_utente e buffer_str devono essere validi
+ *    file_utente: non deve essere NULL
+ *    buffer_str: non deve essere NULL
+ *    file_data: non deve essere NULL
  *
  * Post-condizione:
- * restituisce un utente ricostruito dai file
+ *    restituisce un utente ricostruito dai file
  *
  * Ritorna:
- * un nuovo oggetto Utente, o NULL in caso di errore
+ *    un nuovo oggetto Utente, o NULL in caso di errore
  *
  * Side-effect:
- * lettura da file, allocazione dinamica di memoria
+ *    lettura da file, allocazione dinamica di memoria
  */
 static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str) {
     if (!file_utente || !buffer_str) return NULL;
@@ -786,25 +806,24 @@ static Utente carica_utente(FILE *file_utente, FILE *file_data, char *buffer_str
  * Salva un array di utenti su due file: uno per l'anagrafica, uno per i dati.
  *
  * Implementazione:
- * Apre due file, scrive il numero di utenti e salva ciascun utente.
+ *    Apre due file, scrive il numero di utenti e salva ciascun utente.
  *
  * Parametri:
- * nome_file_utente: nome del file per l'anagrafica
- * nome_file_data: nome del file per i dati storici
- * vettore: array di puntatori a Utente
- * num_utenti: numero di utenti nell'array
+ *    nome_file_utente: nome del file per l'anagrafica
+ *    nome_file_data: nome del file per i dati storici
+ *    vettore: array di puntatori a Utente
+ *    num_utenti: numero di utenti nell'array
  *
  * Pre-condizione:
- * vettore e nomi file devono essere validi
+ *    nome_file_utente: non deve essere NULL
+ *    nome_file_data: non deve essere NULL
+ *    vettore: non deve essere NULL
  *
  * Post-condizione:
- * i dati degli utenti sono scritti nei file
- *
- * Ritorna:
- * nessun valore
+ *    non restituisce niente
  *
  * Side-effect:
- * apertura e scrittura su file
+ *    i dati degli utenti sono scritti nei file
  */
 void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, Utente vettore[], unsigned int num_utenti){
     if(nome_file_utente == NULL || nome_file_data == NULL || vettore == NULL || num_utenti == 0) return;
@@ -835,24 +854,26 @@ void salva_vettore_utenti(const char *nome_file_utente, const char *nome_file_da
  * Carica da due file un array di utenti.
  *
  * Implementazione:
- * Apre i file, legge il numero di utenti e chiama carica_utente per ognuno.
+ *    Apre i file, legge il numero di utenti e chiama carica_utente per ognuno.
  *
  * Parametri:
- * nome_file_utente: nome del file contenente i dati anagrafici
- * nome_file_data: nome del file contenente i dati storici
- * num_utenti: puntatore a intero dove memorizzare il numero di utenti caricati
+ *    nome_file_utente: nome del file contenente i dati anagrafici
+ *    nome_file_data: nome del file contenente i dati storici
+ *    num_utenti: puntatore a intero dove memorizzare il numero di utenti caricati
  *
  * Pre-condizione:
- * nomi file devono essere validi; num_utenti deve essere allocato
+ *    nome_file_utente: non deve essere NULL
+ *    nome_file_data: non deve essere NULL
+ *    num_utenti: non deve essere NULL
  *
  * Post-condizione:
- * il vettore contiene gli utenti caricati dai file
+ *    restituisce il vettore contenente gli utenti caricati dai file
  *
  * Ritorna:
- * un array di Utente, o NULL in caso di errore
+ *    un array di Utente, o NULL in caso di errore
  *
  * Side-effect:
- * lettura da file, allocazione dinamica di memoria
+ *    lettura da file, allocazione dinamica di memoria
  */
 Utente *carica_vettore_utenti(const char *nome_file_utente, const char *nome_file_data, unsigned int *num_utenti){
     if(nome_file_utente == NULL || nome_file_data == NULL || num_utenti == NULL) return NULL;
