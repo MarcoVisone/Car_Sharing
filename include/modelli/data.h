@@ -126,30 +126,6 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione);
 Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione);
 
 /*
- * Funzione: ottieni_vettore_storico
- * ---------------------------------
- * Converte la lista dello storico delle prenotazioni in un array.
- *
- * Parametri:
- *    data: struttura `Data` contenente lo storico.
- *    dimensione: puntatore a variabile dove scrivere la dimensione dell’array restituito.
- *
- * Pre-condizioni:
- *    data: non deve essere NULL
- *    dimensione: non deve essere NULL
- *
- * Post-condizioni:
- *    restituisce un array contenente tutte le prenotazioni.
- *
- * Ritorna:
- *    un puntatore ad un vettore di prenotazioni o NULL
- *
- * Side-effect:
- *    Alloca memoria per l’array restituito.
- */
-Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione);
-
-/*
  * Funzione: ottieni_numero_prenotazioni
  * -------------------------------------
  * Restituisce il numero totale di prenotazioni associate a una struttura `Data`.

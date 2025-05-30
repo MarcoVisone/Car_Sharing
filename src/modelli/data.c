@@ -22,7 +22,7 @@ struct data{
  * Crea e inizializza una nuova struttura Data per la gestione dello storico delle prenotazioni.
  *
  * Implementazione:
- *    - Alloca memoria per la struttura `Data` con `calloc`, inizializzando a 0.
+ *    - Alloca memoria per la struttura `Data` con `calloc`, inizializzando una struttura vuota.
  *    - Inizializza il campo `storico` con una lista vuota.
  *    - Imposta a zero il numero di prenotazioni.
  *
@@ -167,7 +167,7 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
  * Implementazione:
  *    - Verifica che `data` non sia NULL.
  *    - Chiama `rimuovi_prenotazione_lista`.
- *    - Se il contatore `numero_prenotazioni` è maggiore di 0, lo decrementa.
+ *    - Se il contatore `numero_prenotazioni`non è 0, lo decrementa.
  *    - Ritorna se la lista risultante è valida.
  *
  * Parametri:
@@ -198,62 +198,6 @@ Byte rimuovi_da_storico_lista(Data data, Prenotazione prenotazione) {
 
     return data->storico != NULL;
 }
-
-/*
- * Funzione: ottieni_vettore_storico
- * ---------------------------------
- * Converte la lista dello storico delle prenotazioni in un array.
- *
- * Implementazione:
- *    - Verifica la validità dei parametri.
- *    - Alloca un array di dimensione `numero_prenotazioni`.
- *    - Scorre la lista e copia ciascun elemento nell’array.
- *    - Imposta `*dimensione` con il numero di elementi copiati.
- *
- * Parametri:
- *    data: struttura `Data` contenente lo storico.
- *    dimensione: puntatore a variabile dove scrivere la dimensione dell’array restituito.
- *
- * Pre-condizioni:
- *    data: non deve essere NULL
- *    dimensione: non deve essere NULL
- *
- * Post-condizioni:
- *    restituisce un array contenente tutte le prenotazioni.
- *
- * Ritorna:
- *    un puntatore ad un vettore di prenotazioni o NULL
- *
- * Side-effect:
- *    Alloca memoria per l’array restituito.
- */
-Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
-    if (data == NULL || dimensione == NULL) {
-        return NULL;
-    }
-
-    *dimensione = 0;
-    if (data->numero_prenotazioni == 0) {
-        return NULL;
-    }
-
-    Prenotazione *vettore = malloc(data->numero_prenotazioni * sizeof(Prenotazione));
-    if (vettore == NULL) {
-        return NULL;
-    }
-
-    ListaPre curr = data->storico;
-    unsigned int i = 0;
-    while (curr != NULL && i < data->numero_prenotazioni) {
-        vettore[i] = ottieni_item(curr);
-
-        curr = ottieni_prossimo(curr);
-        i++;
-    }
-    *dimensione = i;
-
-    return vettore;
- }
 
 /*
  * Funzione: ottieni_numero_prenotazioni
@@ -312,6 +256,7 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
     if (data == NULL) {
         return;
     }
+
     data->numero_prenotazioni = numero_prenotazioni;
 }
 
@@ -322,7 +267,7 @@ void imposta_numero_prenotazioni(Data data, int numero_prenotazioni){
  *
  * Implementazione:
  *    - Verifica che `data` non sia NULL.
- *    - Assegna `lista_prenotazione` al campo `storico`.
+ *    - Assegna indirizzo a cui punta lista_prenotazione al campo `storico`.
  *
  * Parametri:
  *    data: struttura `Data` da modificare.
