@@ -6,7 +6,7 @@
 #include "strutture_dati/coda.h"
 #include <stdlib.h> // Per malloc e free
 
-/**
+/*
  * Struttura interna che rappresenta un nodo della coda.
  * Ogni nodo contiene un puntatore generico all'elemento memorizzato e
  * un puntatore al nodo successivo nella coda.
@@ -16,10 +16,6 @@ typedef struct nodo {
     struct nodo *next;
 } Nodo;
 
-/**
- * @brief Struttura interna che rappresenta la coda.
- * Contiene i puntatori alla testa e alla coda della lista di nodi.
- */
 struct coda {
     Nodo *testa;
     Nodo *coda;
@@ -33,9 +29,8 @@ struct coda {
  * Implementazione:
  *    Viene allocata dinamicamente una nuova struttura di tipo `struct coda` usando `malloc`.
  *    Se l'allocazione ha successo (il puntatore restituito non è NULL), i puntatori
- *    `testa` e `coda` della nuova struttura vengono inizializzati a **NULL**. Questo
- *    indica che la coda è attualmente vuota e non contiene elementi. In caso di
- *    fallimento dell'allocazione di memoria, la funzione restituisce **NULL**.
+ *    `testa` e `coda` della nuova struttura vengono inizializzati a NULL. In caso di
+ *    fallimento dell'allocazione di memoria, la funzione restituisce NULL.
  *
  * Parametri:
  *    Nessuno.
@@ -70,7 +65,7 @@ Coda crea_coda(void) {
  * Implementazione:
  *    La funzione itera sulla coda finché non è vuota, rimuovendo gli elementi uno per uno
  *    usando la funzione `rimuovi_dalla_coda`. Per ogni `elemento` rimosso (il contenuto
- *    del nodo), se `elemento` non è **NULL** e se è stata fornita una funzione `distruttore`,
+ *    del nodo), se `elemento` non è NULL e se è stata fornita una funzione `distruttore`,
  *    quest'ultima viene invocata per liberare la memoria specifica dell'elemento stesso.
  *    Questo è cruciale per la gestione di tipi di dati complessi. Al termine dell'iterazione,
  *    quando tutti i nodi sono stati rimossi e deallocati, viene liberata la memoria della
@@ -80,10 +75,10 @@ Coda crea_coda(void) {
  *    coda: puntatore alla coda da distruggere.
  *    distruttore: puntatore a una funzione di callback (`void (*distruttore)(void *)`)
  *    che verrà applicata a ogni elemento della coda prima che il nodo venga
- *    liberato. Può essere **NULL** se gli elementi non richiedono deallocazione specifica.
+ *    liberato. Può essere NULL se gli elementi non richiedono deallocazione specifica.
  *
  * Pre-condizioni:
- *    - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda` o **NULL**.
+ *    - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda` o NULL.
  *
  * Post-condizioni:
  *    non restituisce niente
@@ -112,11 +107,11 @@ void distruggi_coda(Coda coda, void (*distruttore)(void *)) {
  *
  * Implementazione:
  *    Viene allocato dinamicamente un nuovo nodo di tipo `Nodo` usando `malloc`.
- *    Se l'allocazione fallisce, la funzione restituisce **-1**.
+ *    Se l'allocazione fallisce, la funzione restituisce -1.
  *    Il campo `elemento` del nuovo nodo viene impostato al puntatore `elemento`
- *    passato come parametro, e il puntatore `next` del nuovo nodo viene impostato a **NULL**
+ *    passato come parametro, e il puntatore `next` del nuovo nodo viene impostato a NULL
  *    perché sarà l'ultimo nodo della coda.
- *    Se la coda è attualmente vuota (`coda->coda` è **NULL**), il nuovo nodo diventa
+ *    Se la coda è attualmente vuota (`coda->coda` è NULL), il nuovo nodo diventa
  *    sia la testa che la coda della lista. Altrimenti, il nodo precedente in coda
  *    (`coda->coda`) punta al nuovo nodo, e il puntatore `coda->coda` viene aggiornato
  *    per puntare al nuovo nodo.
@@ -164,13 +159,13 @@ int aggiungi_in_coda(void *elemento, Coda coda) {
  * Rimuove e restituisce l'elemento che si trova in testa alla coda (il primo elemento aggiunto).
  *
  * Implementazione:
- *    La funzione esegue una verifica iniziale per assicurarsi che il puntatore `coda` non sia **NULL**
- *    e che la coda non sia vuota (`coda->testa` non sia **NULL**). In caso contrario, restituisce **NULL**.
+ *    La funzione esegue una verifica iniziale per assicurarsi che il puntatore `coda` non sia NULL
+ *    e che la coda non sia vuota (`coda->testa` non sia NULL). In caso contrario, restituisce NULL.
  *    Se la coda contiene elementi, un puntatore temporaneo (`temp`) viene salvato per il nodo in testa.
  *    L'elemento contenuto in questo nodo viene estratto e conservato. Il puntatore `coda->testa`
  *    viene aggiornato per puntare al nodo successivo, rimuovendo di fatto il primo nodo dalla lista.
- *    Se, dopo la rimozione, la coda diventa vuota (`coda->testa` è **NULL**), anche `coda->coda`
- *    viene impostato a **NULL** per mantenere la coerenza. Infine, la memoria del nodo `temp` viene
+ *    Se, dopo la rimozione, la coda diventa vuota (`coda->testa` è NULL), anche `coda->coda`
+ *    viene impostato a NULL per mantenere la coerenza. Infine, la memoria del nodo `temp` viene
  *    liberata e l'elemento estratto viene restituito al chiamante.
  *
  * Parametri:
@@ -210,12 +205,12 @@ void *rimuovi_dalla_coda(Coda coda) {
  * Verifica se la coda è vuota.
  *
  * Implementazione:
- *    La funzione prima controlla se il puntatore `coda` stesso è **NULL**. Se lo è,
- *    la coda viene considerata non inizializzata o non valida, e la funzione restituisce **1** (vuota).
- *    Altrimenti, la funzione verifica se il puntatore `coda->testa` è **NULL**. Se `coda->testa`
- *    è **NULL**, significa che non ci sono nodi nella coda, e quindi la coda è vuota;
- *    in questo caso, restituisce **1**. Se `coda->testa` non è **NULL**, significa
- *    che la coda contiene almeno un elemento, e la funzione restituisce **0** (non vuota).
+ *    La funzione prima controlla se il puntatore `coda` stesso è NULL. Se lo è,
+ *    la coda viene considerata non inizializzata o non valida, e la funzione restituisce 1 (vuota).
+ *    Altrimenti, la funzione verifica se il puntatore `coda->testa` è NULL. Se `coda->testa`
+ *    è NULL, significa che non ci sono nodi nella coda, e quindi la coda è vuota;
+ *    in questo caso, restituisce 1. Se `coda->testa` non è NULL, significa
+ *    che la coda contiene almeno un elemento, e la funzione restituisce 0 (non vuota).
  *
  * Parametri:
  *    coda: puntatore alla coda da controllare.
