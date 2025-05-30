@@ -787,7 +787,10 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
         printf("Inserisci la targa del veicolo che vuoi selezionare (per uscire digita E): ");
         ottieni_parola(targa, NUM_CARATTERI_TARGA);
 
-        if(uscita(targa)) return NULL;
+        if(uscita(targa)){
+            free(v);
+            return NULL;
+        }
 
         Veicolo trovato = cerca_veicolo_in_tabella(tabella_veicoli, targa);
 
@@ -797,6 +800,7 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
             stdin_fflush();
 
             if(scelta == 's' || scelta == 'S'){
+                free(v);
                 return trovato;
             }
         }
@@ -804,6 +808,8 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
             printf("Veicolo non trovato\n");
         }
     }
+
+    free(v);
 }
 
 /*
@@ -1020,13 +1026,14 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
         Intervallo resto_giornata = crea_intervallo(ora_corrente_aggiornata, fine_della_giornata);
 
         Veicolo *vettore_veicoli = (Veicolo*) ottieni_vettore(tabella_veicoli, &dimensione);
+        char *ultima_data = formatta_data(ora_corrente_aggiornata);
 
         printf("\n+-------------------------------------------------------------+\n");
         printf("|              VEICOLI DISPONIBILI - TEMPO REALE              |\n");
         printf("+-------------------------------------------------------------+\n");
-        printf("Ultimo Aggiornamento: %s\n", formatta_data(ora_corrente_aggiornata));
+        printf("Ultimo Aggiornamento: %s\n", ultima_data);
         printf("---------------------------------------------------------------\n\n");
-
+        free(ultima_data);
         printf("%-3s | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
                  "#", "Modello", "Targa", "Tipo", "Posizione", "Costo", "Disponibile fino", "Durata");
         printf("----+----------------------+----------+-------------+--------------------+----------+------------------+---------------\n");
@@ -1046,6 +1053,8 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
                 snprintf(costo_str, sizeof(costo_str), "%.2f EUR", calcola_costo(prezzo_min, disponibile)); // Changed to EUR for broad use
 
                 time_t fine_disp = fine_intervallo(disponibile);
+                distruggi_intervallo(disponibile);
+
                 char *disponibile_fino_str = ottieni_orario(fine_disp);
 
                 double durata_secondi = difftime(fine_disp, ora_corrente_aggiornata);
@@ -1061,11 +1070,14 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
 
                 printf("%-3d | %-20s | %-8s | %-11s | %-18s | %-8s | %-16s | %-15s\n",
                         j++, modello, targa, tipo, posizione, costo_str, disponibile_fino_str, durata_str);
-             }
-            if (disponibile){
-                distruggi_intervallo(disponibile);
+
+                free(disponibile_fino_str);
             }
         }
+        distruggi_intervallo(resto_giornata);
+
+        free(vettore_veicoli);
+        vettore_veicoli = NULL;
 
         printf("\n---------------------------------------------------------------\n");
         printf("Trovati/o %d veicoli disponibili.\n", j);
@@ -1083,7 +1095,6 @@ void visualizza_veicoli_disponibili(TabellaVeicoli tabella_veicoli, time_t data_
         if ((comando) == 'R' || comando == 'r') {
             data_riferimento = time(NULL);
         }
-
     }while (comando != 'E' && comando != 'e');
 }
 
@@ -1126,6 +1137,7 @@ Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, 
     }
 
     ListaPre l = ottieni_storico_utente(u);
+    ListaPre curr = l;
     Veicolo v;
     const char *modello;
 
@@ -1137,29 +1149,28 @@ Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, 
     printf("| %-17s | %-18s | %-37s | %-21s |\n", "Veicolo (Targa)", "Modello", "Periodo", "Costo Totale (€)");
     printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
 
-    while (l != NULL){
-        Prenotazione p = ottieni_prenotazione_lista(l);
-        if(p == NULL) {
-            goto prossimo;
+    while (!lista_vuota(curr)){
+        Prenotazione p = ottieni_prenotazione_lista(curr);
+        v = NULL;
+        char *str = NULL;
+        if(p != NULL) {
+            str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
+            v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
         }
-        char *str = intervallo_in_stringa(ottieni_intervallo_prenotazione(p));
-        v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
-        if(v == NULL){
-            goto prossimo;
+        if(v != NULL){
+            modello = ottieni_modello(v);
+
+            printf("| %-17s | %-18s | %-32s  | %-20.2f|\n",
+            ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
         }
-        modello = ottieni_modello(v);
-
-        printf("| %-17s | %-18s | %-32s  | %-20.2f|\n",
-        ottieni_veicolo_prenotazione(p), modello, str, ottieni_costo_prenotazione(p));
-
-        prossimo:
-            free(str);
-            l = ottieni_prossimo(l);
+        free(str);
+        curr = ottieni_prossimo(curr);
     }
     printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
 
     printf("Digita un tasto per uscire...");
     getchar();
+    distruggi_lista_prenotazione(l);
     return 1;
 }
 
@@ -1204,7 +1215,7 @@ Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabell
 
     Prenotazione vettore_prenotazione[num_ele];
     unsigned int id;
-
+    ListaPre lista = NULL;
     while(1) {
         system("clear || cls");
 
@@ -1216,7 +1227,8 @@ Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabell
         printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
         id = 0;
-        for(ListaPre curr = ottieni_storico_utente(u); !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
+        lista = ottieni_storico_utente(u);
+        for(ListaPre curr = lista; !lista_vuota(curr); curr = ottieni_prossimo(curr)) {
             Prenotazione p = ottieni_prenotazione_lista(curr);
             if(p == NULL){
                 curr = ottieni_prossimo(curr);
@@ -1237,6 +1249,7 @@ Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabell
                 printf("+----+------------------+-------------+---------------------------------------+-----------+\n");
 
                 id++;
+                free(periodo);
             }
         }
 
@@ -1282,6 +1295,8 @@ Byte gestisci_le_mie_prenotazioni(const char *email_utente, TabellaUtenti tabell
         Veicolo v = cerca_veicolo_in_tabella(tabella_veicoli, ottieni_veicolo_prenotazione(p));
         Byte codice = rimuovi_prenotazione_veicolo(v, ottieni_intervallo_prenotazione(p));
         codice &= rimuovi_da_storico_utente(u, p);
+        distruggi_lista_prenotazione(lista);
+        lista = NULL;
 
         if(!codice) {
             printf("\nErrore durante la cancellazione. Premere INVIO per continuare...");

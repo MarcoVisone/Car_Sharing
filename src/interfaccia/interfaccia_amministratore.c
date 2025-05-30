@@ -68,9 +68,9 @@ Byte storico_noleggi(TabellaUtenti tabella_utenti, TabellaVeicoli tabella_veicol
         if(u != NULL && ottieni_permesso(u) != ADMIN){
             char *str = utente_in_stringa(u);
             printf("%s\n", str);
-            free(str);
             printf("----------------------------------------\n");
             j++;
+            free(str);
         }
     }
 
@@ -204,13 +204,16 @@ Byte gestione_noleggi(TabellaVeicoli tabella_veicoli) {
                 printf("| %-25s | %-37s | %10.2f |\n",
                        cliente, periodo, costo);
                 free(periodo);
+                distruggi_prenotazione(p[j]);
             }
             sep_noleggi();
         }
         else {
             printf("  (Nessuna prenotazione per questo veicolo)\n");
         }
-        if (p) free(p);
+        if (p){
+            free(p);
+        }
     }
     free(vettore);
     return 1;
