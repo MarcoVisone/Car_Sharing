@@ -25,10 +25,8 @@ struct prenotazione {
  *
  * Implementazione:
  *    Alloca memoria per una nuova struttura 'prenotazione'. Se l'allocazione fallisce,
- *    restituisce NULL. Duplica le stringhe 'cliente' e 'targa' usando `mia_strdup`
- *    per assicurare che la prenotazione abbia le proprie copie indipendenti.
- *    L'intervallo `i` viene assegnato direttamente (si assume che la sua gestione
- *    della memoria sia esterna o che `crea_prenotazione` ne prenda la proprietà).
+ *    restituisce NULL. Duplica le stringhe 'cliente' e 'targa' usando `mia_strdup`,
+ *    e duplica intervallo con 'duplica_intervallo' per assicurare che la prenotazione abbia le proprie copie indipendenti.
  *    Infine, il costo viene assegnato. In caso di fallimento della duplicazione delle stringhe,
  *    la memoria allocata per la struttura e le stringhe già duplicate viene liberata.
  *
@@ -52,7 +50,7 @@ struct prenotazione {
  *    un puntatore a prenotazione o NULL
  *
  * Side-effect:
- *    - Alloca memoria dinamica per la struttura 'Prenotazione' e per le stringhe 'cliente' e 'targa'.
+ *    - Alloca memoria dinamica per la struttura 'Prenotazione' e per le stringhe 'cliente' e 'targa' e Intervallo 'date'.
  */
 Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervallo i, double costo) {
     Prenotazione p = calloc(1, sizeof(struct prenotazione));
@@ -91,11 +89,10 @@ Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervall
  * Libera la memoria allocata per una data prenotazione.
  *
  * Implementazione:
- *    Verifica che il puntatore 'p' non sia NULL per evitare dereferenziamenti invalidi.
+ *    Verifica che il puntatore 'p' non sia NULL altrimenti ferma la funzione.
  *    Invoca `distruggi_intervallo` per deallocare correttamente l'intervallo associato,
- *    poiché si tratta di un tipo opaco e la sua gestione della memoria è esterna.
- *    Successivamente, libera la memoria allocata per le stringhe 'targa' e 'cliente'
- *    (precedentemente duplicate con `mia_strdup`). Infine, dealloca la struttura 'prenotazione' stessa.
+ *    successivamente, libera la memoria allocata per le stringhe 'targa' e 'cliente'
+ *    Infine, dealloca la struttura 'prenotazione' stessa.
  *
  * Parametri:
  *    p: puntatore alla prenotazione da distruggere.
@@ -109,7 +106,6 @@ Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervall
  * Side-effect:
  *    - La memoria associata alla prenotazione 'p' (inclusi i campi interni 'cliente', 'targa' e 'intervallo')
  *    viene deallocata.
- *    - Se 'p' è NULL, la funzione non ha alcun effetto.
  */
 void distruggi_prenotazione(Prenotazione p) {
     if (p == NULL) return;
@@ -128,7 +124,7 @@ void distruggi_prenotazione(Prenotazione p) {
  * Implementazione:
  *    Verifica se il puntatore alla prenotazione 'p' è valido.
  *    Se 'p' è valido, restituisce direttamente il puntatore alla stringa 'cliente'
- *    interna alla struttura. Non viene creata una copia.
+ *    interna alla struttura, essendo un putatore const non potrà essere modificato.
  *
  * Parametri:
  *    p: puntatore alla prenotazione.
@@ -141,7 +137,7 @@ void distruggi_prenotazione(Prenotazione p) {
  *    - Restituisce NULL se 'p' è NULL.
  *
  * Ritorna:
- *    una stringa o NULL
+ *    una stringa constante o NULL
  *
  * Side-effect:
  *    nessuno
@@ -160,7 +156,7 @@ const char *ottieni_cliente_prenotazione(Prenotazione p) {
  * Implementazione:
  *    Verifica se il puntatore alla prenotazione 'p' è valido.
  *    Se 'p' è valido, restituisce direttamente il puntatore alla stringa 'targa'
- *    interna alla struttura. Non viene creata una copia.
+ *    interna alla struttura, essendo un putatore const non potrà essere modificato.
  *
  * Parametri:
  *    p: puntatore alla prenotazione.
@@ -192,7 +188,7 @@ const char *ottieni_veicolo_prenotazione(Prenotazione p){
  * Implementazione:
  *    Verifica se il puntatore alla prenotazione 'p' è valido.
  *    Se 'p' è valido, restituisce direttamente il puntatore all'oggetto 'Intervallo'
- *    interno alla struttura. Non viene creata una copia.
+ *    interno alla struttura
  *
  * Parametri:
  *    p: puntatore alla prenotazione.
@@ -224,7 +220,7 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p) {
  * Implementazione:
  *    Verifica se il puntatore alla prenotazione 'p' è valido.
  *    Se 'p' è valido, restituisce il valore 'costo' direttamente dal campo della struttura.
- *    Se 'p' è NULL, restituisce un valore sentinella -1.0.
+ *    Se 'p' è NULL, restituisce un valore sentinella -1.
  *
  * Parametri:
  *    p: puntatore alla prenotazione.
@@ -237,7 +233,7 @@ Intervallo ottieni_intervallo_prenotazione(Prenotazione p) {
  *    - Restituisce -1.0 se 'p' è NULL.
  *
  * Ritorna:
- *    un double o -1
+ *    un double
  *
  * Side-effect:
  *    nessuno
@@ -308,7 +304,6 @@ void imposta_cliente_prenotazione(Prenotazione p, const char *cliente) {
  *
  * Side-effect:
  *    - La targa del veicolo nella prenotazione 'p' viene aggiornata con la nuova stringa 'targa'.
- *    - Se 'p' è NULL, la funzione non ha alcun effetto.
  *    - Dealloca la memoria precedentemente allocata per la vecchia targa del veicolo.
  *    - Alloca nuova memoria dinamica per duplicare la stringa 'targa'.
  *    - Modifica la memoria interna della struttura 'Prenotazione'.
