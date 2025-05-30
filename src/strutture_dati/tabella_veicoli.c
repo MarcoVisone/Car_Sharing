@@ -60,7 +60,6 @@ TabellaVeicoli crea_tabella_veicoli(unsigned int grandezza){
  */
 static void distruggi_veicolo_t(void *veicolo){
     if (veicolo == NULL) return;
-
     Veicolo v = (Veicolo)veicolo;
     distruggi_veicolo(v);
 }
