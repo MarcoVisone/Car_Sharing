@@ -1205,7 +1205,7 @@ Byte visualizza_storico(const char *email_utente, TabellaUtenti tabella_utenti, 
     }
     printf("+-------------------+--------------------+---------------------------------------+---------------------+\n");
 
-    printf("Digita un tasto per uscire...");
+    printf("Premi un tasto per uscire...");
     getchar();
     distruggi_lista_prenotazione(l);
     return 1;
