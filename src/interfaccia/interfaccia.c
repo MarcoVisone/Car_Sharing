@@ -818,7 +818,10 @@ Veicolo interfaccia_seleziona_veicolo(TabellaVeicoli tabella_veicoli, Intervallo
         if(trovato != NULL){
             printf("Sei sicuro di voler selezionare questo veicolo? (S/N): ");
             scelta = getchar();
-            stdin_fflush();
+            while(scelta == '\n'){
+                scelta = getchar();
+            }
+            //stdin_fflush();
 
             if(scelta == 's' || scelta == 'S'){
                 free(v);

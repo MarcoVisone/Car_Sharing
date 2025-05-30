@@ -617,6 +617,9 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
         printf("5. Logout\n");
         printf("Scegli un'opzione: ");
         scelta_menu_utente = getchar();
+        while(scelta_menu_utente == '\n'){
+            scelta_menu_utente = getchar();
+        }
         stdin_fflush();
 
         switch (scelta_menu_utente) {
