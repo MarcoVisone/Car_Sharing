@@ -386,7 +386,7 @@ int main() {
 
     if(tabella_utenti == NULL || tabella_veicoli == NULL){
         printf("Errore del sistema!\n");
-        // CORREZIONE: Pulizia delle risorse parzialmente allocate
+        // Pulizia delle risorse parzialmente allocate
         if(tabella_utenti != NULL) {
             distruggi_tabella_utenti(tabella_utenti);
         }
@@ -400,14 +400,14 @@ int main() {
     Utente admin_presente = cerca_utente_in_tabella(tabella_utenti, "admin@email.com");
     if (admin_presente == NULL) {
         const char *password_str = "Admin_123&";
-        // CORREZIONE: Inizializzazione sicura dell'array password
+        // Inizializzazione sicura dell'array password
         memset(password, 0, DIMENSIONE_PASSWORD);
         md5(password_str, strlen(password_str), password);
         admin_presente = crea_utente("admin@email.com", password, "Manuel Nello", "Russo", ADMIN);
 
         if(admin_presente == NULL){
             printf("Errore: Impossibile creare l'amministratore di default.\n");
-            // CORREZIONE: Pulizia delle risorse prima di uscire
+            // Pulizia delle risorse prima di uscire
             distruggi_tabella_utenti(tabella_utenti);
             distruggi_tabella_veicoli(tabella_veicoli);
             return -1;
@@ -416,7 +416,7 @@ int main() {
         if (!aggiungi_utente_in_tabella(tabella_utenti, admin_presente)) {
             distruggi_utente(admin_presente);
             printf("Errore: Impossibile aggiungere l'amministratore\n");
-            // CORREZIONE: Pulizia delle risorse prima di uscire
+            //  Pulizia delle risorse prima di uscire
             distruggi_tabella_utenti(tabella_utenti);
             distruggi_tabella_veicoli(tabella_veicoli);
             return -1;
@@ -459,14 +459,14 @@ int main() {
         }
     } while (scelta != '3');
 
-    // CORREZIONE: Salvataggio PRIMA della distruzione delle tabelle
+    // Salvataggio PRIMA della distruzione delle tabelle
     // Questo evita l'accesso a memoria già liberata durante il salvataggio
     printf("Salvataggio dei dati in corso...\n");
     salva_tabella_utenti(tabella_utenti, FILE_UTENTI, FILE_DATI_UTENTI);
     salva_tabella_veicoli(tabella_veicoli, FILE_VEICOLI, FILE_PRENOTAZIONI_VEICOLI);
     printf("Salvataggio completato.\n");
 
-    // CORREZIONE: Pulizia finale con controlli di validità
+    // Pulizia finale con controlli di validità
     // Distrugge le tabelle hash e tutti gli elementi al loro interno
     if(tabella_utenti != NULL) {
         distruggi_tabella_utenti(tabella_utenti);
@@ -505,7 +505,7 @@ TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_ute
 
     if(tabella_utenti == NULL){
         printf("Errore caricamento utenti!\n");
-        // CORREZIONE: Pulizia sicura degli utenti caricati
+        // Pulizia sicura degli utenti caricati
         for(unsigned i = 0; i < num_utenti_caricati; i++) {
             if(utenti_caricati[i] != NULL) {
                 distruggi_utente(utenti_caricati[i]);
@@ -517,7 +517,7 @@ TabellaUtenti carica_tabella_utenti(unsigned int grandezza, const char *file_ute
 
     carica_utenti(tabella_utenti, utenti_caricati, num_utenti_caricati);
 
-    // CORREZIONE: Pulizia sicura del vettore
+    // Pulizia sicura del vettore
     free(utenti_caricati);
     utenti_caricati = NULL;
 
@@ -561,7 +561,7 @@ TabellaVeicoli carica_tabella_veicoli(unsigned int grandezza, const char *file_v
 TipoFascia determina_fascia_oraria(time_t timestamp) {
     struct tm *tm_info = localtime(&timestamp);
     if(tm_info == NULL) {
-        // CORREZIONE: Gestione errore localtime
+        // Gestione errore localtime
         return FASCIA_NORMALE;
     }
 
@@ -658,7 +658,7 @@ void menu_utente(Utente utente, TabellaVeicoli tabella_veicoli, TabellaUtenti ta
 
                 double sconto_totale = 0;
                 char motivo_sconto[MOTIVO_SCONTO * 2];
-                // CORREZIONE: Inizializzazione sicura della stringa
+                //  Inizializzazione sicura della stringa
                 memset(motivo_sconto, 0, sizeof(motivo_sconto));
 
                 /*Se il numero di prenotazioni è 0 allora nessun premio frequenza!*/
@@ -802,7 +802,7 @@ void menu_amministratore(Utente amministratore, TabellaVeicoli tabella_veicoli, 
 }
 
 void salva_tabella_utenti(TabellaUtenti tabella_utenti, const char *file_utente, const char *file_dati){
-    // CORREZIONE: Controlli di validità prima dell'accesso
+    //  Controlli di validità prima dell'accesso
     if(tabella_utenti == NULL || file_utente == NULL || file_dati == NULL) {
         printf("Errore: parametri non validi per il salvataggio utenti\n");
         return;
@@ -821,14 +821,14 @@ void salva_tabella_utenti(TabellaUtenti tabella_utenti, const char *file_utente,
     // direttamente ai dati interni degli oggetti Utente
     salva_vettore_utenti(file_utente, file_dati, vettore_utenti, numero_utenti);
 
-    // CORREZIONE: Libera solo il vettore di puntatori, NON gli oggetti Utente
+    //  Libera solo il vettore di puntatori, NON gli oggetti Utente
     // Gli oggetti Utente saranno liberati da distruggi_tabella_utenti()
     free(vettore_utenti);
     vettore_utenti = NULL;
 }
 
 void salva_tabella_veicoli(TabellaVeicoli tabella_veicoli, const char *file_veicoli, const char *file_prenotazioni){
-    // CORREZIONE: Controlli di validità prima dell'accesso
+    //  Controlli di validità prima dell'accesso
     if(tabella_veicoli == NULL || file_veicoli == NULL || file_prenotazioni == NULL) {
         printf("Errore: parametri non validi per il salvataggio veicoli\n");
         return;
