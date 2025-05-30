@@ -17,21 +17,21 @@ typedef struct coda* Coda;
  * Crea e inizializza una nuova coda vuota.
  *
  * Parametri:
- * Nessuno.
+ *    Nessuno.
  *
  * Pre-condizioni:
- * Nessuna.
+ *    Nessuna.
  *
  * Post-condizioni:
- * - Una nuova struttura Coda viene allocata e i suoi puntatori interni
- * (testa e coda) sono impostati a NULL, indicando una coda vuota.
- *
- * Side-effect:
- * - Alloca memoria dinamica per la struttura della coda.
+ *    - Una nuova struttura Coda viene allocata e i suoi puntatori interni
+ *    (testa e coda) sono impostati a NULL, indicando una coda vuota.
  *
  * Ritorna:
- * Un puntatore di tipo `Coda` alla coda appena creata, o **NULL** in caso di fallimento
- * dell'allocazione di memoria.
+ *    Un puntatore di tipo `Coda` o NULL
+ *
+ * Side-effect:
+ *    - Alloca memoria dinamica per la struttura della coda.
+ *
  */
 Coda crea_coda(void);
 
@@ -42,25 +42,22 @@ Coda crea_coda(void);
  * e alla struttura della coda stessa.
  *
  * Parametri:
- * coda: puntatore alla coda da distruggere.
- * distruttore: puntatore a una funzione di callback (`void (*distruttore)(void *)`)
- * che verrà applicata a ogni elemento della coda prima che il nodo venga
- * liberato. Può essere **NULL** se gli elementi non richiedono deallocazione specifica.
+ *    coda: puntatore alla coda da distruggere.
+ *    distruttore: puntatore a una funzione di callback (`void (*distruttore)(void *)`)
+ *    che verrà applicata a ogni elemento della coda prima che il nodo venga
+ *    liberato. Può essere **NULL** se gli elementi non richiedono deallocazione specifica.
  *
  * Pre-condizioni:
- * - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda` o **NULL**.
+ *    - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda` o **NULL**.
  *
  * Post-condizioni:
- * - Tutta la memoria allocata per la coda (nodi ed elementi, se `distruttore` è fornito)
- * viene rilasciata.
- * - La coda diventa inutilizzabile dopo questa chiamata.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Libera la memoria dinamica occupata dai nodi della coda.
- * - Se `distruttore` è fornito, applica questa funzione a ciascun elemento prima di liberare il nodo.
- *
- * Ritorna:
- * Questa funzione non restituisce alcun valore.
+ *    - Tutta la memoria allocata per la coda (nodi ed elementi, se `distruttore` è fornito)
+ *    viene rilasciata.
+ *    - La coda diventa inutilizzabile dopo questa chiamata.
+ *    - Se `distruttore` è fornito, applica questa funzione a ciascun elemento prima di liberare il nodo.
  */
 void distruggi_coda(Coda coda, void (*distruttore)(void *));
 
@@ -70,23 +67,22 @@ void distruggi_coda(Coda coda, void (*distruttore)(void *));
  * Aggiunge un elemento alla fine della coda.
  *
  * Parametri:
- * elemento: puntatore generico all'elemento da inserire nella coda.
- * coda: puntatore alla coda in cui inserire l'elemento.
+ *    elemento: puntatore generico all'elemento da inserire nella coda.
+ *    coda: puntatore alla coda in cui inserire l'elemento.
  *
  * Pre-condizioni:
- * - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda`.
- * - `elemento` può essere **NULL**.
+ *    coda: non deve essere NULL
+ *    elemento: non deve essere NULL
  *
  * Post-condizioni:
- * - L'elemento viene aggiunto correttamente alla fine della coda.
- * - La dimensione della coda aumenta di uno.
- *
- * Side-effect:
- * - Alloca un nuovo nodo in memoria dinamica per contenere l'elemento.
- * - Modifica i puntatori interni della coda (`coda->coda` e possibilmente `coda->testa`).
+ *    restituisce 0 se l'elemento viene aggiunto correttamente, altrimenti -1
  *
  * Ritorna:
- * **0** se l'inserimento è avvenuto con successo, **-1** in caso di errore (es. fallimento dell'allocazione di memoria per il nuovo nodo).
+ *    un valore intero(0 o -1)
+ *
+ * Side-effect:
+ *    - Alloca un nuovo nodo nella memoria dinamica.
+ *    - Modifica i puntatori interni della coda (`coda->coda` e possibilmente `coda->testa`).
  */
 int aggiungi_in_coda(void *elemento, Coda coda);
 
@@ -96,21 +92,19 @@ int aggiungi_in_coda(void *elemento, Coda coda);
  * Rimuove e restituisce l'elemento che si trova in testa alla coda (il primo elemento aggiunto).
  *
  * Parametri:
- * coda: puntatore alla coda da cui rimuovere l'elemento.
+ *    coda: puntatore alla coda da cui rimuovere l'elemento.
  *
  * Pre-condizioni:
- * - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda`.
+ *    coda: non deve essere NULL
  *
  * Post-condizioni:
- * - L'elemento in testa alla coda viene rimosso.
- * - La coda viene modificata, con il suo nuovo elemento in testa che era il secondo elemento prima della rimozione.
- * - Se la coda diventa vuota, i puntatori `testa` e `coda` della struttura vengono impostati a **NULL**.
+ *    non restituisce niente
  *
  * Side-effect:
- * - Libera la memoria dinamica occupata dal nodo rimosso dalla testa della coda.
- *
- * Ritorna:
- * Un puntatore generico (`void *`) all'elemento rimosso, o **NULL** se la coda è vuota o il puntatore `coda` non è valido.
+ *    - L'elemento in testa alla coda viene rimosso.
+ *    - La coda viene modificata, con il suo nuovo elemento in testa che era il secondo elemento prima della rimozione.
+ *    - Se la coda diventa vuota, i puntatori `testa` e `coda` della struttura vengono impostati a NULL.
+ *    - Libera la memoria dinamica occupata dal nodo rimosso dalla testa della coda.
  */
 void *rimuovi_dalla_coda(Coda coda);
 
@@ -120,19 +114,16 @@ void *rimuovi_dalla_coda(Coda coda);
  * Verifica se la coda è vuota.
  *
  * Parametri:
- * coda: puntatore alla coda da controllare.
+ *    coda: puntatore alla coda da controllare.
  *
  * Pre-condizioni:
- * - `coda` deve essere un puntatore valido a una coda precedentemente creata con `crea_coda` o **NULL**.
+ *    coda: non deve essere NULL
  *
  * Post-condizioni:
- * Nessuna. La funzione non modifica lo stato della coda.
- *
- * Side-effect:
- * Nessuno.
+ *    restituisce 1 se la coda è vuota o è NULL, altrimenti 0
  *
  * Ritorna:
- * **1** (vero) se la coda è vuota (o se `coda` è **NULL**), **0** (falso) altrimenti.
+ *    un valore intero(0 o 1)
  */
 int coda_vuota(Coda coda);
 
