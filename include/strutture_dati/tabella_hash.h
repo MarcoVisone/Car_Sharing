@@ -13,7 +13,7 @@ typedef struct nodo* Nodo;
 
 /*
  * Funzione: nuova_tabella_hash
- * -----------------------------
+ * ----------------------------
  *
  * crea una nuova tabella hash per la memorizzazione degli oggetti con la dimensione specificata
  *
@@ -24,8 +24,11 @@ typedef struct nodo* Nodo;
  *    grandezza: deve essere maggiore di 0
  *
  * Post-condizioni:
- *    restituisce un puntatore a una nuova struttura TabellaHash se l'allocazione è riuscita,
+ *    restituisce una nuova TabellaHash se l'allocazione è riuscita,
  *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore a una nuova struttura TabellaHash o NULL
  *
  * Side-effect:
  *   alloca memoria dinamicamente per la tabella hash e i suoi bucket
@@ -34,7 +37,7 @@ TabellaHash nuova_tabella_hash(const unsigned int grandezza);
 
 /*
  * Funzione: distruggi_tabella
- * -----------------------------
+ * ---------------------------
  *
  * libera la memoria allocata per una tabella hash, inclusi tutti gli elementi memorizzati.
  *
@@ -55,13 +58,13 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
 
 /*
  * Funzione: inserisci_in_tabella
- * ------------------------------------
+ * ------------------------------
  *
  * inserisce un elemento nella tabella hash associando una chiave a un valore
  *
  * Parametri:
  *    tabella_hash: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave dell'elemento
+ *    chiave: stringa costante contenente la chiave dell'elemento
  *    valore: puntatore al valore da associare alla chiave
  *
  * Pre-condizioni:
@@ -71,6 +74,9 @@ void distruggi_tabella(TabellaHash tabella_hash, void (*funzione_distruggi_valor
  *
  * Post-condizioni:
  *    restituisce 1 se l'inserimento è avvenuto con successo, 0 in caso di errore
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
  *    modifica la tabella hash aggiungendo un nuovo elemento e ridimensiona la tabella se necessario
@@ -85,7 +91,7 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
  *
  * Parametri:
  *    tabella_utenti: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave dell'elemento da rimuovere
+ *    chiave: stringa costante contenente la chiave dell'elemento da rimuovere
  *    funzione_distruggi_valore: funzione da applicare al valore per liberare la memoria associata
  *
  * Pre-condizioni:
@@ -96,6 +102,9 @@ Byte inserisci_in_tabella(TabellaHash tabella_hash, const char *chiave, void *va
  *    restituisce 1 se la rimozione ha avuto successo, 0 se la chiave non è presente
  *    o se si verifica un errore
  *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
+ *
  * Side-effect:
  *    - modifica la tabella hash rimuovendo l'elemento associato alla chiave
  *    - libera memoria dinamicamente associata al nodo e al valore
@@ -104,13 +113,13 @@ Byte cancella_dalla_tabella(const TabellaHash tabella_hash, const char *chiave, 
 
 /*
  * Funzione: cerca_in_tabella
- * ---------------------------------
+ * --------------------------
  *
  * cerca un elemento nella tabella hash tramite la chiave specificata
  *
  * Parametri:
  *    tabella_hash: puntatore alla tabella hash
- *    chiave: stringa contenente la chiave da cercare
+ *    chiave: stringa costante contenente la chiave da cercare
  *
  * Pre-condizioni:
  *    tabella_hash: non deve essere NULL
@@ -119,6 +128,9 @@ Byte cancella_dalla_tabella(const TabellaHash tabella_hash, const char *chiave, 
  * Post-condizioni:
  *    Se la chiave è presente, restituisce il puntatore al valore associato;
  *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore generico o NULL
  */
 const void *cerca_in_tabella(TabellaHash tabella_hash, const char *chiave);
 
@@ -139,6 +151,9 @@ const void *cerca_in_tabella(TabellaHash tabella_hash, const char *chiave);
  * Post-condizioni:
  *    restituisce un array di puntatori ai valori presenti nella tabella hash,
  *    oppure NULL se ci sono errori o la tabella è vuota.
+ *
+ * Ritorna:
+ *    un array di puntatori generico o NULL
  *
  * Side-effect:
  *    alloca dinamicamente memoria per il vettore risultante

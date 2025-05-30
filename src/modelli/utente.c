@@ -72,6 +72,10 @@ Utente crea_utente(const char *email, const uint8_t *password,  const char *nome
     u->permesso = permesso;
     if (permesso == CLIENTE) {
         u->data = crea_data();
+        if(u->data == NULL){
+            free(u);
+            return NULL;
+        }
     }
     else {
         u->data = NULL;
@@ -344,7 +348,7 @@ void imposta_data(Utente utente, Data data) {
  * - Viene restituita una nuova stringa allocata contenente il cognome.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -353,7 +357,7 @@ const char *ottieni_cognome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->cognome);
+    return utente->cognome;
 }
 
 
@@ -376,7 +380,7 @@ const char *ottieni_cognome(const Utente utente){
  * - Viene restituita una nuova stringa allocata contenente il nome.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -385,7 +389,7 @@ const char *ottieni_nome(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->nome);
+    return utente->nome;
 }
 
 /*
@@ -407,7 +411,7 @@ const char *ottieni_nome(const Utente utente){
  * - Viene restituita una nuova stringa allocata contenente l'email.
  *
  * Ritorna:
- * - Puntatore a stringa duplicata (malloc), oppure NULL se `utente` è NULL.
+ * - Puntatore a stringa constante (non si può modificare), oppure NULL se `utente` è NULL.
  *
  * Side-effect:
  * - Alloca memoria dinamica che deve essere liberata dal chiamante.
@@ -416,7 +420,7 @@ const char *ottieni_email(const Utente utente){
     if (utente == NULL) {
         return NULL;
     }
-    return mia_strdup(utente->email);
+    return utente->email;
 }
 
 /*
@@ -449,13 +453,7 @@ const uint8_t *ottieni_password(const Utente utente){
         return NULL;
     }
 
-    uint8_t *password = malloc(sizeof(uint8_t) * DIMENSIONE_PASSWORD);
-
-    for(unsigned int i = 0; i < DIMENSIONE_PASSWORD; i++){
-        password[i] = utente->password[i];
-    }
-
-    return password;
+    return utente->password;
 }
 
 /*
@@ -630,6 +628,45 @@ unsigned int ottieni_numero_prenotazioni_utente(Utente u){
     return ottieni_numero_prenotazioni(u->data);
 }
 
+/*
+ * Funzione: crea_nuova_data
+ * --------------------------------------------
+ * Distrugge la vecchia data e una nuova data dentro Utente
+ *
+ * Implementazione:
+ * - Se `utente` è NULL, ritorna 0.
+ * - Altrimenti chiama `distruggi_data` sul campo `data` dell'utente per distruggere
+ * la data attuale se è diversa da null, se utente è cliente invece crea la data nuova.
+ *
+ * Parametri:
+ * u: puntatore all'oggetto `Utente`.
+ *
+ * Pre-condizioni:
+ * - `u` non può essere NULL.
+ *
+ * Post-condizioni:
+ * - Un valore 0 se l'operazione è andata male, 1 se è andata a buon fine
+ *
+ * Ritorna:
+ * - Un valore Byte (8 bit)
+ *
+ * Side-effect:
+ * - Viene deallocata e allocata memoria dentro al campo data.
+ */
+Byte crea_nuova_data(Utente u){
+    if(u == NULL){
+        return 0;
+    }
+
+    distruggi_data(u->data);
+
+    if(u->permesso == CLIENTE){
+        u->data = crea_data();
+        return 1;
+    }
+
+    return 0;
+}
 
 /*
  * Funzione: utente_in_stringa
@@ -659,7 +696,7 @@ unsigned int ottieni_numero_prenotazioni_utente(Utente u){
  */
 char *utente_in_stringa(const Utente utente){
     if(utente == NULL) return NULL;
-    const char *tipo_utente = NULL;
+    char *tipo_utente = NULL;
     if(ottieni_permesso(utente) == ADMIN){
         tipo_utente = mia_strdup("Admin");
     }
@@ -673,6 +710,8 @@ char *utente_in_stringa(const Utente utente){
         utente->cognome,
         utente->email,
         tipo_utente);
+
+    free(tipo_utente);
 
     return buffer;
 }

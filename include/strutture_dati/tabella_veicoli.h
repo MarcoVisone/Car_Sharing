@@ -29,6 +29,9 @@ typedef struct veicolo *Veicolo;
  *    restituisce un oggetto TabellaVeicoli inizializzato,
  *    oppure NULL in caso di errore di allocazione
  *
+ * Ritorna:
+ *    un oggetto TabellaVeicoli o NULL
+ *
  * Side-effect:
  *    Alloca dinamicamente memoria per la struttura tabella hash
  */
@@ -72,6 +75,9 @@ void distruggi_tabella_veicoli(TabellaVeicoli tabella_veicoli);
  * Post-condizioni:
  *    restituisce 1 se l'inserimento è avvenuto con successo, 0 altrimenti
  *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
+ *
  * Side-effect:
  *    modifica la tabella hash aggiungendo il veicolo
  */
@@ -85,7 +91,7 @@ Byte aggiungi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, Veicolo veicolo
  *
  * Parametri:
  *    tabella_veicoli: puntatore alla tabella hash dei veicoli
- *    targa: stringa contenente la targa del veicolo da cercare
+ *    targa: stringa costante contenente la targa del veicolo da cercare
  *
  * Pre-condizioni:
  *    tabella_veicoli: non deve essere NULL
@@ -94,6 +100,9 @@ Byte aggiungi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, Veicolo veicolo
  * Post-condizioni:
  *    restituisce un puntatore al veicolo se presente nella tabella,
  *    altrimenti restituisce NULL
+ *
+ * Ritorna:
+ *    un puntatore ad un veicolo o NULL
  */
 Veicolo cerca_veicolo_in_tabella(const TabellaVeicoli tabella_veicoli, const char *targa);
 
@@ -114,6 +123,9 @@ Veicolo cerca_veicolo_in_tabella(const TabellaVeicoli tabella_veicoli, const cha
  * Post-condizioni:
  *    restituisce 1 se il veicolo è stato rimosso correttamente,
  *    0 se la targa non è presente o si è verificato un errore
+ *
+ * Ritorna:
+ *    un valore di tipo Byte(1 oppure 0)
  *
  * Side-effect:
  *    Modifica la tabella dei veicoli rimuovendo l'elemento specificato
@@ -137,10 +149,10 @@ Byte rimuovi_veicolo_in_tabella(TabellaVeicoli tabella_veicoli, char *targa);
  *    dimensione: non deve essere NULL
  *
  * Post-condizioni:
- *    Restituisce un array allocato dinamicamente di puntatori a veicoli:
- *    - i veicoli occupati nell'intervallo vengono posti a NULL
- *    - quelli disponibili mantengono il puntatore originale
- *    - restituisce NULL in caso di errore
+ *    Restituisce un array allocato dinamicamente di puntatori a veicoli, restituisce NULL in caso di errore
+ *
+ * Ritorna:
+ *    un array di veicoli o NULL
  *
  * Side-effect:
  *    Alloca dinamicamente un array che dovrà essere liberato dal chiamante.

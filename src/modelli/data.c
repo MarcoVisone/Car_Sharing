@@ -147,9 +147,13 @@ Byte aggiungi_a_storico_lista(Data data, Prenotazione prenotazione) {
         return 0;
     }
 
-    ListaPre temp = aggiungi_prenotazione_lista(data->storico, prenotazione);
+    Prenotazione p = duplica_prenotazione(prenotazione);
+    ListaPre temp = aggiungi_prenotazione_lista(data->storico, p);
 
-    if(temp == NULL) return 0;
+    if(temp == NULL){
+        distruggi_prenotazione(p);
+        return 0;
+    }
 
     data->storico = temp;
     data->numero_prenotazioni +=1;
@@ -277,7 +281,7 @@ Prenotazione *ottieni_vettore_storico(Data data, unsigned int *dimensione) {
  */
 unsigned int ottieni_numero_prenotazioni(Data data){
     if (data == NULL) {
-        return -1;
+        return 0;
     }
     return data->numero_prenotazioni;
 }

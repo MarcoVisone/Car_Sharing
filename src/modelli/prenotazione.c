@@ -55,12 +55,31 @@ struct prenotazione {
  * Un puntatore di tipo 'Prenotazione' alla prenotazione creata,  in caso di fallimento.
  */
 Prenotazione crea_prenotazione(const char *cliente, const char *targa, Intervallo i, double costo) {
-    Prenotazione p = malloc(sizeof(struct prenotazione));
+    Prenotazione p = calloc(1, sizeof(struct prenotazione));
     if (p == NULL) return NULL;
 
-    p->cliente = mia_strdup(cliente);
-    p->targa = mia_strdup(targa);
-    p->date = i;
+    p->cliente = cliente ? mia_strdup(cliente) : NULL;
+    if (cliente != NULL && p->cliente == NULL) {
+        free(p);
+        return NULL;
+    }
+
+    p->targa = targa ? mia_strdup(targa) : NULL;
+
+    if (targa != NULL && p->targa == NULL) {
+        free(p->cliente);
+        free(p);
+        return NULL;
+    }
+
+    p->date = duplica_intervallo(i);
+    if (i != NULL && p->date == NULL) {
+        free(p->cliente);
+        free(p->targa);
+        free(p);
+        return NULL;
+    }
+
     p->costo = costo;
 
     return p;
@@ -339,10 +358,12 @@ void imposta_veicolo_prenotazione(Prenotazione p, const char *targa){
  * Questa funzione non restituisce alcun valore.
  */
 void imposta_intervallo_prenotazione(Prenotazione p, Intervallo i) {
-    if (p == NULL) return;
+    if (p == NULL){
+        return;
+    }
 
     distruggi_intervallo(p->date); // Distrugge il vecchio intervallo
-    p->date = i; // Assegna il nuovo intervallo
+    p->date = duplica_intervallo(i); // Assegna il nuovo intervallo
 }
 
 /*
@@ -409,18 +430,8 @@ void imposta_costo_prenotazione(Prenotazione p, double costo) {
  */
 Prenotazione duplica_prenotazione(Prenotazione p) {
     if (p == NULL) return NULL;
-
-    // Duplica l'intervallo per una copia profonda
-    Intervallo date_copia = duplica_intervallo(p->date);
-    if (date_copia == NULL) return NULL; // Errore nella duplicazione dell'intervallo
-
     // Crea la nuova prenotazione usando i dati duplicati
-    Prenotazione copia = crea_prenotazione(p->cliente, p->targa, date_copia, p->costo);
-
-    // Se la creazione della copia fallisce, distruggi l'intervallo duplicato
-    if (copia == NULL) {
-        distruggi_intervallo(date_copia);
-    }
+    Prenotazione copia = crea_prenotazione(p->cliente, p->targa, p->date, p->costo);
 
     return copia;
 }

@@ -1,5 +1,6 @@
 #ifndef GESTORE_FILE_H
 #define GESTORE_FILE_H
+
 typedef struct veicolo *Veicolo;
 typedef struct utente *Utente;
 

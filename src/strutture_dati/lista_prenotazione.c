@@ -93,7 +93,7 @@ void distruggi_lista_prenotazione(ListaPre l){
  *    Modifica la struttura della lista
  */
 ListaPre aggiungi_prenotazione_lista(ListaPre l, Prenotazione p){
-    return aggiungi_nodo(duplica_prenotazione(p), l);
+    return aggiungi_nodo(p, l);
 }
 
 /*
@@ -208,7 +208,7 @@ ListaPre duplica_lista_prenotazioni(ListaPre l){
     ListaPre nuova_lista = crea_lista();
 
     while(!lista_vuota(l)){
-        nuova_lista = aggiungi_nodo(ottieni_item(l), nuova_lista);
+        nuova_lista = aggiungi_nodo(duplica_prenotazione(ottieni_item(l)), nuova_lista);
         l = ottieni_prossimo(l);
     }
 
