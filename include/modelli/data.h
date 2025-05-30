@@ -21,7 +21,9 @@ typedef struct data *Data;
  * - Nessuno.
  *
  * Pre-condizioni:
- * - Nessuna.
+ * - Deve essere disponibile memoria sufficiente per allocare la struttura `Data`.
+ * - La funzione `crea_lista()` deve essere disponibile, correttamente implementata e in grado di restituire una lista valida.
+ * - Il sistema deve consentire l'uso dell'heap tramite `calloc`.
  *
  * Post-condizioni:
  * - La struttura `Data` è pronta per l'uso, con lista storica vuota e contatore a zero.
